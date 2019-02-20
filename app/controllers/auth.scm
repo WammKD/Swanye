@@ -20,11 +20,43 @@
 
 (auth-define sign_up
   (lambda (rc)
-  ))
     "<h1>This is auth#sign_up</h1><p>Find me in app/views/auth/sign_up.html.tpl</p>"
     ;; TODO: add controller method `sign_up'
     ;; uncomment this line if you want to render view from template
     (view-render "sign_up" (the-environment))))
+
+(post "/auth/sign_up" #:from-post 'qstr-safe #:conn #t
+  (lambda (rc)
+    (let ([email     (uri-decode (:from-post rc 'get    "email"))]
+          [username  (uri-decode (:from-post rc 'get "username"))]
+          [salt                (get-random-from-dev #:length 128)]
+          [createdAt                               (current-time)])
+      (let ([token (string->sha-512 (string-append/shared
+                                      (number->string createdAt)
+                                      email
+                                      username))])
+        ((map-table-from-DB (:conn rc))
+          'set 'PEOPLE #:USERNAME           username
+                       #:E_MAIL             email
+                       #:PASSWORD           (SALTER
+                                              (uri-decode
+                                                (:from-post rc 'get "password"))
+                                              salt)
+                       #:SALT               salt
+                       #:CREATED_AT         createdAt
+                       #:CONFIRMATION_TOKEN token)
+
+        (send-the-mail ((make-simple-mail-sender
+                          "no-reply@swanye.herokuapp.com"
+                          email
+                          #:sender "/usr/sbin/sendmail")
+                         (string-append/shared
+                           "Please visit http://localhost/auth/confirmation?token="
+                           token
+                           " to complete your registration.")
+                         #:subject "NO REPLY: Account Confirmation Needed"))
+
+        email))))
 
 (auth-define password
   (lambda (rc)

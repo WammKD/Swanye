@@ -43,5 +43,23 @@
 		<P>
 			Rendered from app/views/auth/sign_up.html.tpl.
 		</P>
+
+		<!-- Need to set this up so it handles if the username already exists -->
+		<FORM action="/auth/sign_up" method="post">
+				E-mail:
+			<BR />
+				<INPUT type="text"   name="email">
+			<BR />
+				Username:
+			<BR />
+				<INPUT type="text"   name="username">
+			<BR />
+				Password:
+			<BR />
+				<INPUT type="text"   name="password">
+			<BR />
+			<BR />
+				<INPUT type="submit" value="Sign Up!">
+		</FORM>
 	</BODY>
 </HTML>

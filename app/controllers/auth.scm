@@ -3,6 +3,13 @@
 ;; This file is generated automatically by GNU Artanis.
 (define-artanis-controller auth) ; DO NOT REMOVE THIS LINE!!!
 
+(use-modules (artanis sendmail))
+
+(define (SALTER password saltString)
+  (string->sha-512 (string-append password saltString)))
+
+
+
 (auth-define sign_in
   (lambda (rc)
     "<h1>This is auth#sign_in</h1><p>Find me in app/views/auth/sign_in.html.tpl</p>"

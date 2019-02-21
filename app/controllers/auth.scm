@@ -3,7 +3,7 @@
 ;; This file is generated automatically by GNU Artanis.
 (define-artanis-controller auth) ; DO NOT REMOVE THIS LINE!!!
 
-(use-modules (artanis sendmail))
+(use-modules (artanis sendmail) (srfi srfi-1))
 
 (define (SALTER password saltString)
   (string->sha-512 (string-append password saltString)))
@@ -27,7 +27,8 @@
 
 (post "/auth/sign_up" #:from-post 'qstr-safe #:conn #t
   (lambda (rc)
-    (let ([email     (uri-decode (:from-post rc 'get    "email"))]
+    (let ([mtable                  (map-table-from-DB (:conn rc))]
+          [email     (uri-decode (:from-post rc 'get    "email"))]
           [username  (uri-decode (:from-post rc 'get "username"))]
           [salt                (get-random-from-dev #:length 128)]
           [createdAt                               (current-time)])
@@ -35,28 +36,36 @@
                                       (number->string createdAt)
                                       email
                                       username))])
-        ((map-table-from-DB (:conn rc))
-          'set 'PEOPLE #:USERNAME           username
-                       #:E_MAIL             email
-                       #:PASSWORD           (SALTER
-                                              (uri-decode
-                                                (:from-post rc 'get "password"))
-                                              salt)
-                       #:SALT               salt
-                       #:CREATED_AT         createdAt
-                       #:CONFIRMATION_TOKEN token)
+        (if (any
+              (lambda (element)
+                (string=? (assoc-ref element "USERNAME") username))
+              (mtable 'get 'PEOPLE #:columns '(USERNAME)))
+            (view-render "sign_up_error" (the-environment))
+          (begin
+            (mtable 'set 'PEOPLE #:USERNAME           username
+                                 #:E_MAIL             email
+                                 #:PASSWORD           (SALTER
+                                                        (uri-decode
+                                                          (:from-post
+                                                            rc
+                                                            'get
+                                                            "password"))
+                                                        salt)
+                                 #:SALT               salt
+                                 #:CREATED_AT         createdAt
+                                 #:CONFIRMATION_TOKEN token)
 
-        (send-the-mail ((make-simple-mail-sender
-                          "no-reply@swanye.herokuapp.com"
-                          email
-                          #:sender "/usr/sbin/sendmail")
-                         (string-append/shared
-                           "Please visit http://localhost/auth/confirmation?token="
-                           token
-                           " to complete your registration.")
-                         #:subject "NO REPLY: Account Confirmation Needed"))
+            (send-the-mail ((make-simple-mail-sender
+                              "no-reply@swanye.herokuapp.com"
+                              email
+                              #:sender "/usr/sbin/sendmail")
+                             (string-append/shared
+                               "Please visit http://localhost/auth/confirmation?token="
+                               token
+                               " to complete your registration.")
+                             #:subject "NO REPLY: Account Confirmation Needed"))
 
-        email))))
+            email))))))
 
 (auth-define password
   (lambda (rc)

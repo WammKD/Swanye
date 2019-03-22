@@ -62,7 +62,7 @@
                                " to complete your registration.")
                              #:subject "NO REPLY: Account Confirmation Needed"))
 
-            email))))))
+            (view-render "sign_up_success" (the-environment))))))))
 
 (auth-define password
   (lambda (rc)

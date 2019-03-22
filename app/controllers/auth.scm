@@ -27,8 +27,7 @@
 
 (post "/auth/sign_up" #:from-post 'qstr-safe #:conn #t
   (lambda (rc)
-    (let ([mtable                  (map-table-from-DB (:conn rc))]
-          [email     (uri-decode (:from-post rc 'get    "email"))]
+    (let ([email     (uri-decode (:from-post rc 'get    "email"))]
           [username  (uri-decode (:from-post rc 'get "username"))]
           [salt                (get-random-from-dev #:length 128)]
           [createdAt                               (current-time)])
@@ -36,24 +35,21 @@
                                       (number->string createdAt)
                                       email
                                       username))])
-        (if (any
-              (lambda (element)
-                (string=? (assoc-ref element "USERNAME") username))
-              (mtable 'get 'PEOPLE #:columns '(USERNAME)))
+        (if (not (null? ($PEOPLE 'get #:columns   '(*)
+                                      #:condition (where #:USERNAME username))))
             (view-render "sign_up_error" (the-environment))
           (begin
-            (mtable 'set 'PEOPLE #:USERNAME           username
-                                 #:E_MAIL             email
-                                 #:PASSWORD           (SALTER
-                                                        (uri-decode
-                                                          (:from-post
-                                                            rc
-                                                            'get
-                                                            "password"))
-                                                        salt)
-                                 #:SALT               salt
-                                 #:CREATED_AT         createdAt
-                                 #:CONFIRMATION_TOKEN token)
+            ($PEOPLE 'set #:USERNAME           username
+                          #:E_MAIL             email
+                          #:PASSWORD           (SALTER
+                                                 (uri-decode (:from-post
+                                                               rc
+                                                               'get
+                                                               "password"))
+                                                 salt)
+                          #:SALT               salt
+                          #:CREATED_AT         createdAt
+                          #:CONFIRMATION_TOKEN token)
 
             (send-the-mail ((make-simple-mail-sender
                               "no-reply@swanye.herokuapp.com"

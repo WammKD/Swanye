@@ -56,7 +56,8 @@
                               email
                               #:sender "/usr/sbin/sendmail")
                              (string-append/shared
-                               "Please visit http://localhost/auth/confirmation?token="
+                               "Please visit "
+                               "http://localhost/auth/confirmation?token="
                                token
                                " to complete your registration.")
                              #:subject "NO REPLY: Account Confirmation Needed"))

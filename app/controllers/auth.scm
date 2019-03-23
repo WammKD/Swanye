@@ -16,6 +16,16 @@
         "Replace this with the home page, once developed."
       (view-render "sign_in" (the-environment)))))
 
+(post "/auth/sign_in" #:auth    `(table PEOPLE "USERNAME" "PASSWORD"
+                                               "SALT"     ,SALTER)
+                      #:session #t
+  (lambda (rc)
+    (cond
+     [(:session rc 'check) "Go to home page."]
+     [(:auth    rc)        (:session rc 'spawn)
+                           "Go to home page."]
+     [else                 "Go to fail page."])))
+
 (auth-define sign_up
   (lambda (rc)
     "<h1>This is auth#sign_up</h1><p>Find me in app/views/auth/sign_up.html.tpl</p>"

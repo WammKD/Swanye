@@ -10,13 +10,11 @@
 
 
 
-(auth-define sign_in
+(get "/auth/sign_in" #:session #t
   (lambda (rc)
-    "<h1>This is auth#sign_in</h1><p>Find me in app/views/auth/sign_in.html.tpl</p>"
-    ;; TODO: add controller method `sign_in'
-    ;; uncomment this line if you want to render view from template
-    ;; (view-render "sign_in" (the-environment))
-  ))
+    (if (:session rc 'check)
+        "Replace this with the home page, once developed."
+      (view-render "sign_in" (the-environment)))))
 
 (auth-define sign_up
   (lambda (rc)

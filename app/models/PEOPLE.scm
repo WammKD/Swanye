@@ -11,5 +11,5 @@
   (NAME               char-field  (#:maxlen  32  #:not-null #:default ""))
   (SUMMARY            char-field  (#:maxlen 500  #:not-null #:default ""))
   (CREATED_AT         big-integer               (#:not-null))
-  (CONFIRMATION_TOKEN char-field  (#:maxlen 128  #:not-null #:unique)))
+  (CONFIRMATION_TOKEN char-field  (#:maxlen 128  #:not-null)))
 

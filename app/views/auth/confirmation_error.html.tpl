@@ -41,7 +41,7 @@
 		</H1>
 
 		<P>
-			Rendered from app/views/auth/confirmation.html.tpl.
+			Invalid token!
 		</P>
 	</BODY>
 </HTML>

@@ -33,7 +33,7 @@
     ;; uncomment this line if you want to render view from template
     (view-render "sign_up" (the-environment))))
 
-(post "/auth/sign_up" #:from-post 'qstr-safe #:conn #t
+(post "/auth/sign_up" #:from-post 'qstr-safe
   (lambda (rc)
     (let ([email     (uri-decode (:from-post rc 'get    "email"))]
           [username  (uri-decode (:from-post rc 'get "username"))]

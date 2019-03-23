@@ -74,9 +74,14 @@
 
 (auth-define confirmation
   (lambda (rc)
-  "<h1>This is auth#confirmation</h1><p>Find me in app/views/auth/confirmation.html.tpl</p>"
-  ;; TODO: add controller method `confirmation'
-  ;; uncomment this line if you want to render view from template
-  ;; (view-render "confirmation" (the-environment))
-  ))
+    (let ([poss ($PEOPLE 'get #:columns   '(*)
+                              #:condition (where
+                                            #:CONFIRMATION_TOKEN
+                                            (get-from-qstr rc "token")))])
+      (if (null? poss)
+          (view-render "confirmation_error" (the-environment))
+        (let ([person (car poss)])
+          ($PEOPLE 'set #:CONFIRMATION_TOKEN "confirmed"
+                        (where #:ID (assoc-ref person "ID")))
 
+          (view-render "confirmation_success" (the-environment)))))))

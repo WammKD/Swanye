@@ -3,7 +3,7 @@
 ;; This file is generated automatically by GNU Artanis.
 (define-artanis-controller auth) ; DO NOT REMOVE THIS LINE!!!
 
-(use-modules (artanis sendmail) (srfi srfi-1) (app models PEOPLE))
+(use-modules (app models PEOPLE) (artanis sendmail) (srfi srfi-1) (web request))
 
 (define (SALTER password saltString)
   (string->sha-512 (string-append password saltString)))

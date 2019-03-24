@@ -38,7 +38,7 @@
                                ("aliases" . (,(string-append "https://" domain
                                                              "/@"       user)
                                              ,userURL))
-                               ("links"   . (("rel"  .                      "self")
-                                             ("type" . "application/activity+json")
-                                             ("href" .                    ,userURL)))))
+                               ("links"   . ((("rel"  .                      "self")
+                                              ("type" . "application/activity+json")
+                                              ("href" .                    ,userURL))))))
                  (redirect-to rc "/404")))))))))

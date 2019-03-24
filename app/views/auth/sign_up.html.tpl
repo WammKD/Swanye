@@ -48,18 +48,18 @@
 		<FORM action="/auth/sign_up" method="post">
 				E-mail:
 			<BR />
-				<INPUT type="text"   name="email">
+				<INPUT type="text"     name="email">
 			<BR />
 				Username:
 			<BR />
-				<INPUT type="text"   name="username">
+				<INPUT type="text"     name="username">
 			<BR />
 				Password:
 			<BR />
-				<INPUT type="text"   name="password">
+				<INPUT type="password" name="password">
 			<BR />
 			<BR />
-				<INPUT type="submit" value="Sign Up!">
+				<INPUT type="submit"   value="Sign Up!">
 		</FORM>
 	</BODY>
 </HTML>

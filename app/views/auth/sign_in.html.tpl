@@ -48,14 +48,14 @@
 		<FORM action="/auth/sign_in" method="post">
 				Username:
 			<BR />
-				<INPUT type="text"   name="USERNAME">
+				<INPUT type="text"     name="USERNAME">
 			<BR />
 				Password:
 			<BR />
-				<INPUT type="text"   name="PASSWORD">
+				<INPUT type="password" name="PASSWORD">
 			<BR />
 			<BR />
-				<INPUT type="submit" value="Sign In!">
+				<INPUT type="submit"   value="Sign In!">
 		</FORM>
 	</BODY>
 </HTML>

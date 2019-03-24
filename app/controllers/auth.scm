@@ -61,12 +61,13 @@
                           #:CONFIRMATION_TOKEN token)
 
             (send-the-mail ((make-simple-mail-sender
-                              "no-reply@swanye.herokuapp.com"
+                              (string-append/shared "no-reply@" domain)
                               email
                               #:sender "/usr/sbin/sendmail")
                              (string-append/shared
                                "Please visit "
-                               "http://localhost/auth/confirmation?token="
+                               domain
+                               "/auth/confirmation?token="
                                token
                                " to complete your registration.")
                              #:subject "NO REPLY: Account Confirmation Needed"))

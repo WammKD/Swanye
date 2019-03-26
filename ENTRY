@@ -23,9 +23,11 @@
                       (=        (length split2)      2)
                       (string=? (car    split2) "acct")))
                (redirect-to rc "/404")
-             (let* ([user                                       (cadr split2)]
-                    [domain                                     (cadr  split)]
-                    [userURL (string-append "https://" domain "/users/" user)])
+             (let ([domain                                    (cadr split)]
+                   [poss   ((map-table-from-DB (:conn rc))
+                             'get        'PEOPLE
+                             #:columns   '(USERNAME)
+                             #:condition (where #:USERNAME (cadr split2)))])
                (if (and
                      (string=? domain (car (assoc-ref
                                              (request-headers (rc-req rc))

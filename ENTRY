@@ -28,9 +28,7 @@
                              #:columns   '(USERNAME)
                              #:condition (where #:USERNAME (cadr split2)))])
                (if (and
-                     (string=? domain (car (assoc-ref
-                                             (request-headers (rc-req rc))
-                                             'host)))
+                     (string=? domain (car (request-host (rc-req rc))))
                      (not (null? poss)))
                    (let* ([username   (assoc-ref (car poss) "USERNAME")]
                           [userURL  (string-append "https://" domain

@@ -31,15 +31,16 @@
                      (string=? domain (car (assoc-ref
                                              (request-headers (rc-req rc))
                                              'host)))
-                   (:mime rc `(("subject" . ,resource)
-                               ("aliases" . (,(string-append "https://" domain
-                                                             "/@"       user)
-                                             ,userURL))
-                               ("links"   . ((("rel"  .                      "self")
-                                              ("type" . "application/activity+json")
-                                              ("href" .                    ,userURL))))))
                      (not (null? poss)))
                    (let* ([username   (assoc-ref (car poss) "USERNAME")]
                           [userURL  (string-append "https://" domain
                                                    "/users/"  username)])
+                     (:mime rc `(("subject" . ,(string-append "acct:" username
+                                                              "@"       domain))
+                                 ("aliases" . (,(string-append "https://" domain
+                                                               "/@"       username)
+                                               ,userURL))
+                                 ("links"   . ((("rel"  .                      "self")
+                                                ("type" . "application/activity+json")
+                                                ("href" .                    ,userURL)))))))
                  (redirect-to rc "/404")))))))))

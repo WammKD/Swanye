@@ -2,7 +2,6 @@
 
  (use-modules (artanis artanis)
               ;; Put modules you want to be imported here
-              (srfi     srfi-1)
               (web     request)
               (artanis   utils))
  ;; Put whatever you want to be called before server initilization here
@@ -32,10 +31,6 @@
                      (string=? domain (car (assoc-ref
                                              (request-headers (rc-req rc))
                                              'host)))
-                     (any
-                       (lambda (l) (string=? (cdr (assoc "USERNAME" l)) user))
-                       ((map-table-from-DB (:conn rc)) 'get      'PEOPLE
-                                                       #:columns '(USERNAME))))
                    (:mime rc `(("subject" . ,resource)
                                ("aliases" . (,(string-append "https://" domain
                                                              "/@"       user)
@@ -43,4 +38,8 @@
                                ("links"   . ((("rel"  .                      "self")
                                               ("type" . "application/activity+json")
                                               ("href" .                    ,userURL))))))
+                     (not (null? poss)))
+                   (let* ([username   (assoc-ref (car poss) "USERNAME")]
+                          [userURL  (string-append "https://" domain
+                                                   "/users/"  username)])
                  (redirect-to rc "/404")))))))))

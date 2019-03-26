@@ -43,6 +43,12 @@
                                                 ("href" .                    ,userURL)))))))
                  (redirect-to rc "/404")))))))))
 
+ (get "/users/:user" (lambda (rc)
+                       (redirect-to
+                         rc
+                         (string-append/shared "/@" (params rc "user"))
+                         #:status 200)))
+
  (get "/@:user" #:mime 'json #:conn #t
    (lambda (rc)
      (let ([poss ((map-table-from-DB (:conn rc))

@@ -3,7 +3,7 @@
 ;; This file is generated automatically by GNU Artanis.
 (define-artanis-controller auth) ; DO NOT REMOVE THIS LINE!!!
 
-(use-modules (app models PEOPLE) (artanis sendmail) (srfi srfi-1) (web request))
+(use-modules (app models PEOPLE) (artanis sendmail) (artanis utils) (web request))
 
 (define (SALTER password saltString)
   (string->sha-512 (string-append password saltString)))
@@ -47,7 +47,18 @@
         (if (not (null? ($PEOPLE 'get #:columns   '(*)
                                       #:condition (where #:USERNAME username))))
             (view-render "sign_up_error" (the-environment))
-          (begin
+          (let ([privateFilename (string-append "private_" username ".pem")]
+                [ publicFilename (string-append  "public_" username ".pem")])
+            (system (string-append/shared
+                      "cd /tmp; openssl genrsa -out "
+                      privateFilename
+                      " 2048"))
+            (system (string-append/shared
+                      "cd /tmp; openssl rsa -in "
+                      privateFilename
+                      " -outform PEM -pubout -out "
+                      publicFilename))
+
             ($PEOPLE 'set #:USERNAME           username
                           #:E_MAIL             email
                           #:PASSWORD           (SALTER
@@ -58,7 +69,16 @@
                                                  salt)
                           #:SALT               salt
                           #:CREATED_AT         createdAt
-                          #:CONFIRMATION_TOKEN token)
+                          #:CONFIRMATION_TOKEN token
+                          #:PUBLIC             (string-trim-right
+                                                 (get-string-all-with-detected-charset
+                                                   (string-append "/tmp/"  publicFilename)))
+                          #:PRIVATE            (string-trim-right
+                                                 (get-string-all-with-detected-charset
+                                                   (string-append "/tmp/" privateFilename))))
+
+            (system (string-append/shared "rm /tmp/" privateFilename))
+            (system (string-append/shared "rm /tmp/"  publicFilename))
 
             (send-the-mail ((make-simple-mail-sender
                               (string-append/shared "no-reply@" domain)

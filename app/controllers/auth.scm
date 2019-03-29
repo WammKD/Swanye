@@ -114,4 +114,5 @@
           ($PEOPLE 'set #:CONFIRMATION_TOKEN "confirmed"
                         (where #:ID (assoc-ref person "ID")))
 
-          (view-render "confirmation_success" (the-environment)))))))
+          (let ([person (assoc-ref person "USERNAME")])
+            (view-render "confirmation_success" (the-environment))))))))

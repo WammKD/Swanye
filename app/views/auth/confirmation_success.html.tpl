@@ -41,7 +41,7 @@
 		</H1>
 
 		<P>
-			Hello, <%= (assoc-ref person "USERNAME") %>! You're all signed up!
+			Hello, <%= person %>! You're all signed up!
 		</P>
 
 		<P>

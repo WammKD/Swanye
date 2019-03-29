@@ -2,8 +2,7 @@
 
  (use-modules (artanis artanis)
               ;; Put modules you want to be imported here
-              (web     request)
-              (artanis   utils))
+              (web     request))
  ;; Put whatever you want to be called before server initilization here
 
  (init-server)
@@ -42,45 +41,3 @@
                                                 ("type" . "application/activity+json")
                                                 ("href" .                    ,userURL)))))))
                  (redirect-to rc "/404")))))))))
-
- (get "/users/:user" (lambda (rc)
-                       (redirect-to
-                         rc
-                         (string-append/shared "/@" (params rc "user"))
-                         #:status 200)))
-
- (get "/@:user" #:mime 'json #:conn #t
-   (lambda (rc)
-     (let ([poss ((map-table-from-DB (:conn rc))
-                   'get        'PEOPLE
-                   #:columns   '(*)
-                   #:condition (where #:USERNAME (params rc "user")))])
-       (if (null? poss)
-           (redirect-to rc "/404")
-         (let* ([request                  (rc-req rc)]
-                [accept      (request-accept request)]
-                [user                      (car poss)]
-                [username (assoc-ref user "USERNAME")])
-           (if (or
-                 (assoc-ref accept 'application/activity+json)
-                 (let ([ld (assoc-ref accept 'application/ld+json)])
-                   (and ld (assoc-ref ld 'profile) (string=?
-                                                     (assoc-ref ld 'profile)
-                                                     "https://www.w3.org/ns/activitystreams"))))
-               (let ([userURL (string-append/shared
-                                "https://" (car (request-host request))
-                                "/users/"  username)])
-                 (:mime rc `(("@context"          . ("https://www.w3.org/ns/activitystreams"
-                                                     "https://w3id.org/security/v1"))
-                             ("id"                . ,userURL)
-                             ("type"              . "Person")
-                             ("preferredUsername" . ,(assoc-ref user "NAME"))
-                             ("inbox"             . ,(string-append/shared
-                                                       userURL
-                                                       "/inbox"))
-                             ("publicKey"         . (("id"           . ,(string-append/shared
-                                                                          userURL
-                                                                          "#main-key"))
-                                                     ("owner"        . ,userURL)
-                                                     ("publicKeyPem" . "fuck"))))))
-             (string-append/shared "The user page of " username "!")))))))

@@ -12,7 +12,7 @@
                         (string-append/shared "/@" (params rc "user"))
                         #:status 200)))
 
-(get "/@:user" #:mime 'json #:conn #t
+(get "/@:user" #:mime 'json
   (lambda (rc)
     (let ([poss ($PEOPLE 'get #:columns   '(*)
                               #:condition (where #:USERNAME (params rc "user")))])

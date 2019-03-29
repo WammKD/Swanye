@@ -3,10 +3,25 @@
 ;; This file is generated automatically by GNU Artanis.
 (define-artanis-controller auth) ; DO NOT REMOVE THIS LINE!!!
 
-(use-modules (app models PEOPLE) (artanis sendmail) (artanis utils) (web request))
+(use-modules (app models PEOPLE)
+             (artanis sendmail)
+             ((artanis utils) #:select (get-random-from-dev
+                                        get-string-all-with-detected-charset))
+             (ice-9 eval-string)
+             (industria crypto blowfish)
+             (rnrs bytevectors)
+             ((srfi srfi-1)   #:select (fold))
+             (web request))
 
 (define (SALTER password saltString)
   (string->sha-512 (string-append password saltString)))
+
+(define (bv->string bv)
+  (string-append/shared (fold
+                          (lambda (int final)
+                            (string-append final " " (number->string int)))
+                          "#vu8("
+                          (bytevector->u8-list bv))                         ")"))
 
 
 

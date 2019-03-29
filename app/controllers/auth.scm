@@ -74,40 +74,51 @@
                       " -outform PEM -pubout -out "
                       publicFilename))
 
-            ($PEOPLE 'set #:USERNAME           username
-                          #:E_MAIL             email
-                          #:PASSWORD           (SALTER
-                                                 (uri-decode (:from-post
-                                                               rc
-                                                               'get
-                                                               "password"))
-                                                 salt)
-                          #:SALT               salt
-                          #:CREATED_AT         createdAt
-                          #:CONFIRMATION_TOKEN token
-                          #:PUBLIC             (string-trim-right
-                                                 (get-string-all-with-detected-charset
-                                                   (string-append "/tmp/"  publicFilename)))
-                          #:PRIVATE            (string-trim-right
-                                                 (get-string-all-with-detected-charset
-                                                   (string-append "/tmp/" privateFilename))))
+            (let ([private  (string->utf8
+                              (string-trim-right
+                                (get-string-all-with-detected-charset
+                                  (string-append "/tmp/" privateFilename))))]
+                  [public   (string->utf8
+                              (string-trim-right
+                                (get-string-all-with-detected-charset
+                                  (string-append "/tmp/"  publicFilename))))]
+                  [schedule (eval-string (get-string-all-with-detected-charset
+                                           "/myapp/.key"))])
+              (system (string-append/shared "rm /tmp/" privateFilename))
+              (system (string-append/shared "rm /tmp/"  publicFilename))
 
-            (system (string-append/shared "rm /tmp/" privateFilename))
-            (system (string-append/shared "rm /tmp/"  publicFilename))
+              (blowfish-encrypt! private 0 private 0 schedule)
+              (blowfish-encrypt! public  0 public  0 schedule)
 
-            (send-the-mail ((make-simple-mail-sender
-                              (string-append/shared "no-reply@" domain)
-                              email
-                              #:sender "/usr/sbin/sendmail")
-                             (string-append/shared
-                               "Please visit "
-                               domain
-                               "/auth/confirmation?token="
-                               token
-                               " to complete your registration.")
-                             #:subject "NO REPLY: Account Confirmation Needed"))
+              (clear-blowfish-schedule! schedule)
 
-            (view-render "sign_up_success" (the-environment))))))))
+              ($PEOPLE 'set #:USERNAME           username
+                            #:E_MAIL             email
+                            #:PASSWORD           (SALTER
+                                                   (uri-decode (:from-post
+                                                                 rc
+                                                                 'get
+                                                                 "password"))
+                                                   salt)
+                            #:SALT               salt
+                            #:CREATED_AT         createdAt
+                            #:CONFIRMATION_TOKEN token
+                            #:PUBLIC             (bv->string  public)
+                            #:PRIVATE            (bv->string private))
+
+              (send-the-mail ((make-simple-mail-sender
+                                (string-append/shared "no-reply@" domain)
+                                email
+                                #:sender "/usr/sbin/sendmail")
+                               (string-append/shared
+                                 "Please visit "
+                                 domain
+                                 "/auth/confirmation?token="
+                                 token
+                                 " to complete your registration.")
+                               #:subject "NO REPLY: Account Confirmation Needed"))
+
+              (view-render "sign_up_success" (the-environment)))))))))
 
 (auth-define password
   (lambda (rc)

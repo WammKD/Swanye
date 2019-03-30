@@ -77,3 +77,18 @@ RUN set -ex \
         && cd artanis-master && ./autogen.sh && ./configure && make \
         && make install && ldconfig \
         && cd .. && rm -rf artanis-master \
+        \
+#        && wget -c https://notabug.org/cwebber/guile-gcrypt/archive/v0.1.0.tar.gz \
+#        && tar xvzf v0.1.0.tar.gz \
+#        && rm -f v0.1.0.tar.gz \
+#        && cd guile-gcrypt \
+#        && mv /tmp/guile.m4 ./m4 \
+#        && ./bootstrap.sh && ./configure && make \
+#        && make install && ldconfig \
+#        \
+#	&& wget -c https://github.com/artyom-poptsov/guile-ssh/archive/v0.11.3.tar.gz \
+#	&& tar xvzf v0.11.3.tar.gz \
+#	&& rm -r v0.11.3.tar.gz \
+#	&& cd guile-ssh-0.11.3 && autoreconf --install && ./configure && make \
+#	&& make install && ldconfig \
+#	\

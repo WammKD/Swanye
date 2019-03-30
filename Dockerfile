@@ -56,3 +56,12 @@ RUN set -ex \
         && mkdir /usr/local/share/guile/2.2/industria/crypto \
         && cp industria-$INDUSTRIA_VERSION/crypto/blowfish.sls /usr/local/share/guile/2.2/industria/crypto/blowfish.scm \
         && rm -rf industria-$INDUSTRIA_VERSION \
+        \
+        && wget -c https://github.com/opencog/guile-dbi/archive/guile-dbi-$GUILE_DBI_VERSION.tar.gz \
+        && tar xvzf guile-dbi-$GUILE_DBI_VERSION.tar.gz \
+        && rm -f guile-dbi-$GUILE_DBI_VERSION.tar.gz \
+        && cd guile-dbi-guile-dbi-$GUILE_DBI_VERSION/guile-dbi && ./autogen.sh && make \
+        && make install && ldconfig \
+        && cd ../guile-dbd-mysql && ./autogen.sh && make \
+        && make install && ldconfig \
+        && cd ../.. && rm -rf guile-dbi-guile-dbi-$GUILE_DBI_VERSION \

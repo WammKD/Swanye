@@ -28,3 +28,17 @@ RUN echo "UseTLS=YES"      >> /etc/ssmtp/ssmtp.conf
 RUN echo "UseSTARTTLS=YES" >> /etc/ssmtp/ssmtp.conf
 
 COPY ./guile.m4 /tmp
+
+RUN set -ex \
+#        && wget -c ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.32.tar.gz \
+#        && tar xvzf libgpg-error-1.32.tar.gz \
+#        && rm -f libgpg-error-1.32.tar.gz \
+#        && cd libgpg-error-1.32 && ./configure && make \
+#        && make check && make install && ldconfig \
+#        \
+#        && wget -c ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-1.8.3.tar.gz \
+#        && tar xvzf libgcrypt-1.8.3.tar.gz \
+#        && rm -f libgcrypt-1.8.3.tar.gz \
+#        && cd libgcrypt-1.8.3 && ./configure && make \
+#        && make check && make install && ldconfig \
+#        \

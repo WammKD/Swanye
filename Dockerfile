@@ -48,3 +48,11 @@ RUN set -ex \
         && cd guile-$GUILE_VERSION && ./configure && make \
         && make install && ldconfig \
         && cd .. && rm -rf guile-$GUILE_VERSION \
+	\
+        && wget -c https://github.com/weinholt/industria/archive/v$INDUSTRIA_VERSION.tar.gz \
+        && tar xvzf v$INDUSTRIA_VERSION.tar.gz \
+        && rm -f v$INDUSTRIA_VERSION.tar.gz \
+        && mkdir /usr/local/share/guile/2.2/industria \
+        && mkdir /usr/local/share/guile/2.2/industria/crypto \
+        && cp industria-$INDUSTRIA_VERSION/crypto/blowfish.sls /usr/local/share/guile/2.2/industria/crypto/blowfish.scm \
+        && rm -rf industria-$INDUSTRIA_VERSION \

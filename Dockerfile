@@ -8,3 +8,5 @@ ENV         NJS_VERSION             1.15.3.0.2.3-1~stretch
 ENV         GUILE_VERSION           2.2.3
 ENV         INDUSTRIA_VERSION       2.0.0
 ENV         ARTANIS_VERSION         0.3.1
+ENV         GUILE_DBI_VERSION       2.1.7
+ENV         GUILE_DBD_MYSQL_VERSION 2.1.6

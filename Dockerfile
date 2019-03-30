@@ -10,3 +10,5 @@ ENV         INDUSTRIA_VERSION       2.0.0
 ENV         ARTANIS_VERSION         0.3.1
 ENV         GUILE_DBI_VERSION       2.1.7
 ENV         GUILE_DBD_MYSQL_VERSION 2.1.6
+RUN         echo "deb http://mirrors.ustc.edu.cn/debian jessie main contrib non-free"     >> /etc/apt/sources.list && \
+            echo "deb-src http://mirrors.ustc.edu.cn/debian jessie main contrib non-free" >> /etc/apt/sources.list

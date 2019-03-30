@@ -42,3 +42,9 @@ RUN set -ex \
 #        && cd libgcrypt-1.8.3 && ./configure && make \
 #        && make check && make install && ldconfig \
 #        \
+        && wget -c ftp://ftp.gnu.org/gnu/guile/guile-$GUILE_VERSION.tar.gz \
+        && tar xvzf guile-$GUILE_VERSION.tar.gz \
+        && rm -f guile-$GUILE_VERSION.tar.gz \
+        && cd guile-$GUILE_VERSION && ./configure && make \
+        && make install && ldconfig \
+        && cd .. && rm -rf guile-$GUILE_VERSION \

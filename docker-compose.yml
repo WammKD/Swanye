@@ -13,7 +13,11 @@ services:
       timeout: 20s
       retries: 10
   web:
-    build: .
+    build:
+      context: .
+      args:
+        EMAIL_ADDRESS: ${SWANYE_EMAIL_ADDRESS}
+        EMAIL_PASSWORD: ${SWANYE_EMAIL_PASSWORD}
     command: bash -c "nginx && art work"
     volumes:
       - .:/myapp

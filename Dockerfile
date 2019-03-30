@@ -26,3 +26,5 @@ RUN echo "AuthPass=$EMAIL_PASSWORD"   >> /etc/ssmtp/ssmtp.conf
 
 RUN echo "UseTLS=YES"      >> /etc/ssmtp/ssmtp.conf
 RUN echo "UseSTARTTLS=YES" >> /etc/ssmtp/ssmtp.conf
+
+COPY ./guile.m4 /tmp

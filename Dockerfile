@@ -180,3 +180,5 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 
 RUN sed -i -e 's/        root   \/usr\/share\/nginx\/html;/        proxy_pass http:\/\/127.0.0.1:1234;/g' /etc/nginx/conf.d/default.conf
 RUN sed -i -e 's/        index  index.html index.htm;/        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;/g' /etc/nginx/conf.d/default.conf
+
+RUN apt-get update && apt-get install -q -y --no-install-recommends openssl

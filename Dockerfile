@@ -65,3 +65,15 @@ RUN set -ex \
         && cd ../guile-dbd-mysql && ./autogen.sh && make \
         && make install && ldconfig \
         && cd ../.. && rm -rf guile-dbi-guile-dbi-$GUILE_DBI_VERSION \
+        \
+#        && wget -c http://ftp.gnu.org/gnu/artanis/artanis-$ARTANIS_VERSION.tar.bz2 \
+#        && tar xvjf artanis-$ARTANIS_VERSION.tar.bz2 \
+#        && rm -f artanis-$ARTANIS_VERSION.tar.bz2 \
+#        && cd artanis-$ARTANIS_VERSION && ./configure && make \
+#        && make install && ldconfig \
+        && wget -c https://gitlab.com/NalaGinrut/artanis/-/archive/master/artanis-master.tar.gz \
+        && tar xvzf artanis-master.tar.gz \
+        && rm -f artanis-master.tar.gz \
+        && cd artanis-master && ./autogen.sh && ./configure && make \
+        && make install && ldconfig \
+        && cd .. && rm -rf artanis-master \

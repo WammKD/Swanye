@@ -12,3 +12,6 @@ ENV         GUILE_DBI_VERSION       2.1.7
 ENV         GUILE_DBD_MYSQL_VERSION 2.1.6
 RUN         echo "deb http://mirrors.ustc.edu.cn/debian jessie main contrib non-free"     >> /etc/apt/sources.list && \
             echo "deb-src http://mirrors.ustc.edu.cn/debian jessie main contrib non-free" >> /etc/apt/sources.list
+RUN         apt-get update && apt-get build-dep  -y --no-install-recommends guile-2.0 \
+                           && apt-get install -q -y --no-install-recommends openssl ssmtp mailutils \
+                           && rm -rf /var/lib/apt/lists/*

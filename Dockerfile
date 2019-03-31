@@ -49,6 +49,13 @@ RUN set -ex \
         && make install && ldconfig \
         && cd .. && rm -rf guile-$GUILE_VERSION \
 	\
+        && wget -c https://www.gnupg.org/ftp/gcrypt/gnutls/v3.6/gnutls-3.6.7.tar.xz \
+        && tar xJf gnutls-3.6.7.tar.xz \
+        && rm -f gnutls-3.6.7.tar.xz \
+        && cd gnutls-3.6.7 && ./configure --enable-guile GUILE="/usr/local/bin/guile" && make \
+        && make install && ldconfig \
+        && cd .. && rm -rf gnutls-3.6.7 \
+	\
         && wget -c https://github.com/weinholt/industria/archive/v$INDUSTRIA_VERSION.tar.gz \
         && tar xvzf v$INDUSTRIA_VERSION.tar.gz \
         && rm -f v$INDUSTRIA_VERSION.tar.gz \

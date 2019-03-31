@@ -49,6 +49,27 @@ RUN set -ex \
         && make install && ldconfig \
         && cd .. && rm -rf guile-$GUILE_VERSION \
 	\
+        && wget -c https://ftp.gnu.org/gnu/nettle/nettle-3.4.1.tar.gz \
+        && tar xvzf nettle-3.4.1.tar.gz \
+	&& rm -f nettle-3.4.1.tar.gz \
+        && cd nettle-3.4.1 && ./configure && make \
+        && make install && ldconfig \
+        && cd .. && rm -rf nettle-3.4.1 \
+	\
+        && wget -c https://ftp.gnu.org/gnu/libtasn1/libtasn1-4.13.tar.gz \
+        && tar xvzf libtasn1-4.13.tar.gz \
+        && rm -f libtasn1-4.13.tar.gz \
+        && cd libtasn1-4.13 && ./configure && make \
+        && make install && ldconfig \
+        && cd .. && rm -rf libtasn1-4.13 \
+	\
+        && wget -c https://github.com/p11-glue/p11-kit/releases/download/0.23.15/p11-kit-0.23.15.tar.gz \
+        && tar xvzf p11-kit-0.23.15.tar.gz \
+        && rm -f p11-kit-0.23.15.tar.gz \
+        && cd p11-kit-0.23.15 && ./configure && make \
+        && make install && ldconfig \
+        && cd .. && rm -rf p11-kit-0.23.15 \
+	\
         && wget -c https://www.gnupg.org/ftp/gcrypt/gnutls/v3.6/gnutls-3.6.7.tar.xz \
         && tar xJf gnutls-3.6.7.tar.xz \
         && rm -f gnutls-3.6.7.tar.xz \

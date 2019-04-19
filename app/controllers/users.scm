@@ -7,10 +7,6 @@
              (industria crypto blowfish) (rnrs  bytevectors) (web request))
 
 (define (render-user-page rc)
-  (let ([poss ($PEOPLE 'get #:columns   '(*)
-                            #:condition (where #:USERNAME (params rc "user")))])
-    (if (null? poss)
-        (redirect-to rc "/404")
 (define-syntax process-user-account-as
   (syntax-rules ()
     [(_ userVar (rcVar) then)
@@ -22,9 +18,9 @@
                 (redirect-to rcVar "/404")
               (let ([userVar (car poss)])
                 then)))]))
+    (process-user-account-as user (rc)
       (let* ([request                  (rc-req rc)]
              [accept      (request-accept request)]
-             [user                      (car poss)]
              [username (assoc-ref user "USERNAME")])
         (if (or
               (assoc-ref accept 'application/activity+json)

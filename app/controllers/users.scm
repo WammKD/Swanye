@@ -6,7 +6,6 @@
 (use-modules (app       models   PEOPLE) (ice-9 eval-string)
              (industria crypto blowfish) (rnrs  bytevectors) (web request))
 
-(define (render-user-page rc)
 (define-syntax process-user-account-as
   (syntax-rules ()
     [(_ userVar (rcVar) then)
@@ -26,6 +25,9 @@
       (and ld (equal?
                 (assoc-ref ld 'profile)
                 "https://www.w3.org/ns/activitystreams")))))
+
+(get "/@:user" #:mime 'json
+  (lambda (rc)
     (process-user-account-as user (rc)
       (let* ([request                  (rc-req rc)]
              [accept      (request-accept request)]
@@ -42,34 +44,25 @@
                   (eval-string
                     (get-string-all-with-detected-charset "/myapp/.key"))))
 
-              (cons #t `(("@context"          . ("https://www.w3.org/ns/activitystreams"
-                                                 "https://w3id.org/security/v1"))
-                         ("id"                . ,userURL)
-                         ("type"              . "Person")
-                         ("preferredUsername" . ,(assoc-ref user "NAME"))
-                         ("inbox"             . ,(string-append/shared
-                                                   userURL
-                                                   "/inbox"))
-                         ("publicKey"         . (("id"           . ,(string-append/shared
-                                                                      userURL
-                                                                      "#main-key"))
-                                                 ("owner"        . ,userURL)
-                                                 ("publicKeyPem" . ,(utf8->string
-                                                                     publicEncrypted)))))))
-          (cons #f (string-append/shared "The user page of " username "!")))))))
+              (:mime rc `(("@context"          . ("https://www.w3.org/ns/activitystreams"
+                                                  "https://w3id.org/security/v1"))
+                          ("id"                . ,userURL)
+                          ("type"              . "Person")
+                          ("preferredUsername" . ,(assoc-ref user "NAME"))
+                          ("inbox"             . ,(string-append/shared
+                                                    userURL
+                                                    "/inbox"))
+                          ("publicKey"         . (("id"           . ,(string-append/shared
+                                                                       userURL
+                                                                       "#main-key"))
+                                                  ("owner"        . ,userURL)
+                                                  ("publicKeyPem" . ,(utf8->string
+                                                                       publicEncrypted)))))))
+          (string-append/shared "The user page of " username "!"))))))
+
+(get "/users/:user" (lambda (rc)
+                      (redirect-to rc (string-append/shared
+                                        "/@"
+                                        (params rc "user")) #:scheme 'https)))
 
 
-
-(get "/@:user" #:mime 'json
-  (lambda (rcObject)
-    (let ([result (render-user-page rcObject)])
-      (if (car result)
-          (:mime rcObject (cdr result))
-        (cdr result)))))
-
-(get "/users/:user" #:mime 'json
-  (lambda (rcObject)
-    (let ([result (render-user-page rcObject)])
-      (if (car result)
-          (:mime rcObject (cdr result))
-        (cdr result)))))

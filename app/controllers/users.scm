@@ -18,16 +18,19 @@
                 (redirect-to rcVar "/404")
               (let ([userVar (car poss)])
                 then)))]))
+
+(define (act-stream? accept)
+  (or
+    (assoc-ref accept 'application/activity+json)
+    (let ([ld (assoc-ref accept 'application/ld+json)])
+      (and ld (equal?
+                (assoc-ref ld 'profile)
+                "https://www.w3.org/ns/activitystreams")))))
     (process-user-account-as user (rc)
       (let* ([request                  (rc-req rc)]
              [accept      (request-accept request)]
              [username (assoc-ref user "USERNAME")])
-        (if (or
-              (assoc-ref accept 'application/activity+json)
-              (let ([ld (assoc-ref accept 'application/ld+json)])
-                (and ld (assoc-ref ld 'profile) (string=?
-                                                  (assoc-ref ld 'profile)
-                                                  "https://www.w3.org/ns/activitystreams"))))
+        (if (act-stream? accept)
             (let ([userURL         (string-append/shared
                                      "https://" (car (request-host request))
                                      "/users/"  username)]

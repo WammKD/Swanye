@@ -11,6 +11,17 @@
                             #:condition (where #:USERNAME (params rc "user")))])
     (if (null? poss)
         (redirect-to rc "/404")
+(define-syntax process-user-account-as
+  (syntax-rules ()
+    [(_ userVar (rcVar) then)
+          (let ([poss ($PEOPLE
+                        'get
+                        #:columns   '(*)
+                        #:condition (where #:USERNAME (params rcVar "user")))])
+            (if (null? poss)
+                (redirect-to rcVar "/404")
+              (let ([userVar (car poss)])
+                then)))]))
       (let* ([request                  (rc-req rc)]
              [accept      (request-accept request)]
              [user                      (car poss)]

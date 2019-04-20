@@ -63,6 +63,14 @@
                 (assoc-ref ld 'profile)
                 "https://www.w3.org/ns/activitystreams")))))
 
+(define (gsub regexp replacement str)
+  (if-let ([match? (string-match regexp str)])
+      (regexp-substitute #f match? 'pre replacement 'post)
+    str))
+
+
+
+
 (get "/@:user" #:mime 'json
   (lambda (rc)
     (process-user-account-as user (rc)

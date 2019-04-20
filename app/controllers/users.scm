@@ -66,36 +66,35 @@
 (get "/@:user" #:mime 'json
   (lambda (rc)
     (process-user-account-as user (rc)
-      (let* ([request                  (rc-req rc)]
-             [accept      (request-accept request)]
-             [username (assoc-ref user "USERNAME")])
-        (if (act-stream? accept)
-            (let ([userURL         (string-append/shared
-                                     "https://" (car (request-host request))
-                                     "/users/"  username)]
-                  [publicEncrypted (eval-string (assoc-ref user "PUBLIC"))])
-              (blowfish-decrypt!
-                publicEncrypted 0
-                publicEncrypted 0
-                (reverse-blowfish-schedule
-                  (eval-string
-                    (get-string-all-with-detected-charset "/myapp/.key"))))
+      (if-let* ([request                              (rc-req rc)]
+                [accept   act-stream?    (request-accept request)]
+                [username             (assoc-ref user "USERNAME")])
+          (let ([userURL         (string-append/shared
+                                   "https://" (car (request-host request))
+                                   "/users/"  username)]
+                [publicEncrypted (eval-string (assoc-ref user "PUBLIC"))])
+            (blowfish-decrypt!
+              publicEncrypted 0
+              publicEncrypted 0
+              (reverse-blowfish-schedule
+                (eval-string
+                  (get-string-all-with-detected-charset "/myapp/.key"))))
 
-              (:mime rc `(("@context"          . ("https://www.w3.org/ns/activitystreams"
-                                                  "https://w3id.org/security/v1"))
-                          ("id"                . ,userURL)
-                          ("type"              . "Person")
-                          ("preferredUsername" . ,(assoc-ref user "NAME"))
-                          ("inbox"             . ,(string-append/shared
-                                                    userURL
-                                                    "/inbox"))
-                          ("publicKey"         . (("id"           . ,(string-append/shared
-                                                                       userURL
-                                                                       "#main-key"))
-                                                  ("owner"        . ,userURL)
-                                                  ("publicKeyPem" . ,(utf8->string
-                                                                       publicEncrypted)))))))
-          (string-append/shared "The user page of " username "!"))))))
+            (:mime rc `(("@context"          . ("https://www.w3.org/ns/activitystreams"
+                                                "https://w3id.org/security/v1"))
+                        ("id"                . ,userURL)
+                        ("type"              . "Person")
+                        ("preferredUsername" . ,(assoc-ref user "NAME"))
+                        ("inbox"             . ,(string-append/shared
+                                                  userURL
+                                                  "/inbox"))
+                        ("publicKey"         . (("id"           . ,(string-append/shared
+                                                                     userURL
+                                                                     "#main-key"))
+                                                ("owner"        . ,userURL)
+                                                ("publicKeyPem" . ,(utf8->string
+                                                                     publicEncrypted)))))))
+        (string-append/shared "The user page of " username "!")))))
 
 (get "/users/:user" (lambda (rc)
                       (redirect-to rc (string-append/shared

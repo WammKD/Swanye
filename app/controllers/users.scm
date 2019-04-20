@@ -228,8 +228,10 @@
                                             " -signature "                  veriFilename))
               (system (string-append/shared "rm " baseFilename))
 
-              (if (string-trim-both
-                    (get-string-all-with-detected-charset veriFilename))
+              (if (string=
+                    (string-trim-both
+                      (get-string-all-with-detected-charset veriFilename))
+                    "Verified OK")
                   (response-emit "OK" #:status 200)
                 (response-emit "Request signature could not be verified"
                                #:status 401))

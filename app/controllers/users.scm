@@ -233,9 +233,13 @@
                     (string-trim-both
                       (get-string-all-with-detected-charset veriFilename))
                     "Verified OK")
-                  (response-emit "OK" #:status 200)
-                (response-emit "Request signature could not be verified"
-                               #:status 401))
+                  (begin
+                    (system (string-append/shared "rm " veriFilename))
 
-              (system (string-append/shared "rm " veriFilename))))
+                          (response-emit "OK" #:status 200))
+                (begin
+                  (system (string-append/shared "rm " veriFilename))
+
+                  (response-emit "Request signature could not be verified"
+                                 #:status 401)))))
         (response-emit "Request signature could not be verified" #:status 401)))))

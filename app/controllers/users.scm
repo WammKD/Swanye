@@ -5,6 +5,29 @@
 
 (use-modules (app       models   PEOPLE) (ice-9 eval-string)
              (industria crypto blowfish) (rnrs  bytevectors) (web request))
+(define-syntax if-let-helper
+  (syntax-rules ()
+    [(_ ([bnd             val]    ...)
+        (cnd                      ...)
+        ()                             then else) (let ([bnd val] ...)
+                                                    (if (and cnd ...) then else))]
+    [(_ ([bnd             val]    ...)
+        (cnd                      ...)
+        ([binding       value] . rest) then else) (if-let-helper ([bnd val] ... [binding value])
+                                                                 (cnd                       ...)
+                                                                 rest                            then else)]
+    [(_ ([bnd             val]    ...)
+        (cnd                      ...)
+        ([binding funct value] . rest) then else) (if-let-helper ([bnd val] ... [binding value])
+                                                                 (cnd       ... (funct binding))
+                                                                 rest                            then else)]))
+(define-syntax if-let
+  (syntax-rules ()
+    [(_ ([binding         value]  ...) then else) (let ([binding value] ...)
+                                                    (if (and binding ...) then else))]
+    [(_ (binding-funct-value      ...) then else) (if-let-helper ()
+                                                                 ()
+                                                                 (binding-funct-value ...) then else)]))
 
 (define-syntax process-user-account-as
   (syntax-rules ()

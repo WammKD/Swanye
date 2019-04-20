@@ -7,25 +7,39 @@
              (industria crypto blowfish) (rnrs  bytevectors) (web request))
 (define-syntax if-let-helper
   (syntax-rules ()
-    [(_ ([bnd             val]    ...)
+    [(_ letVersion
+        ([bnd             val]    ...)
         (cnd                      ...)
-        ()                             then else) (let ([bnd val] ...)
+        ()                             then else) (letVersion ([bnd val] ...)
                                                     (if (and cnd ...) then else))]
-    [(_ ([bnd             val]    ...)
+    [(_ letVersion
+        ([bnd             val]    ...)
         (cnd                      ...)
-        ([binding       value] . rest) then else) (if-let-helper ([bnd val] ... [binding value])
+        ([binding       value] . rest) then else) (if-let-helper letVersion
+                                                                 ([bnd val] ... [binding value])
                                                                  (cnd                       ...)
                                                                  rest                            then else)]
-    [(_ ([bnd             val]    ...)
+    [(_ letVersion
+        ([bnd             val]    ...)
         (cnd                      ...)
-        ([binding funct value] . rest) then else) (if-let-helper ([bnd val] ... [binding value])
+        ([binding funct value] . rest) then else) (if-let-helper letVersion
+                                                                 ([bnd val] ... [binding value])
                                                                  (cnd       ... (funct binding))
                                                                  rest                            then else)]))
 (define-syntax if-let
   (syntax-rules ()
     [(_ ([binding         value]  ...) then else) (let ([binding value] ...)
                                                     (if (and binding ...) then else))]
-    [(_ (binding-funct-value      ...) then else) (if-let-helper ()
+    [(_ (binding-funct-value      ...) then else) (if-let-helper let
+                                                                 ()
+                                                                 ()
+                                                                 (binding-funct-value ...) then else)]))
+(define-syntax if-let*
+  (syntax-rules ()
+    [(_ ([binding         value]  ...) then else) (let* ([binding value] ...)
+                                                    (if (and binding ...) then else))]
+    [(_ (binding-funct-value      ...) then else) (if-let-helper let*
+                                                                 ()
                                                                  ()
                                                                  (binding-funct-value ...) then else)]))
 

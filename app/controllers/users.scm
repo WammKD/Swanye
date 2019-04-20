@@ -174,7 +174,7 @@
                                      (lambda (value)
                                        (gsub "\"$" "" (gsub "^\"" "" value)))
                                      (string-split pair #\=)))
-                                 (string-split (assoc-ref h 'Signature) #\,))]
+                                 (string-split (assoc-ref h 'signature) #\,))]
                 [keyID                              (get-val "keyId"     sig)]
                 [headers                            (get-val "headers"   sig)]
                 [signature (if-let ([v? (get-val "signature" sig)])

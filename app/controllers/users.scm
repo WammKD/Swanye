@@ -3,8 +3,10 @@
 ;; This file is generated automatically by GNU Artanis.
 (define-artanis-controller users) ; DO NOT REMOVE THIS LINE!!!
 
-(use-modules (app       models   PEOPLE) (ice-9 eval-string)
-             (industria crypto blowfish) (rnrs  bytevectors) (web request))
+(use-modules (app       models    PEOPLE) (ice-9 eval-string) (web   client)
+             (app       models FOLLOWERS) (ice-9     receive) (web  request)
+             (industria crypto  blowfish) (rnrs  bytevectors) (srfi srfi-26))
+
 (define-syntax if-let-helper
   (syntax-rules ()
     [(_ letVersion
@@ -109,4 +111,52 @@
                                         "/@"
                                         (params rc "user")) #:scheme 'https)))
 
+(get "/users/:user/followers" #:mime 'json
+  (lambda (rc)
+    (process-user-account-as user (rc)
+      (if-let* ([request                              (rc-req rc)]
+                [accept   act-stream?    (request-accept request)]
+                [username             (assoc-ref user "USERNAME")])
+          (let* ([id        (string-append/shared
+                              "https://"   (car (request-host request))
+                              "/users/"    username
+                              "/followers")]
+                 [followers ($FOLLOWERS
+                              'get
+                              #:columns   '(*)
+                              #:condition (where
+                                            #:FOLLOWEE
+                                            (assoc-ref user "ID")))]
+                 [followLen (length followers)])
+            (:mime rc (append
+                        `(("@context"   . "https://www.w3.org/ns/activitystreams")
+                          ("type"       .                     "OrderedCollection")
+                          ("totalItems" .                              ,followLen))
+                        (if-let ([pgNum (get-from-qstr rc "page")])
+                            (let ([num (if-let ([n (string->number
+                                                     pgNum)]) (floor n) 1)])
+                              (append
+                                `(("id" . ,(string-append/shared id "?page=" pgNum)))
+                                (if (> num 1)
+                                    `(("prev" . ,(string-append/shared
+                                                   id
+                                                   "?page="
+                                                   (number->string (1- num)))))
+                                  '())
+                                (if (negative?
+                                      (/ (- followLen (* num 10) 1) 10))
+                                    '()
+                                  `(("next" . ,(string-append/shared
+                                                 id
+                                                 "?page="
+                                                 (if (> num 1)
+                                                     (number->string (1+ num))
+                                                   "2")))))
+                                `(("partOf"       . ,id)
+                                  ("orderedItems" . ,(map
+                                                       (cut assoc-ref <> "FOLLOWER")
+                                                       followers)))))
+                          `(("id"         .                                  ,id)
+                            ("first"      . ,(string-append/shared id "?page=1")))))))
+        (string-append/shared "The followers page of " username "!")))))
 

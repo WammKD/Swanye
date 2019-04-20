@@ -5,7 +5,7 @@
 
 (use-modules (app       models    PEOPLE) (ice-9 eval-string) (web   client)
              (app       models FOLLOWERS) (ice-9     receive) (web  request)
-             (industria crypto  blowfish) (rnrs  bytevectors) (srfi srfi-26))
+             (industria crypto  blowfish) (rnrs  bytevectors) (srfi  srfi-1) (srfi srfi-26))
 
 (define-syntax if-let-helper
   (syntax-rules ()
@@ -160,3 +160,79 @@
                             ("first"      . ,(string-append/shared id "?page=1")))))))
         (string-append/shared "The followers page of " username "!")))))
 
+(post "/users/:user/inbox"
+  (lambda (rc)
+    (process-user-account-as user (rc)
+      (if-let* ([get-val   (lambda (k s)  ; s = signature, k = key, v = value
+                             (if-let ([v null? (assoc-ref s k)]) #f (car v)))]
+                [request                                          (rc-req rc)]
+                [h                                  (request-headers request)]
+                [sig           (map
+                                 (lambda (pair)
+                                   (map
+                                     (lambda (value)
+                                       (gsub "\"$" "" (gsub "^\"" "" value)))
+                                     (string-split pair #\=)))
+                                 (string-split (assoc-ref h 'Signature) #\,))]
+                [keyID                              (get-val "keyId"     sig)]
+                [headers                            (get-val "headers"   sig)]
+                [signature (if-let ([v? (get-val "signature" sig)])
+                               (base64-decode-as-string v?)
+                             #f)])
+          (receive (head body)
+              (http-get keyID #:headers '((Accept . (string-append/shared
+                                                      "application/ld+json; "
+                                                      "profile=\"https://www"
+                                                      ".w3.org/ns/activity"
+                                                      "streams\""))))
+            (let* ([username                         (assoc-ref user "USERNAME")]
+                   [currentTime                                   (current-time)]
+                   [ sigFilename (string-append/shared "/tmp/signature_" username
+                                                       currentTime       ".txt")]
+                   [baseFilename (string-append/shared "/tmp/sigBase64_" username
+                                                       currentTime       ".txt")]
+                   [veriFilename (string-append/shared "/tmp/sigVerify_" username
+                                                       currentTime       ".txt")]
+                   [ sigPort                        (open-file  sigFilename "w")]
+                   [basePort                        (open-file baseFilename "w")])
+              (display (string-trim-right
+                         (fold
+                           (lambda (signedHeaderName result)
+                             (string-append/shared
+                               result
+                               (if (string= signedHeaderName "(request-target)")
+                                   "(request-target): post /inbox\n"
+                                 (string-append/shared
+                                   signedHeaderName
+                                   ": "
+                                   (assoc-ref h (string->symbol
+                                                  (string-capitalize
+                                                    signedHeaderName)))
+                                   "\n"))))
+                           ""
+                           (string-split headers #\space))) sigPort)
+              (close sigPort)
+
+              (system (string-append/shared "openssl base64 -d -in " sigFilename
+                                            " -out "                 baseFilename))
+              (system (string-append/shared "rm " sigFilename))
+
+              (display (hash-ref
+                         (hash-ref
+                           (json-string->scm (utf8->string body))
+                           "publicKey")
+                         "publicKeyPem")                           basePort)
+              (close basePort)
+
+              (system (string-append/shared "openssl dgst -sha256 -verify " baseFilename
+                                            " -signature "                  veriFilename))
+              (system (string-append/shared "rm " baseFilename))
+
+              (if (string-trim-both
+                    (get-string-all-with-detected-charset veriFilename))
+                  (response-emit "OK" #:status 200)
+                (response-emit "Request signature could not be verified"
+                               #:status 401))
+
+              (system (string-append/shared "rm " veriFilename))))
+        (response-emit "Request signature could not be verified" #:status 401)))))

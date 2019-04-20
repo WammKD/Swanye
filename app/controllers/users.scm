@@ -236,7 +236,17 @@
                   (begin
                     (system (string-append/shared "rm " veriFilename))
 
+                    (if-let ([body (rc-body rc)])
+                        (let ([bodyStr (utf8->string body)])
+                          ($INBOXES 'set #:PERSON_ID (assoc-ref user "ID")
+                                         #:ACTIVITY  bodyStr
+                                         #:TYPE      (hash-ref
+                                                       (json-string->scm bodyStr)
+                                                       "type"))
+
                           (response-emit "OK" #:status 200))
+                      (response-emit "Request signature could not be verified"
+                                     #:status 401)))
                 (begin
                   (system (string-append/shared "rm " veriFilename))
 

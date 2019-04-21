@@ -187,7 +187,7 @@
                                                       ".w3.org/ns/activity"
                                                       "streams\""))))
             (let* ([username                         (assoc-ref user "USERNAME")]
-                   [currentTime                                   (current-time)]
+                   [currentTime                  (number->string (current-time))]
                    [ sigFilename (string-append/shared "/tmp/signature_" username
                                                        currentTime       ".txt")]
                    [baseFilename (string-append/shared "/tmp/sigBase64_" username

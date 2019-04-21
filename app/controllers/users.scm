@@ -173,7 +173,9 @@
                                    (map
                                      (lambda (value)
                                        (gsub "\"$" "" (gsub "^\"" "" value)))
-                                     (string-split pair #\=)))
+                                     (string-split
+                                       (gsub "=" "\n" pair)
+                                       #\newline)))
                                  (string-split (assoc-ref h 'signature) #\,))]
                 [keyID                              (get-val "keyId"     sig)]
                 [headers                            (get-val "headers"   sig)]

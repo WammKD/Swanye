@@ -180,12 +180,12 @@
                 [keyID                              (get-val "keyId"     sig)]
                 [headers                            (get-val "headers"   sig)]
           (receive (head body)
-              (http-get keyID #:headers '((Accept . (string-append/shared
-                                                      "application/ld+json; "
-                                                      "profile=\"https://www"
-                                                      ".w3.org/ns/activity"
-                                                      "streams\""))))
                 [signature                          (get-val "signature" sig)])
+              (http-get keyID #:headers `((Accept . ,(string-append/shared
+                                                       "application/ld+json; "
+                                                       "profile=\"https://www"
+                                                       ".w3.org/ns/activity"
+                                                       "streams\""))))
             (let* ([username                         (assoc-ref user "USERNAME")]
                    [currentTime                  (number->string (current-time))]
                    [ sigFilename (string-append/shared "/tmp/signature_" username

@@ -177,15 +177,13 @@
                                  (string-split (assoc-ref h 'signature) #\,))]
                 [keyID                              (get-val "keyId"     sig)]
                 [headers                            (get-val "headers"   sig)]
-                [signature (if-let ([v? (get-val "signature" sig)])
-                               (base64-decode-as-string v?)
-                             #f)])
           (receive (head body)
               (http-get keyID #:headers '((Accept . (string-append/shared
                                                       "application/ld+json; "
                                                       "profile=\"https://www"
                                                       ".w3.org/ns/activity"
                                                       "streams\""))))
+                [signature                          (get-val "signature" sig)])
             (let* ([username                         (assoc-ref user "USERNAME")]
                    [currentTime                  (number->string (current-time))]
                    [ sigFilename (string-append/shared "/tmp/signature_" username
@@ -196,6 +194,12 @@
                                                        currentTime       ".txt")]
                    [ sigPort                        (open-file  sigFilename "w")]
                    [basePort                        (open-file baseFilename "w")])
+              (display signature sigPort)
+              (close sigPort)
+
+              (system (string-append/shared "openssl base64 -d -A -in " sigFilename
+                                            " -out "                    baseFilename))
+              (system (string-append/shared "rm " sigFilename))
               (display (string-trim-right
                          (fold
                            (lambda (signedHeaderName result)

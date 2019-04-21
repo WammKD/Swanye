@@ -166,7 +166,8 @@
     (process-user-account-as user (rc)
       (if-let* ([get-val   (lambda (k s)  ; s = signature, k = key, v = value
                              (if-let ([v null? (assoc-ref s k)]) #f (car v)))]
-                [request                                          (rc-req rc)]
+                [body                                            (rc-body rc)]
+                [request                                         (rc-req  rc)]
                 [h                                  (request-headers request)]
                 [sig           (map
                                  (lambda (pair)
@@ -179,8 +180,8 @@
                                  (string-split (assoc-ref h 'signature) #\,))]
                 [keyID                              (get-val "keyId"     sig)]
                 [headers                            (get-val "headers"   sig)]
-          (receive (head body)
                 [signature                          (get-val "signature" sig)])
+          (receive (httpHead httpBody)
               (http-get keyID #:headers `((Accept . ,(string-append/shared
                                                        "application/ld+json; "
                                                        "profile=\"https://www"
@@ -192,16 +193,41 @@
                                                        currentTime       ".txt")]
                    [baseFilename (string-append/shared "/tmp/sigBase64_" username
                                                        currentTime       ".txt")]
+                   [ pubFilename (string-append/shared "/tmp/sigPubKey_" username
+                                                       currentTime       ".txt")]
                    [veriFilename (string-append/shared "/tmp/sigVerify_" username
                                                        currentTime       ".txt")]
+                   [rsltFilename (string-append/shared "/tmp/sigResult_" username
+                                                       currentTime       ".txt")]
+                   [bodyFilename (string-append/shared "/tmp/sigDigest_" username
+                                                       currentTime       ".txt")]
+                   [brltFilename (string-append/shared "/tmp/sigBdRslt_" username
+                                                       currentTime       ".txt")]
                    [ sigPort                        (open-file  sigFilename "w")]
-                   [basePort                        (open-file baseFilename "w")])
+                   [ pubPort                        (open-file  pubFilename "w")]
+                   [veriPort                        (open-file veriFilename "w")]
+                   [bodyPort                        (open-file bodyFilename "w")])
               (display signature sigPort)
               (close sigPort)
 
               (system (string-append/shared "openssl base64 -d -A -in " sigFilename
                                             " -out "                    baseFilename))
               (system (string-append/shared "rm " sigFilename))
+
+              (display (utf8->string body) bodyPort)
+              (close bodyPort)
+
+              (system (string-append/shared "openssl dgst -sha256 -binary " bodyFilename
+                                            " | base64 > "                  brltFilename))
+              (system (string-append/shared "rm " bodyFilename))
+
+              (display (hash-ref
+                         (hash-ref
+                           (json-string->scm (utf8->string httpBody))
+                           "publicKey")
+                         "publicKeyPem")                               pubPort)
+              (close pubPort)
+
               (display (string-trim-right
                          (fold
                            (lambda (signedHeaderName result)
@@ -217,23 +243,16 @@
                                                     signedHeaderName)))
                                    "\n"))))
                            ""
-                           (string-split headers #\space))) sigPort)
-              (close sigPort)
+                           (string-split headers #\space))) veriPort)
+              (close veriPort)
 
-              (system (string-append/shared "openssl base64 -d -in " sigFilename
-                                            " -out "                 baseFilename))
-              (system (string-append/shared "rm " sigFilename))
-
-              (display (hash-ref
-                         (hash-ref
-                           (json-string->scm (utf8->string body))
-                           "publicKey")
-                         "publicKeyPem")                           basePort)
-              (close basePort)
-
-              (system (string-append/shared "openssl dgst -sha256 -verify " baseFilename
-                                            " -signature "                  veriFilename))
+              (system (string-append/shared "openssl dgst -sha256 -verify "  pubFilename
+                                            " -signature "                  baseFilename
+                                            " "                             veriFilename
+                                            " > "                           rsltFilename))
+              (system (string-append/shared "rm "  pubFilename))
               (system (string-append/shared "rm " baseFilename))
+              (system (string-append/shared "rm " veriFilename))
 
               (if (string=
                     (string-trim-both

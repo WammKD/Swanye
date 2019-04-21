@@ -238,9 +238,19 @@
                                  (string-append/shared
                                    signedHeaderName
                                    ": "
-                                   (assoc-ref h (string->symbol
-                                                  (string-capitalize
-                                                    signedHeaderName)))
+                                   (if-let ([obj (assoc-ref h (string->symbol
+                                                                signedHeaderName))])
+                                       (cond
+                                        [(d:date? obj) (d:date->string
+                                                         obj
+                                                         "~a, ~d ~b ~Y ~3 GMT")]
+                                        [(pair?   obj) (if-let ([o symbol? (car obj)])
+                                                           (symbol->string o)
+                                                         o)]
+                                        [(string? obj) obj]
+                                        [(symbol? obj) (symbol->string obj)]
+                                        [else          ""])
+                                     "")
                                    "\n"))))
                            ""
                            (string-split headers #\space))) veriPort)

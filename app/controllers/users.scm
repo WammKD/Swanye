@@ -234,7 +234,13 @@
                              (string-append/shared
                                result
                                (if (string= signedHeaderName "(request-target)")
-                                   "(request-target): post /inbox\n"
+                                   (string-append
+                                     "(request-target): "
+                                     (string-downcase
+                                       (symbol->string (request-method request)))
+                                     " "
+                                     (request-path request)
+                                     "\n")
                                  (string-append/shared
                                    signedHeaderName
                                    ": "

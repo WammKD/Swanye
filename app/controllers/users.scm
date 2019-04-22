@@ -266,10 +266,10 @@
 
               (if (string=
                     (string-trim-both
-                      (get-string-all-with-detected-charset veriFilename))
+                      (get-string-all-with-detected-charset rsltFilename))
                     "Verified OK")
                   (begin
-                    (system (string-append/shared "rm " veriFilename))
+                    (system (string-append/shared "rm " rsltFilename))
 
                     (if-let ([body (rc-body rc)])
                         (let ([bodyStr (utf8->string body)])
@@ -283,7 +283,7 @@
                       (response-emit "Request signature could not be verified"
                                      #:status 401)))
                 (begin
-                  (system (string-append/shared "rm " veriFilename))
+                  (system (string-append/shared "rm " rsltFilename))
 
                   (response-emit "Request signature could not be verified"
                                  #:status 401)))))

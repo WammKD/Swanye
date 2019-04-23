@@ -7,6 +7,8 @@
 			<%= (current-appname) %>
 		</TITLE>
 
+		<@css forms.css %>
+
 		<SCRIPT>
 			/*
 			 * @licstart  The following is the entire license notice for the
@@ -36,30 +38,30 @@
 	</HEAD>
 
 	<BODY>
-		<H1>
-			auth#sign_up
-		</H1>
+		<DIV class="form_container">
+			<H1 align="center">
+				Swanye
+			</H1>
 
-		<P>
-			Rendered from app/views/auth/sign_up.html.tpl.
-		</P>
-
-		<!-- Need to set this up so it handles if the username already exists -->
-		<FORM action="/auth/sign_up" method="post">
-				E-mail:
-			<BR />
-				<INPUT type="text"     name="email">
-			<BR />
-				Username:
-			<BR />
-				<INPUT type="text"     name="username">
-			<BR />
-				Password:
-			<BR />
-				<INPUT type="password" name="password">
-			<BR />
-			<BR />
-				<INPUT type="submit"   value="Sign Up!">
-		</FORM>
+			<!-- Need to set this up so it handles if the username already exists -->
+			<FORM class="basic_form" action="/auth/sign_up" method="post">
+					E-mail:
+				<BR />
+					<INPUT  type="text"     name="email">
+				<BR />
+					Username:
+				<BR />
+					<INPUT  type="text"     name="username">
+				<BR />
+					Password:
+				<BR />
+					<INPUT  type="password" name="password">
+				<BR />
+				<BR />
+					<BUTTON type="submit"   name="button">
+						Sign Up!
+					</BUTTON>
+			</FORM>
+		</DIV>
 	</BODY>
 </HTML>

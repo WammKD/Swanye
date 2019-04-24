@@ -40,7 +40,7 @@
 	<BODY>
 		<DIV class="dash_side">
 			<DIV class="dash_button">
-				<P style="font-size: 3.75em; margin-block-start: -.1em; margin-block-end: -.15em;">
+				<P style="font-size: 9.15vh; margin-block-start: -.1em; margin-block-end: -.15em;">
 					Aa
 				</P>
 

@@ -26,6 +26,14 @@ body {
 	text-align: center;
 }
 
+.dash_settings_nav img {
+	height:       28px;
+	display:      inline-block;
+	text-align:   center;
+	margin-left:  calc(100% / 35);
+	margin-right: calc(100% / 35);
+}
+
 .dash_side {
 	float:            right;
 	width:            153px;

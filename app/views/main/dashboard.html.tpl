@@ -100,6 +100,22 @@
 			</DIV>
 		</DIV>
 
+		<DIV class="dash_settings">
+			<DIV class="dash_settings_nav">
+				<IMG src="data:image/svg+xml;charset=utf8,%3Csvg%20height='32'%20width='32'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cpath%20fill='%23aea8d3'%20d='M16%200l16%2016h-4v14h-8V20h-8v10H4V16H0z'/%3E%3C/svg%3E">
+
+				<IMG src="data:image/svg+xml;charset=utf8,%3Csvg%20height='512'%20width='512'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cpath%20fill='%23aea8d3'%20d='M256%2048C141.1%2048%2048%20141.1%2048%20256s93.1%20208%20208%20208%20208-93.1%20208-208S370.9%2048%20256%2048zm0%20336V256H128.3L352%20160l-96%20224z'/%3E%3C/svg%3E">
+
+				<IMG src="data:image/svg+xml;charset=utf8,%3Csvg%20viewBox='0%200%2030%2030'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cpath%20fill='%23aea8d3'%20d='M16.189%2016.521L27.463%206H2.537L13.81%2016.521c.667.624%201.713.624%202.379%200zM8.906%2014.68L1%207.301v15.285zM21.094%2014.68L29%2022.586V7.301z'/%3E%3Cpath%20fill='#aea8d3'%20d='M19.631%2016.045l-2.077%201.938c-.717.669-1.636%201.003-2.555%201.003s-1.838-.334-2.555-1.003l-2.077-1.938L2.414%2024h25.172l-7.955-7.955z'/%3E%3C/svg%3E">
+
+				<IMG src="data:image/svg+xml;charset=utf8,%3Csvg%20height='48'%20width='48'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cpath%20fill='%23aea8d3'%20d='M40%204H8C5.79%204%204.02%205.79%204.02%208L4%2044l8-8h28c2.21%200%204-1.79%204-4V8c0-2.21-1.79-4-4-4zm-4%2024H12v-4h24v4zm0-6H12v-4h24v4zm0-6H12v-4h24v4z'/%3E%3Cpath%20d='M0%200h48v48H0z'%20fill='none'/%3E%3C/svg%3E">
+
+				<IMG src="data:image/svg+xml;charset=utf8,%3Csvg%20height='512'%20width='512'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cpath%20fill='%23aea8d3'%20d='M302.7%2064L143%20288h95.8l-29.5%20160L369%20224h-95.8l29.5-160z'/%3E%3C/svg%3E">
+
+				<IMG src="data:image/svg+xml;charset=utf8,%3Csvg%20height='32'%20width='32'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cg%20fill='%23aea8d3'%3E%3Cpath%20d='M22.417%2014.836c-1.209%202.763-3.846%205.074-6.403%205.074-3.122%200-5.39-2.284-6.599-5.046C2.384%2018.506%203.27%2027.723%203.27%2027.723c0%201.262.994%201.445%202.162%201.445h21.146c1.17%200%202.167-.184%202.167-1.445.001%200%20.702-9.244-6.328-12.887z'/%3E%3Cpath%20d='M16.013%2018.412c3.521%200%206.32-5.04%206.32-9.204%200-4.165-2.854-7.541-6.375-7.541S9.582%205.043%209.582%209.208c0%204.165%202.909%209.204%206.431%209.204z'/%3E%3C/g%3E%3C/svg%3E">
+			</DIV>
+		</DIV>
+
 		<DIV class="dash_main">
 			<H1>
 				auth#password

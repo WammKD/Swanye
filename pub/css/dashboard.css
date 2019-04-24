@@ -21,6 +21,11 @@ body {
 	background-color: #3E365D;
 }
 
+.dash_settings_nav {
+	width:      100%;
+	text-align: center;
+}
+
 .dash_side {
 	float:            right;
 	width:            153px;

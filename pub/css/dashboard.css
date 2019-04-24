@@ -13,6 +13,14 @@ body {
 	background-color: #3E365D;
 }
 
+.dash_settings {
+	float:            right;
+	width:            25.5%;
+	height:           100%;
+	padding-top:      20px;
+	background-color: #3E365D;
+}
+
 .dash_side {
 	float:            right;
 	width:            153px;

@@ -1,0 +1,46 @@
+@import "font.css";
+
+body {
+	color:       #FFFFFF;
+	margin:     0;
+	font-family: 'josefin_sans_stdlight';
+}
+
+.dash_main {
+	width:            auto;
+	height:           100%;
+	overflow:         hidden;
+	background-color: #3E365D;
+}
+
+.dash_side {
+	float:            right;
+	width:            153px;
+	height:           100%;
+	text-align:       center;
+	box-shadow:       inset 30px 0 45px -30px #000000;
+	background-color: #1A1A1A;
+}
+
+.dash_button {
+	width:         80%;
+	height:        14.29%;
+	display:       inline-block;
+	position:      relative;
+	text-align:    center;
+	border-bottom: 1px solid #323232;
+	margin-bottom: -1px;
+}
+
+.dash_button img {
+	max-width:     54%;
+	max-height:    75%;
+	margin-top:    2%;
+	margin-bottom: -7px;
+}
+
+.dash_buttom p {
+	font-size:          9.15vh;
+	margin-block-start: -.1em;
+	margin-block-end:   -.15em;
+}

@@ -21,6 +21,32 @@ body {
 	background-color: #3E365D;
 }
 
+.dash_settings input[type=text] {
+	color:            #AEA8D3;
+	width:            calc(100% - (100% / 17.5));
+	border:           none;
+	font-size:        1em;
+	font-family:      inherit;
+	margin-top:       20px;
+	margin-left:      calc(100% / 35);
+	margin-right:     calc(100% / 35);
+	padding-left:     2px;
+	border-bottom:    1px solid #AEA8D3;
+	background-color: #3E365D;
+}
+.dash_settings input[type=text]:focus {
+	outline-width: 0;
+}
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #B2CCE5;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: #B2CCE5;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: #B2CCE5;
+}
+
 .dash_settings_nav {
 	width:      100%;
 	text-align: center;

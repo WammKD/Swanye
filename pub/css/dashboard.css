@@ -7,16 +7,17 @@ body {
 }
 
 .dash_main {
-	width:            auto;
+	width:            calc(100% - 25.5% - 153px);
 	height:           100%;
 	overflow:         hidden;
 	background-color: #3E365D;
 }
 
 .dash_settings {
-	float:            right;
+	right:            153px;
 	width:            25.5%;
 	height:           100%;
+	position:         fixed;
 	padding-top:      20px;
 	background-color: #3E365D;
 }
@@ -61,9 +62,10 @@ body {
 }
 
 .dash_side {
-	float:            right;
+	right:            0;
 	width:            153px;
 	height:           100%;
+	position:         fixed;
 	text-align:       center;
 	box-shadow:       inset 30px 0 45px -30px #000000;
 	background-color: #1A1A1A;

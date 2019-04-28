@@ -34,6 +34,43 @@
 			 * @licend  The above is the entire license notice
 			 * for the JavaScript code in this page.
 			 */
+			function handleSearch(el) {
+				if(event.key === "Enter") {
+					var v = el.value[0] === "@" ? el.value
+					                                .substring(1)
+					                                .split("@")   : el.value
+					                                                  .split("@");
+
+					if(v.length === 2) {
+						var call = new XMLHttpRequest();
+
+						call.open("GET", "https://"                              + v[1] +
+														 "/.well-known/webfinger?resource=acct:" + v[0] +
+														 "%40"                                   + v[1]);
+						call.send();
+
+						call.onreadystatechange = function() {
+						                          	if(this.readyState == 4 && this.status == 200) {
+						                          		var links = JSON.parse(call.responseText).links;
+																					var url   = "";
+
+						                          		for(linkIndex in links) {
+						                          			var link = links[linkIndex];
+
+						                          			if(link.type === "application/activity+json") {
+						                          				url = link.href;
+						                          			}
+						                          		}
+
+						                          		document.getElementById("search_results")
+						                          		        .innerHTML = "<DIV class='search_result'>" + url.substring(url.lastIndexOf("/users/") + 7) + "<DIV class='follow_icon'></DIV></DIV>";
+						                          	}
+						                          };
+					} else {
+						alert("fuck");
+					}
+				}
+			}
 		</SCRIPT>
 	</HEAD>
 

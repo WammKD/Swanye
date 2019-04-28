@@ -9,7 +9,7 @@
 
 		<@css dashboard.css %>
 
-		<SCRIPT>
+		<SCRIPT type="text/javascript">
 			/*
 			 * @licstart  The following is the entire license notice for the
 			 * JavaScript code in this page.

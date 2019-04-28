@@ -63,7 +63,11 @@
 						                          		}
 
 						                          		document.getElementById("search_results")
-						                          		        .innerHTML = "<DIV class='search_result'>" + url.substring(url.lastIndexOf("/users/") + 7) + "<DIV class='follow_icon'></DIV></DIV>";
+						                          		        .innerHTML = "<DIV class='search_result'>"                   +
+						                          		                       url.substring(url.lastIndexOf("/users/") + 7) +
+
+						                          		                       "<DIV class='follow_icon'></DIV>"             +
+						                          		                     "</DIV>";
 						                          	}
 						                          };
 					} else {

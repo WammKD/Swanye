@@ -116,6 +116,9 @@
 			</DIV>
 
 			<INPUT type="text" placeholder="Search…">
+
+			<DIV id="search_results">
+			</DIV>
 		</DIV>
 
 		<DIV class="dash_main">

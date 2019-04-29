@@ -34,6 +34,8 @@
 			 * @licend  The above is the entire license notice
 			 * for the JavaScript code in this page.
 			 */
+			var ACCEPT = 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"';
+
 			function handleSearch(el) {
 				if(event.key === "Enter") {
 					var v = el.value[0] === "@" ? el.value

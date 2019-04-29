@@ -49,8 +49,6 @@
 						call.open("GET", "https://"                              + v[1] +
 														 "/.well-known/webfinger?resource=acct:" + v[0] +
 														 "%40"                                   + v[1]);
-						call.send();
-
 						call.onreadystatechange = function() {
 						                          		var links = JSON.parse(call.responseText).links;
 																					var url   = "";
@@ -73,6 +71,7 @@
 						                          		                     "</DIV>";
 						                          	}
 						                          };
+						call.send();
 					} else {
 						alert("fuck");
 					}

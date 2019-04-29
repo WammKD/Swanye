@@ -52,9 +52,10 @@
 						call.send();
 
 						call.onreadystatechange = function() {
-						                          	if(this.readyState == 4 && this.status == 200) {
 						                          		var links = JSON.parse(call.responseText).links;
 																					var url   = "";
+						                          	if(this.readyState == 4   &&
+						                          	   this.status     == 200) {
 
 						                          		for(linkIndex in links) {
 						                          			var link = links[linkIndex];

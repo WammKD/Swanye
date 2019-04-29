@@ -57,10 +57,11 @@
 						                          		    url   = "";
 
 						                          		for(linkIndex in links) {
-						                          			var link = links[linkIndex];
+						                          			var l = links[linkIndex];
 
-						                          			if(link.type === "application/activity+json") {
 						                          				url = link.href;
+						                          			if(l.type === "application/activity+json" ||
+						                          			   l.type === ACCEPT) {
 						                          			}
 						                          		}
 

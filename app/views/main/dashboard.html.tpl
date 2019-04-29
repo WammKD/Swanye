@@ -67,10 +67,12 @@
 						                          		}
 
 						                          		document.getElementById("search_results")
-						                          		        .innerHTML = "<DIV class='search_result'>"                   +
-						                          		                       url.substring(url.lastIndexOf("/users/") + 7) +
+						                          		        .innerHTML = "<DIV class='search_result'>"                     +
+						                          		                       "<SPAN onclick='getUserPosts(" + link + ")'>"   +
+						                          		                         url.substring(url.lastIndexOf("/users/") + 7) +
+						                          		                       "</SPAN>"                                       +
 
-						                          		                       "<DIV class='follow_icon'></DIV>"             +
+						                          		                       "<DIV class='follow_icon'></DIV>"               +
 						                          		                     "</DIV>";
 						                          	}
 						                          };

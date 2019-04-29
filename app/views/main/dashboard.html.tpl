@@ -50,10 +50,11 @@
 														 "/.well-known/webfinger?resource=acct:" + v[0] +
 														 "%40"                                   + v[1]);
 						call.onreadystatechange = function() {
-						                          		var links = JSON.parse(call.responseText).links;
-																					var url   = "";
 						                          	if(this.readyState == 4   &&
 						                          	   this.status     == 200) {
+						                          		var links = JSON.parse(call.responseText).links,
+						                          		    link,
+						                          		    url   = "";
 
 						                          		for(linkIndex in links) {
 						                          			var link = links[linkIndex];

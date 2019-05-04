@@ -108,9 +108,9 @@
         (string-append/shared "The user page of " username "!")))))
 
 (get "/users/:user" (lambda (rc)
-                      (redirect-to rc (string-append/shared
-                                        "/@"
-                                        (params rc "user")) #:scheme 'https)))
+                      (redirect-to
+                        rc
+                        (string-append/shared "/@" (params rc "user")))))
 
 (get "/users/:user/followers" #:mime 'json
   (lambda (rc)

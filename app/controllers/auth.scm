@@ -28,7 +28,7 @@
 (get "/auth/sign_in" #:session #t
   (lambda (rc)
     (if (:session rc 'check)
-        "Replace this with the home page, once developed."
+        (redirect-to rc "/")
       (view-render "sign_in" (the-environment)))))
 
 (post "/auth/sign_in" #:auth    `(table PEOPLE "USERNAME" "PASSWORD"
@@ -36,10 +36,10 @@
                       #:session #t
   (lambda (rc)
     (cond
-     [(:session rc 'check) "Go to home page."]
+     [(:session rc 'check) (redirect-to rc "/")]
      [(:auth    rc)        (:session rc 'spawn)
-                           "Go to home page."]
-     [else                 "Go to fail page."])))
+                           (redirect-to rc "/")]
+     [else                   "Go to fail page."])))
 
 (auth-define sign_up
   (lambda (rc)

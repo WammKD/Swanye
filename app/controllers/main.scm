@@ -6,5 +6,6 @@
 (get "/" #:session #t
   (lambda (rc)
     (if (:session rc 'check)
-        (redirect-to rc "/auth/sign_in" #:scheme 'https)
-      (view-render "dashboard" (the-environment)))))
+        (view-render "dashboard" (the-environment))
+      (redirect-to rc "/auth/sign_in"))))
+

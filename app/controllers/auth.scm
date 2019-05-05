@@ -34,10 +34,22 @@
 (post "/auth/sign_in" #:auth    `(table PEOPLE "USERNAME" "PASSWORD"
                                                "SALT"     ,SALTER)
                       #:session #t
+                      #:cookies   '(names sess)
+                      #:from-post 'qstr-safe
   (lambda (rc)
     (cond
      [(:session rc 'check) (redirect-to rc "/")]
      [(:auth    rc)        (:session rc 'spawn)
+                           (:cookies-set!
+                             rc
+                             'sess
+                             "account"
+                             (uri-decode (:from-post rc 'get "USERNAME")))
+                           (:cookies-setattr! rc 'sess #:domain    (car
+                                                                     (request-host
+                                                                       (rc-req rc)))
+                                                       #:secure    #t
+                                                       #:http-only #t)
                            (redirect-to rc "/")]
      [else                   "Go to fail page."])))
 

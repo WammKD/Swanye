@@ -31,10 +31,10 @@
         (redirect-to rc "/")
       (view-render "sign_in" (the-environment)))))
 
-(post "/auth/sign_in" #:auth    `(table PEOPLE "USERNAME" "PASSWORD"
-                                               "SALT"     ,SALTER)
-                      #:session #t
+(post "/auth/sign_in" #:auth      `(table PEOPLE "USERNAME" "PASSWORD"
+                                                 "SALT"     ,SALTER)
                       #:cookies   '(names sess)
+                      #:session   #t
                       #:from-post 'qstr-safe
   (lambda (rc)
     (cond

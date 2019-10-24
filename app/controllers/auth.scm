@@ -124,9 +124,7 @@
                                 #:sender "/usr/bin/msmtp")
                                (string-append/shared
                                  "Please visit "
-                                 domain
-                                 "/auth/confirmation?token="
-                                 token
+                                 domain "/auth/confirmation?token=" token
                                  " to complete your registration.")
                                #:subject "NO REPLY: Account Confirmation Needed"))
 

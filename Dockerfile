@@ -3,11 +3,11 @@ MAINTAINER  Jonathan Schmeling
 ARG         EMAIL_ADDRESS
 ARG         EMAIL_PASSWORD
 ENV         LANG                    C.UTF-8
-ENV         INDUSTRIA_VERSION       2.0.0
 ENV         ARTANIS_VERSION         0.3.1
 ENV         NGINX_VERSION           1.17.4-1~buster
 ENV         NJS_VERSION             1.17.4.0.3.5-1~buster
 ENV         GUILE_VERSION           2.2.6
+ENV         INDUSTRIA_VERSION       2.1.0
 ENV         GUILE_DBI_VERSION       2.1.7
 ENV         GUILE_DBD_MYSQL_VERSION 2.1.6
 RUN         echo "deb http://mirrors.ustc.edu.cn/debian stretch main contrib non-free"     >> /etc/apt/sources.list && \

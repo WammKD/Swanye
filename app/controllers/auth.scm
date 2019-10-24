@@ -121,7 +121,7 @@
               (send-the-mail ((make-simple-mail-sender
                                 (string-append/shared "no-reply@" domain)
                                 email
-                                #:sender "/usr/sbin/sendmail")
+                                #:sender "/usr/bin/msmtp")
                                (string-append/shared
                                  "Please visit "
                                  domain

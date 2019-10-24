@@ -13,19 +13,24 @@ ENV         GUILE_DBD_MYSQL_VERSION 2.1.6
 RUN         echo "deb http://mirrors.ustc.edu.cn/debian stretch main contrib non-free"     >> /etc/apt/sources.list && \
             echo "deb-src http://mirrors.ustc.edu.cn/debian stretch main contrib non-free" >> /etc/apt/sources.list
 RUN         apt-get update && apt-get build-dep  -y --no-install-recommends guile-2.0 \
-                           && apt-get install -q -y --no-install-recommends libnss3 openssl ssmtp mailutils \
+                           && apt-get install -q -y --no-install-recommends libnss3 openssl msmtp ca-certificates \
                            && rm -rf /var/lib/apt/lists/*
 
-# root is the person who gets all mail for userids < 1000
-RUN echo "root=jaft.r@outlook.com" >> /etc/ssmtp/ssmtp.conf
-
-# Here is the gmail configuration (or change it to your private smtp server)
-RUN echo "mailhub=smtp.gmail.com:587" >> /etc/ssmtp/ssmtp.conf
-RUN echo "AuthUser=$EMAIL_ADDRESS"    >> /etc/ssmtp/ssmtp.conf
-RUN echo "AuthPass=$EMAIL_PASSWORD"   >> /etc/ssmtp/ssmtp.conf
-
-RUN echo "UseTLS=YES"      >> /etc/ssmtp/ssmtp.conf
-RUN echo "UseSTARTTLS=YES" >> /etc/ssmtp/ssmtp.conf
+RUN echo "# Set default values for all following accounts."  >  /etc/msmtprc
+RUN echo "defaults"                                          >> /etc/msmtprc
+RUN echo "auth           on"                                 >> /etc/msmtprc
+RUN echo "tls            on"                                 >> /etc/msmtprc
+RUN echo "tls_trust_file /etc/ssl/certs/ca-certificates.crt" >> /etc/msmtprc
+RUN echo "logfile        ~/.msmtp.log"                       >> /etc/msmtprc
+RUN echo "# Gmail"                                           >> /etc/msmtprc
+RUN echo "account        gmail"                              >> /etc/msmtprc
+RUN echo "host           smtp.gmail.com"                     >> /etc/msmtprc
+RUN echo "port           587"                                >> /etc/msmtprc
+RUN echo "from           $EMAIL_ADDRESS"                     >> /etc/msmtprc
+RUN echo "user           $EMAIL_ADDRESS"                     >> /etc/msmtprc
+RUN echo "password       $EMAIL_PASSWORD"                    >> /etc/msmtprc
+RUN echo "# Set a default account"                           >> /etc/msmtprc
+RUN echo "account default : gmail"                           >> /etc/msmtprc
 
 COPY ./guile.m4 /tmp
 

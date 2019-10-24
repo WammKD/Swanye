@@ -3,11 +3,11 @@ MAINTAINER  Jonathan Schmeling
 ARG         EMAIL_ADDRESS
 ARG         EMAIL_PASSWORD
 ENV         LANG                    C.UTF-8
-ENV         NGINX_VERSION           1.15.3-1~stretch
-ENV         NJS_VERSION             1.15.3.0.2.3-1~stretch
 ENV         GUILE_VERSION           2.2.3
 ENV         INDUSTRIA_VERSION       2.0.0
 ENV         ARTANIS_VERSION         0.3.1
+ENV         NGINX_VERSION           1.17.4-1~buster
+ENV         NJS_VERSION             1.17.4.0.3.5-1~buster
 ENV         GUILE_DBI_VERSION       2.1.7
 ENV         GUILE_DBD_MYSQL_VERSION 2.1.6
 RUN         echo "deb http://mirrors.ustc.edu.cn/debian stretch main contrib non-free"     >> /etc/apt/sources.list && \
@@ -147,13 +147,13 @@ RUN set -ex \
 	&& case "$dpkgArch" in \
 		amd64|i386) \
 # arches officialy built by upstream
-			echo "deb https://nginx.org/packages/mainline/debian/ stretch nginx" >> /etc/apt/sources.list.d/nginx.list \
+			echo "deb https://nginx.org/packages/mainline/debian/ buster nginx" >> /etc/apt/sources.list.d/nginx.list \
 			&& apt-get update \
 			;; \
 		*) \
 # we're on an architecture upstream doesn't officially build for
 # let's build binaries from the published source packages
-			echo "deb-src https://nginx.org/packages/mainline/debian/ stretch nginx" >> /etc/apt/sources.list.d/nginx.list \
+			echo "deb-src https://nginx.org/packages/mainline/debian/ buster nginx" >> /etc/apt/sources.list.d/nginx.list \
 			\
 # new directory for storing sources and .deb files
 			&& tempDir="$(mktemp -d)" \

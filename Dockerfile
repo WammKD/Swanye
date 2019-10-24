@@ -3,17 +3,17 @@ MAINTAINER  Jonathan Schmeling
 ARG         EMAIL_ADDRESS
 ARG         EMAIL_PASSWORD
 ENV         LANG                    C.UTF-8
-ENV         ARTANIS_VERSION         0.3.1
 ENV         NGINX_VERSION           1.17.4-1~buster
 ENV         NJS_VERSION             1.17.4.0.3.5-1~buster
 ENV         GUILE_VERSION           2.2.6
 ENV         INDUSTRIA_VERSION       2.1.0
+ENV         ARTANIS_VERSION         0.4
 ENV         GUILE_DBI_VERSION       2.1.7
 ENV         GUILE_DBD_MYSQL_VERSION 2.1.6
 RUN         echo "deb http://mirrors.ustc.edu.cn/debian stretch main contrib non-free"     >> /etc/apt/sources.list && \
             echo "deb-src http://mirrors.ustc.edu.cn/debian stretch main contrib non-free" >> /etc/apt/sources.list
 RUN         apt-get update && apt-get build-dep  -y --no-install-recommends guile-2.0 \
-                           && apt-get install -q -y --no-install-recommends openssl ssmtp mailutils \
+                           && apt-get install -q -y --no-install-recommends libnss3 openssl ssmtp mailutils \
                            && rm -rf /var/lib/apt/lists/*
 
 # root is the person who gets all mail for userids < 1000
@@ -94,16 +94,16 @@ RUN set -ex \
         && make install && ldconfig \
         && cd ../.. && rm -rf guile-dbi-guile-dbi-$GUILE_DBI_VERSION \
         \
-#        && wget -c http://ftp.gnu.org/gnu/artanis/artanis-$ARTANIS_VERSION.tar.bz2 \
-#        && tar xvjf artanis-$ARTANIS_VERSION.tar.bz2 \
-#        && rm -f artanis-$ARTANIS_VERSION.tar.bz2 \
-#        && cd artanis-$ARTANIS_VERSION && ./configure && make \
-#        && make install && ldconfig \
-        && wget -c https://gitlab.com/NalaGinrut/artanis/-/archive/master/artanis-master.tar.gz \
-        && tar xvzf artanis-master.tar.gz \
-        && rm -f artanis-master.tar.gz \
-        && cd artanis-master && ./autogen.sh && ./configure && make \
+        && wget -c http://ftp.gnu.org/gnu/artanis/artanis-$ARTANIS_VERSION.tar.bz2 \
+        && tar xvjf artanis-$ARTANIS_VERSION.tar.bz2 \
+        && rm -f artanis-$ARTANIS_VERSION.tar.bz2 \
+        && cd artanis-$ARTANIS_VERSION && ./configure && make \
         && make install && ldconfig \
+#        && wget -c https://gitlab.com/NalaGinrut/artanis/-/archive/master/artanis-master.tar.gz \
+#        && tar xvzf artanis-master.tar.gz \
+#        && rm -f artanis-master.tar.gz \
+#        && cd artanis-master && ./autogen.sh && ./configure && make \
+#        && make install && ldconfig \
         && cd .. && rm -rf artanis-master \
         \
 #        && wget -c https://notabug.org/cwebber/guile-gcrypt/archive/v0.1.0.tar.gz \

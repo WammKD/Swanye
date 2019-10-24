@@ -16,8 +16,8 @@ services:
     build:
       context: .
       args:
-        EMAIL_ADDRESS: ${SWANYE_EMAIL_ADDRESS}
-        EMAIL_PASSWORD: ${SWANYE_EMAIL_PASSWORD}
+        EMAIL_ADDRESS: ${SWANYE_EMAIL_ADDR}
+        EMAIL_PASSWORD: ${SWANYE_EMAIL_PSWD}
     command: bash -c "nginx && art work"
     volumes:
       - .:/myapp

@@ -67,8 +67,8 @@
                 "https://www.w3.org/ns/activitystreams")))))
 
 (define (gsub regexp replacement str)
-  (if-let ([match? (string-match regexp str)])
-      (regexp-substitute #f match? 'pre replacement 'post)
+  (if-let ([isMatch (string-match regexp str)])
+      (regexp-substitute #f isMatch 'pre replacement 'post)
     str))
 
 

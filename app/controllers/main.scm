@@ -3,9 +3,7 @@
 ;; This file is generated automatically by GNU Artanis.
 (define-artanis-controller main) ; DO NOT REMOVE THIS LINE!!!
 
-(get "/" #:session #t
+(get "/" #:with-auth "/auth/sign_in"
   (lambda (rc)
-    (if (:session rc 'check)
-        (view-render "dashboard" (the-environment))
-      (redirect-to rc "/auth/sign_in"))))
+    (view-render "dashboard" (the-environment))))
 

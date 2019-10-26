@@ -13,7 +13,7 @@ ENV         GUILE_DBD_MYSQL_VERSION 2.1.6
 RUN         echo "deb http://mirrors.ustc.edu.cn/debian stretch main contrib non-free"     >> /etc/apt/sources.list && \
             echo "deb-src http://mirrors.ustc.edu.cn/debian stretch main contrib non-free" >> /etc/apt/sources.list
 RUN         apt-get update && apt-get build-dep  -y --no-install-recommends guile-2.0 \
-                           && apt-get install -q -y --no-install-recommends libnss3 openssl msmtp ca-certificates \
+                           && apt-get install -q -y --no-install-recommends libnss3 openssl msmtp \
                            && rm -rf /var/lib/apt/lists/*
 
 RUN echo "# Set default values for all following accounts."  >  /etc/msmtprc
@@ -207,7 +207,7 @@ RUN set -ex \
 	&& apt-get install --no-install-recommends --no-install-suggests -y \
 						$nginxPackages \
 						gettext-base \
-	&& apt-get remove --purge --auto-remove -y apt-transport-https ca-certificates && rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/nginx.list \
+	&& apt-get remove --purge --auto-remove -y apt-transport-https && rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/nginx.list \
 	\
 # if we have leftovers from building, let's purge them (including extra, unnecessary build deps)
 	&& if [ -n "$tempDir" ]; then \

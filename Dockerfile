@@ -52,44 +52,50 @@ RUN set -ex \
         && rm -f guile-$GUILE_VERSION.tar.gz \
         && cd guile-$GUILE_VERSION && ./configure && make \
         && make install && ldconfig \
-        && cd .. && rm -rf guile-$GUILE_VERSION \
-	\
+        && cd .. && rm -rf guile-$GUILE_VERSION
+
+RUN set -ex \
         && wget -c https://ftp.gnu.org/gnu/nettle/nettle-3.4.1.tar.gz \
         && tar xvzf nettle-3.4.1.tar.gz \
 	&& rm -f nettle-3.4.1.tar.gz \
         && cd nettle-3.4.1 && ./configure && make \
         && make install && ldconfig \
-        && cd .. && rm -rf nettle-3.4.1 \
-	\
+        && cd .. && rm -rf nettle-3.4.1
+
+RUN set -ex \
         && wget -c https://ftp.gnu.org/gnu/libtasn1/libtasn1-4.13.tar.gz \
         && tar xvzf libtasn1-4.13.tar.gz \
         && rm -f libtasn1-4.13.tar.gz \
         && cd libtasn1-4.13 && ./configure && make \
         && make install && ldconfig \
-        && cd .. && rm -rf libtasn1-4.13 \
-	\
+        && cd .. && rm -rf libtasn1-4.13
+
+RUN set -ex \
         && wget -c https://github.com/p11-glue/p11-kit/releases/download/0.23.15/p11-kit-0.23.15.tar.gz \
         && tar xvzf p11-kit-0.23.15.tar.gz \
         && rm -f p11-kit-0.23.15.tar.gz \
         && cd p11-kit-0.23.15 && ./configure && make \
         && make install && ldconfig \
-        && cd .. && rm -rf p11-kit-0.23.15 \
-	\
+        && cd .. && rm -rf p11-kit-0.23.15
+
+RUN set -ex \
         && wget -c https://www.gnupg.org/ftp/gcrypt/gnutls/v3.6/gnutls-3.6.7.tar.xz \
         && tar xJf gnutls-3.6.7.tar.xz \
         && rm -f gnutls-3.6.7.tar.xz \
         && cd gnutls-3.6.7 && ./configure --enable-guile GUILE="/usr/local/bin/guile" && make \
         && make install && ldconfig \
-        && cd .. && rm -rf gnutls-3.6.7 \
-	\
+        && cd .. && rm -rf gnutls-3.6.7
+
+RUN set -ex \
         && wget -c https://github.com/weinholt/industria/archive/v$INDUSTRIA_VERSION.tar.gz \
         && tar xvzf v$INDUSTRIA_VERSION.tar.gz \
         && rm -f v$INDUSTRIA_VERSION.tar.gz \
         && mkdir /usr/local/share/guile/2.2/industria \
         && mkdir /usr/local/share/guile/2.2/industria/crypto \
         && cp industria-$INDUSTRIA_VERSION/crypto/blowfish.sls /usr/local/share/guile/2.2/industria/crypto/blowfish.scm \
-        && rm -rf industria-$INDUSTRIA_VERSION \
-        \
+        && rm -rf industria-$INDUSTRIA_VERSION
+
+RUN set -ex \
         && wget -c https://github.com/opencog/guile-dbi/archive/guile-dbi-$GUILE_DBI_VERSION.tar.gz \
         && tar xvzf guile-dbi-$GUILE_DBI_VERSION.tar.gz \
         && rm -f guile-dbi-$GUILE_DBI_VERSION.tar.gz \
@@ -97,8 +103,9 @@ RUN set -ex \
         && make install && ldconfig \
         && cd ../guile-dbd-mysql && ./autogen.sh && make \
         && make install && ldconfig \
-        && cd ../.. && rm -rf guile-dbi-guile-dbi-$GUILE_DBI_VERSION \
-        \
+        && cd ../.. && rm -rf guile-dbi-guile-dbi-$GUILE_DBI_VERSION
+
+RUN set -ex \
         && wget -c http://ftp.gnu.org/gnu/artanis/artanis-$ARTANIS_VERSION.tar.bz2 \
         && tar xvjf artanis-$ARTANIS_VERSION.tar.bz2 \
         && rm -f artanis-$ARTANIS_VERSION.tar.bz2 \
@@ -109,8 +116,8 @@ RUN set -ex \
 #        && rm -f artanis-master.tar.gz \
 #        && cd artanis-master && ./autogen.sh && ./configure && make \
 #        && make install && ldconfig \
-        && cd .. && rm -rf artanis-master \
-        \
+        && cd .. && rm -rf artanis-master
+
 #        && wget -c https://notabug.org/cwebber/guile-gcrypt/archive/v0.1.0.tar.gz \
 #        && tar xvzf v0.1.0.tar.gz \
 #        && rm -f v0.1.0.tar.gz \
@@ -125,6 +132,7 @@ RUN set -ex \
 #	&& cd guile-ssh-0.11.3 && autoreconf --install && ./configure && make \
 #	&& make install && ldconfig \
 #	\
+RUN set -ex \
 	&& apt-get update \
 	&& apt-get install --no-install-recommends --no-install-suggests -y gnupg1 apt-transport-https ca-certificates \
 	&& \

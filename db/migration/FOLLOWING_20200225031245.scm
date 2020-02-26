@@ -6,10 +6,11 @@
 (migrate-create
   (create-table
     'FOLLOWING
+    '(ID       big-integer (#:not-null     #:unique       #:auto-increment))
     '(FOLLOWER big-integer (#:not-null))
-    '(FOLLOWEE char-field  (#:not-null     #:maxlen 32))
+    '(FOLLOWEE char-field  (#:not-null     #:maxlen 20000))
     '(PENDING  char-field  (#:default NULL #:maxlen 0))
-    #:primary-keys '(FOLLOWER FOLLOWEE)))
+    #:primary-keys '(ID FOLLOWER)))
 (migrate-up
   (display "Add your up code\n"))
 (migrate-down

@@ -7,7 +7,69 @@
 			<%= (current-appname) %>
 		</TITLE>
 
-		<@css dashboard.css %>
+		<@css                   dashboard.css %>
+		<@js               biwascheme-min.js  %>
+		<@js  additional-scheme-functions.js  %>
+
+		<SCRIPT type="text/biwascheme">
+			(define ACCEPT (string-append
+			               	"application/ld+json; profile='http"
+			               	"s://www.w3.org/ns/activitystreams'"))
+
+			(add-handler!
+				"input"
+				"keydown"
+				(lambda (ev)
+					(when (string=? (js-ref ev "key") "Enter")
+						(let* ([value (js-ref (js-ref ev "srcElement") "value")]
+						       [split (string-split
+						              	(if (string=? (substring value 0 1) "@")
+						              			(substring value 1 (string-length value))
+						              		value)
+						              	"@")])
+							(if (= (length split) 2)
+									(http-get-async
+										(string-append
+											"https://"                              (cadr split)
+											"/.well-known/webfinger?resource=acct:" (car  split)
+											"%40"                                   (cadr split))
+										(lambda (data)
+											(let ([rslt (filter
+											            	(lambda (link)
+											            		(let ([type (js-ref link "type")])
+											            			(and
+											            				(string? type)
+											            				(or
+											            					(string=? type ACCEPT)
+											            					(string=? type "application/activity+json")))))
+											            	(vector->list (js-ref data "links")))])
+												(when (not (null? rslt))
+													(let ([url (js-ref (car rslt) "href")])
+														(element-update!
+															(getelem "#search_results")
+															(string-append
+																"<DIV class='search_result'>"
+																  "<SPAN onclick='get-user-posts()'>"
+																    (substring
+																    	url
+																    	(+ (string-contains-last url "/users/") 7)
+																    	(string-length url))
+																  "</SPAN>"
+
+																  "<DIV class='follow_icon'></DIV>"
+																"</DIV>")))))))
+								(alert "fuck"))))))
+
+			(define (get-user-posts)
+				(alert "shterfuck!"))
+			(console-log (car (string-split "fuck2sht2" "2")))
+			; (http-get-async
+			; 	"https://httpbin.org/get"
+			; 	(lambda (data)
+			; 		(console-log (js-ref data "origin"))))
+
+			(console-log ACCEPT)
+		</SCRIPT>
 
 		<SCRIPT type="text/javascript">
 			/*
@@ -81,6 +143,44 @@
 						alert("fuck");
 					}
 				}
+			}
+
+			function getUserPosts(user_data) {
+				var call = new XMLHttpRequest();
+
+				call.open("GET", user_data.href);
+				call.setRequestHeader("Accept", ACCEPT);
+				call.onreadystatechange = function() {
+				                          	if(this.readyState == 4   &&
+				                          	   this.status     == 200) {
+				                          		var c2 = new XMLHttpRequest();
+
+				                          		c2.open("GET",
+				                          		        JSON.parse(call.responseText)
+				                          		            .outbox);
+				                          		c2.setRequestHeader("Accept", ACCEPT);
+				                          		c2.onreadystatechange = function() {
+				                          		                        	if(this.readyState == 4   &&
+				                          		                        	   this.status     == 200) {
+				                          		                        		var c3 = new XMLHttpRequest();
+
+				                          		                        		c3.open("GET",
+				                          		                        		        JSON.parse(call.responseText)
+				                          		                        		            .first);
+				                          		                        		c3.setRequestHeader("Accept", ACCEPT);
+				                          		                        		c3.onreadystatechange = function() {
+				                          		                        		                        	if(this.readyState == 4   &&
+				                          		                        		                        	   this.status     == 200) {
+				                          		                        		                        		alert(call.responseText);
+				                          		                        		                        	}
+				                          		                        		                        };
+				                          		                        		c3.send();
+				                          		                        	}
+				                          		                        };
+				                          		c2.send();
+				                          	}
+				                          };
+				call.send();
 			}
 		</SCRIPT>
 	</HEAD>
@@ -163,7 +263,7 @@
 				<IMG src="data:image/svg+xml;charset=utf8,%3Csvg%20height='32'%20width='32'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cg%20fill='%23aea8d3'%3E%3Cpath%20d='M22.417%2014.836c-1.209%202.763-3.846%205.074-6.403%205.074-3.122%200-5.39-2.284-6.599-5.046C2.384%2018.506%203.27%2027.723%203.27%2027.723c0%201.262.994%201.445%202.162%201.445h21.146c1.17%200%202.167-.184%202.167-1.445.001%200%20.702-9.244-6.328-12.887z'/%3E%3Cpath%20d='M16.013%2018.412c3.521%200%206.32-5.04%206.32-9.204%200-4.165-2.854-7.541-6.375-7.541S9.582%205.043%209.582%209.208c0%204.165%202.909%209.204%206.431%209.204z'/%3E%3C/g%3E%3C/svg%3E">
 			</DIV>
 
-			<INPUT type="text" placeholder="Search…" onkeydown="handleSearch(this)" />
+			<INPUT type="text" placeholder="Search…" />
 
 			<DIV id="search_results">
 			</DIV>

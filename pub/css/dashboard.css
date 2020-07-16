@@ -61,6 +61,10 @@ body {
 	padding-bottom: 5px;
 }
 
+.search_result span {
+	font-size: 1.2em;
+}
+
 .follow_icon {
 	float:           right;
 	width:           15px;

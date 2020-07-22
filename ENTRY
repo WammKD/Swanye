@@ -7,6 +7,6 @@
               (artanis utils))
  ;; Put whatever you want to be called before server initilization here
 
- (init-server)
+ (init-server )
 
  ;; Put whatever you want to be called before server running here

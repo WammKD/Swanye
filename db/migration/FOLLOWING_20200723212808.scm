@@ -8,7 +8,7 @@
     'FOLLOWING
     '(ID       auto        (#:unique))
     '(FOLLOWER big-integer (#:not-null))
-    '(FOLLOWEE text        (#:not-null #:maxlen 60000))
+    '(FOLLOWEE text        (#:not-null))
     '(PENDING  boolean     (#:not-null))))
 (migrate-up
   (display "Add your up code\n"))

@@ -6,10 +6,10 @@
 (migrate-create
   (create-table
     'FOLLOWING
-    '(ID       auto        (#:unique))
-    '(FOLLOWER big-integer (#:not-null))
-    '(FOLLOWEE text        (#:not-null))
-    '(PENDING  boolean     (#:not-null))))
+    '(ID       auto         (#:unique))
+    '(FOLLOWER big-integer  (#:not-null))
+    '(FOLLOWEE text         (#:not-null))
+    '(PENDING  tiny-integer (#:not-null))))
 (migrate-up
   (display "Add your up code\n"))
 (migrate-down

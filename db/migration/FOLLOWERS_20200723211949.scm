@@ -6,8 +6,9 @@
 (migrate-create
   (create-table
     'FOLLOWERS
+    '(ID       auto        (#:primary-key #:not-null #:unique))
     '(FOLLOWEE big-integer (#:primary-key #:not-null))
-    '(FOLLOWER text        (#:primary-key #:not-null))))
+    '(FOLLOWER text                      (#:not-null))))
 (migrate-up
   (display "Add your up code\n"))
 (migrate-down

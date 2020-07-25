@@ -6,5 +6,5 @@
   (ID        auto        (#:unique))
   (PERSON_ID big-integer (#:not-null))
   (ACTIVITY  text        (#:not-null))
-  (TYPE      text        (#:not-null))
+  (TYPE      text        (#:not-null)))
 

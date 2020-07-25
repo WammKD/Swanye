@@ -5,5 +5,5 @@
   FOLLOWERS
   (ID       auto        (#:unique))
   (FOLLOWEE big-integer (#:not-null))
-  (FOLLOWER text        (#:not-null))
+  (FOLLOWER text        (#:not-null)))
 

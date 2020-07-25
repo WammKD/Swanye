@@ -1,7 +1,7 @@
 ;; Model PEOPLE definition of Swanye
 ;; Please add your license header here.
 ;; This file is generated automatically by GNU Artanis.
-(create-artanis-model PEOPLE   ; DO NOT REMOVE THIS LINE!!!
+(create-artanis-model   ; DO NOT REMOVE THIS LINE!!!
   PEOPLE
   (ID                 auto        (#:primary-key  #:not-null #:unique))
   (USERNAME           char-field  (#:maxlen    32 #:not-null #:unique))

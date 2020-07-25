@@ -1,0 +1,89 @@
+@import "font.css";
+
+body {
+	color:            #FFFFFF;
+	font-family:      'josefin_sans_stdlight';
+	background-color: #3E365D;
+	display:          block;
+	word-wrap:        break-word;
+	font-weight:      500;
+}
+
+h1 {
+	margin-bottom: 50px;
+}
+
+.form_container {
+	max-width:      400px;
+	margin:         40px auto 0;
+	padding:        20px;
+	border:         0;
+	vertical-align: baseline;
+}
+
+.basic_form input[type=email]:active,
+.basic_form input[type=email]:focus,
+.basic_form input[type=number]:active,
+.basic_form input[type=number]:focus,
+.basic_form input[type=password]:active,
+.basic_form input[type=password]:focus,
+.basic_form input[type=text]:active,
+.basic_form input[type=text]:focus,
+.basic_form textarea:active,
+.basic_form textarea:focus              {
+	background:   #1A1A1A;
+	border-color: #AEA8D3;
+}
+
+.basic_form input[type=email],
+.basic_form input[type=number],
+.basic_form input[type=password],
+.basic_form input[type=text],
+.basic_form textarea             {
+	box-sizing:    border-box;
+	font-size:     16px;
+	color:         #FFFFFF;
+	display:       block;
+	width:         100%;
+	outline:       0;
+	font-family:   inherit;
+	resize:        vertical;
+	border:        1px solid #0A0B0E;
+	background:    #1A1A1A;
+	border-radius: 4px;
+	padding:       10px;
+	margin-top:    8px;
+}
+
+.basic_form .block-button:last-child,
+.basic_form .button:last-child,
+.basic_form  button:last-child {
+	margin-right: 0;
+}
+
+.basic_form .block-button,
+.basic_form .button,
+.basic_form  button       {
+	display:         block;
+	width:           100%;
+	border:          0;
+	border-radius:   4px;
+	background:      #AEA8D3;
+	color:           #3E365D;
+	font-size:       18px;
+	line-height:     inherit;
+	height:          auto;
+	padding:         10px;
+	text-transform:  uppercase;
+	text-decoration: none;
+	text-align:      center;
+	box-sizing:      border-box;
+	cursor:          pointer;
+	font-weight:     bold;
+	outline:         0;
+	margin-bottom:   10px;
+}
+
+button {
+	font-family: inherit;
+}

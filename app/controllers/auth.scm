@@ -19,3 +19,11 @@
                             (string-append final " " (number->string int)))
                           "#vu8("
                           (bytevector->u8-list bv))                         ")"))
+
+
+
+(get "/auth/sign_in" #:session #t
+  (lambda (rc)
+    (if (:session rc 'check)
+        (redirect-to rc "/")
+      (view-render "sign_in" (the-environment)))))

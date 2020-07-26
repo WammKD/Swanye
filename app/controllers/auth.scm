@@ -27,3 +27,14 @@
     (if (:session rc 'check)
         (redirect-to rc "/")
       (view-render "sign_in" (the-environment)))))
+
+(post "/auth/sign_in" #:auth      `(table PEOPLE "USERNAME" "PASSWORD"
+                                                 "SALT"     ,SALTER)
+                      #:session   #t
+                      #:from-post 'qstr-safe
+  (lambda (rc)
+    (cond
+     [(:session rc 'check) (redirect-to rc "/")]
+     [(:auth    rc)        (:session rc 'spawn)
+                           (redirect-to rc "/")]
+     [else                   "Go to fail page."])))

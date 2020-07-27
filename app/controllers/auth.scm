@@ -128,3 +128,14 @@
                              #:subject "NO REPLY: Account Confirmation Needed"))
 
             (view-render "sign_up_success" (the-environment))))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;
+;;  P A S S W O R D  ;;
+;;;;;;;;;;;;;;;;;;;;;;;
+(auth-define password
+  (lambda (rc)
+    "<h1>This is auth#password</h1><p>Find me in app/views/auth/password.html.tpl</p>"
+    ;; TODO: add controller method `password'
+    ;; uncomment this line if you want to render view from template
+    ;; (view-render "password" (the-environment))
+    ))

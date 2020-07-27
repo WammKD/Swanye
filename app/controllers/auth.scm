@@ -52,3 +52,20 @@
     ;; TODO: add controller method `sign_up'
     ;; uncomment this line if you want to render view from template
     (view-render "sign_up" (the-environment))))
+
+(post "/auth/sign_up" #:from-post 'qstr-safe
+  (lambda (rc)
+    (let ([email     (uri-decode (:from-post rc 'get    "email"))]
+          [username  (uri-decode (:from-post rc 'get "username"))]
+          [salt                (get-random-from-dev #:length 128)]
+          [createdAt                               (current-time)]
+          [domain                (car (request-host (rc-req rc)))])
+      (let ([token (string->sha-512 (string-append/shared
+                                      (number->string createdAt)
+                                      email
+                                      username))])
+        (if (not (null? ($PEOPLE 'get #:columns   '(*)
+                                      #:condition (where #:USERNAME username))))
+            ;; Stuff
+          ;; Other stuff
+            )))))

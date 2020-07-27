@@ -4,9 +4,15 @@
 (define-artanis-controller auth) ; DO NOT REMOVE THIS LINE!!!
 
 (use-modules (app models PEOPLE)
+             (artanis sendmail)
              ((artanis utils) #:select (get-random-from-dev
                                         get-string-all-with-detected-charset))
-             (rnrs bytevectors))
+             (ice-9 eval-string)
+             (industria crypto blowfish)
+             (rnrs bytevectors)
+             ((srfi srfi-1)   #:select (fold))
+             (srfi srfi-98)
+             (web request))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  U T I L I T I E S  ;;

@@ -60,12 +60,11 @@
           [salt                (get-random-from-dev #:length 128)]
           [createdAt                               (current-time)]
           [domain                (car (request-host (rc-req rc)))])
-      (let ([token (string->sha-512 (string-append/shared
-                                      (number->string createdAt)
-                                      email
-                                      username))])
-        (if (not (null? ($PEOPLE 'get #:columns   '(*)
-                                      #:condition (where #:USERNAME username))))
-            ;; Stuff
-          ;; Other stuff
-            )))))
+      (if (not (null? ($PEOPLE 'get #:columns   '(*)
+                                    #:condition (where #:USERNAME username))))
+          (view-render "sign_up_error" (the-environment))
+        (let ([token (string->sha-512 (string-append/shared
+                                        (number->string createdAt)
+                                        email
+                                        username))])
+          )))))

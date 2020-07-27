@@ -5,7 +5,8 @@
 
 (use-modules (app models PEOPLE)
              ((artanis utils) #:select (get-random-from-dev
-                                        get-string-all-with-detected-charset)))
+                                        get-string-all-with-detected-charset))
+             (rnrs bytevectors))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  U T I L I T I E S  ;;

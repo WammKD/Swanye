@@ -139,3 +139,21 @@
     ;; uncomment this line if you want to render view from template
     ;; (view-render "password" (the-environment))
     ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  C O N F I R M A T I O N  ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(auth-define confirmation
+  (lambda (rc)
+    (let ([poss ($PEOPLE 'get #:columns   '(*)
+                              #:condition (where
+                                            #:CONFIRMATION_TOKEN
+                                            (get-from-qstr rc "token")))])
+      (if (null? poss)
+          (view-render "confirmation_error" (the-environment))
+        (let ([person (car poss)])
+          ($PEOPLE 'set #:CONFIRMATION_TOKEN "confirmed"
+                        (where #:ID (assoc-ref person "ID")))
+
+          (let ([person (assoc-ref person "USERNAME")])
+            (view-render "confirmation_success" (the-environment))))))))

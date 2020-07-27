@@ -61,13 +61,7 @@
       (if (not (null? ($PEOPLE 'get #:columns   '(*)
                                     #:condition (where #:USERNAME username))))
           (view-render "sign_up_error" (the-environment))
-        (let ([token           (string->sha-512 (string-append/shared
-                                                  (number->string createdAt)
-                                                  email
-                                                  username))]
-              [salt                    (get-random-from-dev #:length 128)]
-              [domain                    (car (request-host (rc-req rc)))]
-              [privateFilename (string-append "private_" username ".pem")]
+        (let ([privateFilename (string-append "private_" username ".pem")]
               [ publicFilename (string-append  "public_" username ".pem")])
           (system (string-append/shared
                     "cd /tmp; openssl genrsa -out "
@@ -78,4 +72,53 @@
                     privateFilename
                     " -outform PEM -pubout -out "
                     publicFilename))
-)))))
+
+          (let ([token    (string->sha-512 (string-append/shared
+                                             (number->string createdAt)
+                                             email
+                                             username))]
+                [salt                    (get-random-from-dev #:length 128)]
+                [domain                    (car (request-host (rc-req rc)))]
+                [private   (string->utf8
+                             (string-trim-right
+                               (get-string-all-with-detected-charset
+                                 (string-append "/tmp/" privateFilename))))]
+                [public    (string->utf8
+                             (string-trim-right
+                               (get-string-all-with-detected-charset
+                                 (string-append "/tmp/"  publicFilename))))]
+                [schedule (eval-string
+                            (get-environment-variable "BLOWFISH_SCHEDULE"))])
+            (system (string-append/shared "rm /tmp/" privateFilename))
+            (system (string-append/shared "rm /tmp/"  publicFilename))
+
+            (blowfish-encrypt! private 0 private 0 schedule)
+            (blowfish-encrypt! public  0 public  0 schedule)
+
+            (clear-blowfish-schedule! schedule)
+
+            ($PEOPLE 'set #:USERNAME           username
+                          #:E_MAIL             email
+                          #:PASSWORD           (SALTER
+                                                 (uri-decode (:from-post
+                                                               rc
+                                                               'get
+                                                               "password"))
+                                                 salt)
+                          #:SALT               salt
+                          #:CREATED_AT         createdAt
+                          #:CONFIRMATION_TOKEN token
+                          #:PUBLIC             (bv->string  public)
+                          #:PRIVATE            (bv->string private))
+
+            (send-the-mail ((make-simple-mail-sender
+                              (string-append/shared "no-reply@" domain)
+                              email
+                              #:sender "/usr/bin/msmtp")
+                             (string-append/shared
+                               "Please visit "
+                               domain "/auth/confirmation?token=" token
+                               " to complete your registration.")
+                             #:subject "NO REPLY: Account Confirmation Needed"))
+
+            (view-render "sign_up_success" (the-environment))))))))

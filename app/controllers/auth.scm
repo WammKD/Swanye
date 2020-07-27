@@ -23,6 +23,9 @@
 
 
 
+;;;;;;;;;;;;;;;;;;;;;
+;;  S I G N - I N  ;;
+;;;;;;;;;;;;;;;;;;;;;
 (get "/auth/sign_in" #:session #t
   (lambda (rc)
     (if (:session rc 'check)
@@ -40,6 +43,9 @@
                            (redirect-to rc "/")]
      [else                   "Go to fail page."])))
 
+;;;;;;;;;;;;;;;;;;;;;
+;;  S I G N - I N  ;;
+;;;;;;;;;;;;;;;;;;;;;
 (auth-define sign_up
   (lambda (rc)
     "<h1>This is auth#sign_up</h1><p>Find me in app/views/auth/sign_up.html.tpl</p>"

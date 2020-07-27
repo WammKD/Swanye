@@ -57,14 +57,25 @@
   (lambda (rc)
     (let ([email     (uri-decode (:from-post rc 'get    "email"))]
           [username  (uri-decode (:from-post rc 'get "username"))]
-          [salt                (get-random-from-dev #:length 128)]
-          [createdAt                               (current-time)]
-          [domain                (car (request-host (rc-req rc)))])
+          [createdAt                               (current-time)])
       (if (not (null? ($PEOPLE 'get #:columns   '(*)
                                     #:condition (where #:USERNAME username))))
           (view-render "sign_up_error" (the-environment))
-        (let ([token (string->sha-512 (string-append/shared
-                                        (number->string createdAt)
-                                        email
-                                        username))])
-          )))))
+        (let ([token           (string->sha-512 (string-append/shared
+                                                  (number->string createdAt)
+                                                  email
+                                                  username))]
+              [salt                    (get-random-from-dev #:length 128)]
+              [domain                    (car (request-host (rc-req rc)))]
+              [privateFilename (string-append "private_" username ".pem")]
+              [ publicFilename (string-append  "public_" username ".pem")])
+          (system (string-append/shared
+                    "cd /tmp; openssl genrsa -out "
+                    privateFilename
+                    " 2048"))
+          (system (string-append/shared
+                    "cd /tmp; openssl rsa -in "
+                    privateFilename
+                    " -outform PEM -pubout -out "
+                    publicFilename))
+)))))

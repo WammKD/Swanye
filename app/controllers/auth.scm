@@ -39,3 +39,10 @@
      [(:auth    rc)        (:session rc 'spawn)
                            (redirect-to rc "/")]
      [else                   "Go to fail page."])))
+
+(auth-define sign_up
+  (lambda (rc)
+    "<h1>This is auth#sign_up</h1><p>Find me in app/views/auth/sign_up.html.tpl</p>"
+    ;; TODO: add controller method `sign_up'
+    ;; uncomment this line if you want to render view from template
+    (view-render "sign_up" (the-environment))))

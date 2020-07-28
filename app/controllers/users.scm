@@ -52,3 +52,16 @@
                 (redirect-to rcVar "/404")
               (let ([userVar (car poss)])
                 then)))]))
+
+(define (act-stream? accept)
+  (or
+    (assoc-ref accept 'application/activity+json)
+    (let ([ld (assoc-ref accept 'application/ld+json)])
+      (and ld (equal?
+                (assoc-ref ld 'profile)
+                "https://www.w3.org/ns/activitystreams")))))
+
+(define (gsub regexp replacement str)
+  (if-let ([isMatch (string-match regexp str)])
+      (regexp-substitute #f isMatch 'pre replacement 'post)
+    str))

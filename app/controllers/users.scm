@@ -286,3 +286,76 @@
                   (response-emit "Request signature could not be verified"
                                  #:status 401)))))
         (response-emit "Request signature could not be verified" #:status 401)))))
+
+(get "/users/follow/:userToFollow" #:with-auth "/auth/sign_in"
+  (lambda (rc)
+    (let ([poss ($PEOPLE 'get #:columns   '(*)
+                              #:condition (where #:USERNAME "wamm"))])
+      (if (null? poss)
+          (redirect-to rcVar "/404")
+        (let* ([user                                              (car poss)]
+               [username                         (assoc-ref user "USERNAME")]
+               [userURL          (string-append/shared
+                                   "https://" (car (request-host (rc-req rc)))
+                                   "/users/"  username)]
+               [currentTime                  (number->string (current-time))]
+               [currentDate                         (d:date->string
+                                                      (d:current-date)
+                                                      "~a, ~d ~b ~Y ~3 GMT")]
+               [utfName          (car  (string-split (params
+                                                       rc
+                                                       "userToFollow") #\@))]
+               [utfDomain        (cadr (string-split (params
+                                                       rc
+                                                       "userToFollow") #\@))]
+               [utfPath                        (string-append/shared
+                                                 "/users/" utfName "/inbox")]
+               [utfURL                       (string-append/shared
+                                               "https://" utfDomain utfPath)]
+               [privateEncrypted    (eval-string (assoc-ref user "PRIVATE"))]
+               [baseFilename     (string-append/shared "/tmp/siB64_" username
+                                                       currentTime   ".txt")]
+               [ sigFilename     (string-append/shared "/tmp/signa_" username
+                                                       currentTime   ".txt")]
+               [privFilename     (string-append/shared "/tmp/priva_" username
+                                                       currentTime   ".txt")]
+               [ sigPort                        (open-file  sigFilename "w")]
+               [privPort                        (open-file privFilename "w")]
+               [stringToSign        (string-append/shared
+                                      "(request-target): post " utfPath
+                                      "\nhost: "                utfDomain
+                                      "\ndate: "                currentDate)])
+          (blowfish-decrypt!
+            privateEncrypted 0
+            privateEncrypted 0
+            (reverse-blowfish-schedule
+              (eval-string
+                (get-string-all-with-detected-charset "/myapp/.key"))))
+
+          (display (utf8->string privateEncrypted) privPort)
+          (close privPort)
+
+          (display stringToSign sigPort)
+          (close sigPort)
+
+          (system (string-append/shared "openssl dgst -sha256 -sign "  privFilename
+                                        " " sigFilename " | base64 > " baseFilename))
+          (system (string-append/shared "rm " privFilename " " sigFilename))
+
+          (http-post utfURL #:headers `((Host      . ,utfURL)
+                                        (Date      . ,currentDate)
+                                        (Signature . ,(string-append/shared
+                                                        "keyId=\""
+                                                        userURL
+                                                        "\",headers=\"(request-target) host date\",signature=\""
+                                                        (get-string-all-with-detected-charset baseFilename) "\"")))
+                            #:body    (string-append/shared
+                                        "{ \"@context\": \"https://www.w3.org/ns/activitystreams\","
+                                          "\"id\":       \"" userURL "#follow_at_" currentTime "\","
+                                          "\"type\":     \"Follow\","
+                                          "\"actor\":    \"" userURL "\","
+                                          "\"object\":   \"https://" utfDomain "/users/" utfName "\" }"))
+
+          (system (string-append/shared "rm " baseFilename))
+
+          "It worked!")))))

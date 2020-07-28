@@ -120,7 +120,7 @@
             (send-the-mail ((make-simple-mail-sender
                               (string-append/shared "no-reply@" domain)
                               email
-                              #:sender "/usr/bin/msmtp")
+                              #:sender "msmtp")
                              (string-append/shared
                                "Please visit "
                                domain "/auth/confirmation?token=" token

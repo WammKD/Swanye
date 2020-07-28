@@ -101,3 +101,8 @@
                                                 ("publicKeyPem" . ,(utf8->string
                                                                      publicEncrypted)))))))
         (string-append/shared "The user page of " username "!")))))
+
+(get "/users/:user" (lambda (rc)
+                      (redirect-to
+                        rc
+                        (string-append/shared "/@" (params rc "user")))))

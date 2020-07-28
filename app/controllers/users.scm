@@ -155,3 +155,134 @@
                           `(("id"         .                                  ,id)
                             ("first"      . ,(string-append/shared id "?page=1")))))))
         (string-append/shared "The followers page of " username "!")))))
+
+(post "/users/:user/inbox"
+  (lambda (rc)
+    (process-user-account-as user (rc)
+      (if-let* ([get-val   (lambda (k s)  ; s = signature, k = key, v = value
+                             (if-let ([v null? (assoc-ref s k)]) #f (car v)))]
+                [body                                            (rc-body rc)]
+                [request                                         (rc-req  rc)]
+                [h                                  (request-headers request)]
+                [sig           (map
+                                 (lambda (pair)
+                                   (map
+                                     (lambda (value)
+                                       (gsub "\"$" "" (gsub "^\"" "" value)))
+                                     (string-split
+                                       (gsub "=" "\n" pair)
+                                       #\newline)))
+                                 (string-split (assoc-ref h 'signature) #\,))]
+                [keyID                              (get-val "keyId"     sig)]
+                [headers                            (get-val "headers"   sig)]
+                [signature                          (get-val "signature" sig)])
+          (receive (httpHead httpBody)
+              (http-get keyID #:headers `((Accept . ,(string-append/shared
+                                                       "application/ld+json; "
+                                                       "profile=\"https://www"
+                                                       ".w3.org/ns/activity"
+                                                       "streams\""))))
+            (let* ([username                         (assoc-ref user "USERNAME")]
+                   [currentTime                  (number->string (current-time))]
+                   [ sigFilename (string-append/shared "/tmp/signature_" username
+                                                       currentTime       ".txt")]
+                   [baseFilename (string-append/shared "/tmp/sigBase64_" username
+                                                       currentTime       ".txt")]
+                   [ pubFilename (string-append/shared "/tmp/sigPubKey_" username
+                                                       currentTime       ".txt")]
+                   [veriFilename (string-append/shared "/tmp/sigVerify_" username
+                                                       currentTime       ".txt")]
+                   [rsltFilename (string-append/shared "/tmp/sigResult_" username
+                                                       currentTime       ".txt")]
+                   [bodyFilename (string-append/shared "/tmp/sigDigest_" username
+                                                       currentTime       ".txt")]
+                   [brltFilename (string-append/shared "/tmp/sigBdRslt_" username
+                                                       currentTime       ".txt")]
+                   [ sigPort                        (open-file  sigFilename "w")]
+                   [ pubPort                        (open-file  pubFilename "w")]
+                   [veriPort                        (open-file veriFilename "w")]
+                   [bodyPort                        (open-file bodyFilename "w")])
+              (display signature sigPort)
+              (close sigPort)
+
+              (system (string-append/shared "openssl base64 -d -A -in " sigFilename
+                                            " -out "                    baseFilename))
+              (system (string-append/shared "rm " sigFilename))
+
+              (display (utf8->string body) bodyPort)
+              (close bodyPort)
+
+              (system (string-append/shared "openssl dgst -sha256 -binary " bodyFilename
+                                            " | base64 > "                  brltFilename))
+              (system (string-append/shared "rm " bodyFilename))
+
+              (display (hash-ref
+                         (hash-ref
+                           (json-string->scm (utf8->string httpBody))
+                           "publicKey")
+                         "publicKeyPem")                               pubPort)
+              (close pubPort)
+
+              (display (string-trim-right
+                         (fold
+                           (lambda (signedHeaderName result)
+                             (string-append/shared
+                               result
+                               (if (string= signedHeaderName "(request-target)")
+                                   (string-append
+                                     "(request-target): "
+                                     (string-downcase
+                                       (symbol->string (request-method request)))
+                                     " "
+                                     (request-path request)
+                                     "\n")
+                                 (string-append/shared
+                                   signedHeaderName
+                                   ": "
+                                   (if-let ([obj (assoc-ref h (string->symbol
+                                                                signedHeaderName))])
+                                       (cond
+                                        [(d:date? obj) (d:date->string
+                                                         obj
+                                                         "~a, ~d ~b ~Y ~3 GMT")]
+                                        [(pair?   obj) (if-let ([o symbol? (car obj)])
+                                                           (symbol->string o)
+                                                         o)]
+                                        [(string? obj) obj]
+                                        [(symbol? obj) (symbol->string obj)]
+                                        [else          ""])
+                                     "")
+                                   "\n"))))
+                           ""
+                           (string-split headers #\space))) veriPort)
+              (close veriPort)
+
+              (system (string-append/shared "openssl dgst -sha256 -verify "  pubFilename
+                                            " -signature "                  baseFilename
+                                            " "                             veriFilename
+                                            " > "                           rsltFilename))
+              (system (string-append/shared "rm "  pubFilename))
+              (system (string-append/shared "rm " baseFilename))
+              (system (string-append/shared "rm " veriFilename))
+
+              (if (string=
+                    (string-trim-both
+                      (get-string-all-with-detected-charset rsltFilename))
+                    "Verified OK")
+                  (begin
+                    (system (string-append/shared "rm " rsltFilename))
+
+                    (let ([bodyStr (utf8->string body)])
+                      ($INBOXES 'set #:PERSON_ID (assoc-ref user "ID")
+                                     #:ACTIVITY  bodyStr
+                                     #:TYPE      (hash-ref
+                                                   (json-string->scm bodyStr)
+                                                   "type"))
+
+                      (response-emit "OK" #:status 200)))
+                (begin
+                  (system (string-append/shared "rm " rsltFilename))
+
+                  (response-emit "Request signature could not be verified"
+                                 #:status 401)))))
+        (response-emit "Request signature could not be verified" #:status 401)))))

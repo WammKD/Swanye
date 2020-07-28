@@ -4,9 +4,42 @@
               ;; Put modules you want to be imported here
               ;; only for this file, not controllers/views
 
-              (artanis utils))
+              (web     request))
  ;; Put whatever you want to be called before server initilization here
 
  (init-server)
 
  ;; Put whatever you want to be called before server running here
+
+ (get "/.well-known/webfinger" #:mime 'json #:conn #t
+   (lambda (rc)
+     (let ([resource (get-from-qstr rc "resource")])
+       (if (not resource)
+           (redirect-to rc "/404")
+         (let* ([split  (string-split resource    #\@)]
+                [split2 (string-split (car split) #\:)])
+           (if (not (and
+                      (=        (length  split)      2)
+                      (=        (length split2)      2)
+                      (string=? (car    split2) "acct")))
+               (redirect-to rc "/404")
+             (let ([domain                                    (cadr split)]
+                   [poss   ((map-table-from-DB (:conn rc))
+                             'get        'PEOPLE
+                             #:columns   '(USERNAME)
+                             #:condition (where #:USERNAME (cadr split2)))])
+               (if (and
+                     (string=? domain (car (request-host (rc-req rc))))
+                     (not (null? poss)))
+                   (let* ([username   (assoc-ref (car poss) "USERNAME")]
+                          [userURL  (string-append "https://" domain
+                                                   "/users/"  username)])
+                     (:mime rc `(("subject" . ,(string-append "acct:" username
+                                                              "@"       domain))
+                                 ("aliases" . (,(string-append "https://" domain
+                                                               "/@"       username)
+                                               ,userURL))
+                                 ("links"   . ((("rel"  .                      "self")
+                                                ("type" . "application/activity+json")
+                                                ("href" .                    ,userURL)))))))
+                 (redirect-to rc "/404")))))))))

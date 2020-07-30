@@ -4,7 +4,7 @@
 (define-artanis-controller users) ; DO NOT REMOVE THIS LINE!!!
 
 (use-modules (app       models    PEOPLE) (ice-9 eval-string) (srfi srfi-1)  ((srfi srfi-19) #:prefix d:)
-             (app       models FOLLOWERS) (ice-9     receive) (srfi srfi-26)
+             (app       models FOLLOWERS) (ice-9     receive) (srfi srfi-26) (srfi srfi-98)
              (app       models   INBOXES) (ice-9       regex) (web   client)
              (industria crypto  blowfish) (rnrs  bytevectors) (web  request))
 

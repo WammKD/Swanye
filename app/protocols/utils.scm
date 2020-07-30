@@ -54,6 +54,7 @@
                          (string->number (substring (car host) 0 1))) "" "s")
                    "://"
                    (car host)
-                   ":"
-                   (number->string (cdr host))
+                   (if (cdr host)
+                       (string-append/shared ":" (number->string (cdr host)))
+                     "")
                    path))))

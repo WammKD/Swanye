@@ -52,8 +52,7 @@
               publicEncrypted 0
               publicEncrypted 0
               (reverse-blowfish-schedule
-                (eval-string
-                  (get-string-all-with-detected-charset "/myapp/.key"))))
+                (eval-string (get-environment-variable "BLOWFISH_SCHEDULE"))))
 
             (:mime rc `(("@context"          . ("https://www.w3.org/ns/activitystreams"
                                                 "https://w3id.org/security/v1"))
@@ -298,8 +297,7 @@
             privateEncrypted 0
             privateEncrypted 0
             (reverse-blowfish-schedule
-              (eval-string
-                (get-string-all-with-detected-charset "/myapp/.key"))))
+              (eval-string (get-environment-variable "BLOWFISH_SCHEDULE"))))
 
           (display (utf8->string privateEncrypted) privPort)
           (close privPort)

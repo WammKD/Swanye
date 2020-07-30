@@ -13,6 +13,7 @@
              ((srfi srfi-1)   #:select (fold))
              (srfi srfi-98)
              (web request))
+(include "../protocols/utils.scm")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  U T I L I T I E S  ;;
@@ -35,7 +36,7 @@
 (get "/auth/sign_in" #:session #t
   (lambda (rc)
     (if (:session rc 'check)
-        (redirect-to rc "/")
+        (redirect-to rc (process-uri rc "/"))
       (view-render "sign_in" (the-environment)))))
 
 (post "/auth/sign_in" #:auth      `(table PEOPLE "USERNAME" "PASSWORD"
@@ -44,9 +45,9 @@
                       #:from-post 'qstr-safe
   (lambda (rc)
     (cond
-     [(:session rc 'check) (redirect-to rc "/")]
+     [(:session rc 'check) (redirect-to rc (process-uri rc "/"))]
      [(:auth    rc)        (:session rc 'spawn)
-                           (redirect-to rc "/")]
+                           (redirect-to rc (process-uri rc "/"))]
      [else                   "Go to fail page."])))
 
 ;;;;;;;;;;;;;;;;;;;;;

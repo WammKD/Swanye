@@ -13,7 +13,7 @@
                         #:columns   '(*)
                         #:condition (where #:USERNAME (params rcVar "user")))])
             (if (null? poss)
-                (redirect-to rcVar "/404")
+                (redirect-to rcVar (process-uri rcVar "/404"))
               (let ([userVar (car poss)])
                 then)))]))
 
@@ -67,9 +67,9 @@
         (string-append/shared "The user page of " username "!")))))
 
 (get "/users/:user" (lambda (rc)
-                      (redirect-to
-                        rc
-                        (string-append/shared "/@" (params rc "user")))))
+                      (redirect-to rc (process-uri rc (string-append/shared
+                                                        "/@"
+                                                        (params rc "user"))))))
 
 (get "/users/:user/followers" #:mime 'json
   (lambda (rc)
@@ -256,7 +256,7 @@
     (let ([poss ($PEOPLE 'get #:columns   '(*)
                               #:condition (where #:USERNAME "wamm"))])
       (if (null? poss)
-          (redirect-to rcVar "/404")
+          (redirect-to rc (process-uri rc "/404"))
         (let* ([user                                              (car poss)]
                [username                         (assoc-ref user "USERNAME")]
                [userURL          (string-append/shared

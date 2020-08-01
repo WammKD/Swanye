@@ -309,20 +309,22 @@
                                         " " sigFilename " | base64 > " baseFilename))
           (system (string-append/shared "rm " privFilename " " sigFilename))
 
-          (http-post utfURL #:headers `((Host      . ,utfURL)
-                                        (Date      . ,currentDate)
-                                        (Signature . ,(string-append/shared
-                                                        "keyId=\""
-                                                        userURL
-                                                        "\",headers=\"(request-target) host date\",signature=\""
-                                                        (get-string-all-with-detected-charset baseFilename) "\"")))
-                            #:body    (string-append/shared
-                                        "{ \"@context\": \"https://www.w3.org/ns/activitystreams\","
-                                          "\"id\":       \"" userURL "#follow_at_" currentTime "\","
-                                          "\"type\":     \"Follow\","
-                                          "\"actor\":    \"" userURL "\","
-                                          "\"object\":   \"https://" utfDomain "/users/" utfName "\" }"))
+          (receive (httpHead httpBody)
+              (http-post utfURL #:headers `((Host      . ,utfURL)
+                                            (Date      . ,currentDate)
+                                            (Signature . ,(string-append/shared
+                                                            "keyId=\""
+                                                            userURL
+                                                            "\",headers=\"(request-target) host date\",signature=\""
+                                                            (get-string-all-with-detected-charset baseFilename) "\"")))
+                                #:body    (string-append/shared
+                                            "{ \"@context\": \"https://www.w3.org/ns/activitystreams\","
+                                              "\"id\":       \"" userURL "#follow_at_" currentTime "\","
+                                              "\"type\":     \"Follow\","
+                                              "\"actor\":    \"" userURL "\","
+                                              "\"object\":   \"https://" utfDomain "/users/" utfName "\" }"))
+            (system (string-append/shared "rm " baseFilename))
 
-          (system (string-append/shared "rm " baseFilename))
-
-          "It worked!")))))
+            (string-append
+              "It worked!\n\n"
+              (utf8->string httpBody))))))))

@@ -144,7 +144,25 @@
                 [keyID                              (get-val "keyId"     sig)]
                 [headers                            (get-val "headers"   sig)]
                 [signature                          (get-val "signature" sig)])
-          (receive (httpHead httpBody)
+          (begin
+            (display "\n\n\n\nFUCKERSHIT\n\n\n\n")
+            (display keyID)
+            (newline)
+            (display headers)
+            (newline)
+            (display signature)
+            (newline)
+            (display sig)
+            (newline)
+            (display h)
+            (newline)
+            (display request)
+            (newline)
+            (display body)
+            (newline)
+            (display "\n\n\n\nFUCKERSHIT\n\n\n\n")
+
+            (receive (httpHead httpBody)
               (http-get keyID #:headers `((Accept . ,(string-append/shared
                                                        "application/ld+json; "
                                                        "profile=\"https://www"
@@ -252,7 +270,7 @@
                   (system (string-append/shared "rm " rsltFilename))
 
                   (response-emit "Request signature could not be verified"
-                                 #:status 401)))))
+                                 #:status 401))))))
         (response-emit "Request signature could not be verified" #:status 401)))))
 
 (get "/users/follow/:userToFollow" #:with-auth "/auth/sign_in"

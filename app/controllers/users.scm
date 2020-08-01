@@ -258,7 +258,7 @@
 (get "/users/follow/:userToFollow" #:with-auth "/auth/sign_in"
   (lambda (rc)
     (let ([poss ($PEOPLE 'get #:columns   '(*)
-                              #:condition (where #:USERNAME "wamm"))])
+                              #:condition (where #:USERNAME "wammkd"))])
       (if (null? poss)
           (redirect-to rc (process-uri rc "/404"))
         (let* ([user                                              (car poss)]

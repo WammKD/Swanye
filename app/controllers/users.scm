@@ -158,13 +158,21 @@
             (newline)
             (display request)
             (newline)
-            (display body)
+            (display (utf8->string body))
             (newline)
-            (display "\n\n\n\nFUCKERSHIT\n\n\n\n")
+            (display "\n\n\n\nFUCKERSHIT2\n\n\n\n")
 
             (receive (httpHead httpBody)
               (http-get keyID #:headers `((Accept  . "application/ld+json")
                                           (Profile . "https://www.w3.org/ns/activitystreams")))
+              (display "\n\n\n\nPISSERSHIT\n\n\n\n")
+              (display (utf8->string httpBody))
+              (newline)
+              (display (assoc-ref user "USERNAME"))
+              (newline)
+              (display (number->string (current-time)))
+              (newline)
+              (display "\n\n\n\nPISSERSHIT2\n\n\n\n")
             (let* ([username                         (assoc-ref user "USERNAME")]
                    [currentTime                  (number->string (current-time))]
                    [ sigFilename (string-append/shared "/tmp/signature_" username

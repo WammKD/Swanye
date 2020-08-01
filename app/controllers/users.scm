@@ -163,11 +163,8 @@
             (display "\n\n\n\nFUCKERSHIT\n\n\n\n")
 
             (receive (httpHead httpBody)
-              (http-get keyID #:headers `((Accept . ,(string-append/shared
-                                                       "application/ld+json; "
-                                                       "profile=\"https://www"
-                                                       ".w3.org/ns/activity"
-                                                       "streams\""))))
+              (http-get keyID #:headers `((Accept  . "application/ld+json")
+                                          (Profile . "https://www.w3.org/ns/activitystreams")))
             (let* ([username                         (assoc-ref user "USERNAME")]
                    [currentTime                  (number->string (current-time))]
                    [ sigFilename (string-append/shared "/tmp/signature_" username

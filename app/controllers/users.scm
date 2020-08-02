@@ -5,10 +5,8 @@
 
 (use-modules (app       models    PEOPLE) (ice-9 eval-string) (srfi srfi-1)  ((srfi srfi-19) #:prefix d:)
              (app       models FOLLOWERS) (ice-9     receive) (srfi srfi-26) (srfi srfi-98)
-             (app       models   INBOXES) (ice-9       regex) (web   client)
+             (app       models   INBOXES) (ice-9       regex) (web   client) (Swanye utils)
              (industria crypto  blowfish) (rnrs  bytevectors) (web  request))
-
-(include "../protocols/utils.scm")
 
 (define-syntax process-user-account-as
   (syntax-rules ()

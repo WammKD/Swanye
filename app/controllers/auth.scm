@@ -12,8 +12,8 @@
              (rnrs bytevectors)
              ((srfi srfi-1)   #:select (fold))
              (srfi srfi-98)
+             (Swanye utils)
              (web request))
-(include "../protocols/utils.scm")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  U T I L I T I E S  ;;

@@ -38,7 +38,7 @@
 
   (lambda (rc)
     (if (:session rc 'check)
-        (redirect-to rc (process-uri rc "/"))
+        (process-redirect rc "/")
       (view-render "sign_in" (the-environment)))))
 
 (post "/auth/sign_in" #:auth      `(table PEOPLE "USERNAME" "PASSWORD"
@@ -47,9 +47,9 @@
                       #:from-post 'qstr-safe
   (lambda (rc)
     (cond
-     [(:session rc 'check) (redirect-to rc (process-uri rc "/"))]
+     [(:session rc 'check) (process-redirect rc "/")]
      [(:auth    rc)        (:session rc 'spawn)
-                           (redirect-to rc (process-uri rc "/"))]
+                           (process-redirect rc "/")]
      [else                   "Go to fail page."])))
 
 ;;;;;;;;;;;;;;;;;;;;;

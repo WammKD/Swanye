@@ -3,12 +3,13 @@
 ;;;; <YOUR LICENSE HERE>
 
 (define-module (Swanye utils)
+  #:use-module (artanis page)
   #:use-module (artanis route)
   #:use-module (web     request)
   #:use-module (web     uri)
   #:export (if-let
             if-let*
-            process-uri))
+            process-redirect))
 
 ;;;;;;;;;;;;;;;;;;;
 ;;  M A C R O S  ;;
@@ -54,17 +55,19 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  U T I L I T I E S  ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;
-(define (process-uri rc path)
-  (let ([host (request-host (rc-req rc))])
-    (string->uri (string-append/shared
-                   "http"
-                   (if (or
-                         (string=? (car host) "localhost")
-                         ;; TODO: actually check properly for an IP address
-                         (string->number (substring (car host) 0 1))) "" "s")
-                   "://"
-                   (car host)
-                   (if (cdr host)
-                       (string-append/shared ":" (number->string (cdr host)))
-                     "")
-                   path))))
+(define (process-redirect rc path)
+  (redirect-to
+    rc 
+    (let ([host (request-host (rc-req rc))])
+      (string->uri (string-append/shared
+                     "http"
+                     (if (or
+                           (string=? (car host) "localhost")
+                           ;; TODO: actually check properly for an IP address
+                           (string->number (substring (car host) 0 1))) "" "s")
+                     "://"
+                     (car host)
+                     (if (cdr host)
+                         (string-append/shared ":" (number->string (cdr host)))
+                       "")
+                     path)))))

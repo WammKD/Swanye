@@ -16,7 +16,7 @@
                         #:columns   '(*)
                         #:condition (where #:USERNAME (params rcVar "user")))])
             (if (null? poss)
-                (redirect-to rcVar (process-uri rcVar "/404"))
+                (process-redirect rcVar "/404")
               (let ([userVar (car poss)])
                 then)))]))
 
@@ -70,7 +70,7 @@
 
 (users-define :user
   (lambda (rc)
-    (redirect-to rc (process-uri rc (string-append/shared "/@" (params rc "user"))))))
+    (process-redirect rc (string-append/shared "/@" (params rc "user")))))
 
 (users-define :user/followers
   (options #:mime 'json)
@@ -271,7 +271,7 @@
     (let ([poss ($PEOPLE 'get #:columns   '(*)
                               #:condition (where #:USERNAME "wammkd"))])
       (if (null? poss)
-          (redirect-to rc (process-uri rc "/404"))
+          (process-redirect rc "/404")
         (let* ([user                                              (car poss)]
                [username                         (assoc-ref user "USERNAME")]
                [userURL          (string-append/shared

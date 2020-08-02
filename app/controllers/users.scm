@@ -68,12 +68,13 @@
                                                                      publicEncrypted)))))))
         (string-append/shared "The user page of " username "!")))))
 
-(get "/users/:user" (lambda (rc)
-                      (redirect-to rc (process-uri rc (string-append/shared
-                                                        "/@"
-                                                        (params rc "user"))))))
+(users-define :user
+  (lambda (rc)
+    (redirect-to rc (process-uri rc (string-append/shared "/@" (params rc "user"))))))
 
-(get "/users/:user/followers" #:mime 'json
+(users-define :user/followers
+  (options #:mime 'json)
+
   (lambda (rc)
     (process-user-account-as user (rc)
       (if-let* ([request                              (rc-req rc)]
@@ -263,7 +264,9 @@
                                  #:status 401))))
         (response-emit "Request signature could not be verified" #:status 401)))))
 
-(get "/users/follow/:userToFollow" #:with-auth "/auth/sign_in"
+(users-define follow/:userToFollow
+  (options #:with-auth "/auth/sign_in")
+
   (lambda (rc)
     (let ([poss ($PEOPLE 'get #:columns   '(*)
                               #:condition (where #:USERNAME "wammkd"))])

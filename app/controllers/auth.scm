@@ -33,7 +33,9 @@
 ;;;;;;;;;;;;;;;;;;;;;
 ;;  S I G N - I N  ;;
 ;;;;;;;;;;;;;;;;;;;;;
-(get "/auth/sign_in" #:session #t
+(auth-define sign_in
+  (options #:session #t)
+
   (lambda (rc)
     (if (:session rc 'check)
         (redirect-to rc (process-uri rc "/"))

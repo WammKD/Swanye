@@ -1,7 +1,9 @@
 @font-face {
 	font-family: 'josefin_sans_stdlight';
-	src:         url('josefinsansstd-light-webfont.woff2') format('woff2'),
-	             url('josefinsansstd-light-webfont.woff')  format('woff');
+	src:         local(''),
+	             url('../font/JosefinSans-Light.woff2') format('woff2'),
+	             url('../font/JosefinSans-Light.woff')  format('woff'),
+	             url('../font/JosefinSans-Light.ttf')   format('truetype');
 	font-weight: normal;
 	font-style:  normal;
 }

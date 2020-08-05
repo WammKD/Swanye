@@ -5,4 +5,4 @@
 
 (get "/" #:with-auth "/auth/sign_in"
   (lambda (rc)
-    (view-render "dashboard" (the-environment))))
+    (view-render "main" (the-environment))))

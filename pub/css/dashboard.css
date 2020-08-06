@@ -1,26 +1,24 @@
 @import "font.css";
 
 body {
-	color:       #FFFFFF;
-	margin:      0;
-	font-family: 'josefin_sans_stdlight';
+	color:            #FFFFFF;
+	margin:           0;
+	font-family:      'josefin_sans_stdlight';
+	background-color: #3E365D;
 }
 
 .dash_main {
-	width:            calc(100% - 25.5% - 153px - 40px);
-	height:           100%;
-	padding:          20px;
-	overflow:         hidden;
-	background-color: #3E365D;
+	width:    calc(100% - 25.5% - 153px - 40px);
+	padding:  20px;
+	overflow: hidden;
 }
 
 .dash_settings {
-	right:            153px;
-	width:            25.5%;
-	height:           100%;
-	position:         fixed;
-	padding-top:      20px;
-	background-color: #3E365D;
+	right:       153px;
+	width:       25.5%;
+	height:      100%;
+	position:    fixed;
+	padding-top: 20px;
 }
 
 .dash_settings input[type=text] {

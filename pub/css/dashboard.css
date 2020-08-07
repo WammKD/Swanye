@@ -3,10 +3,15 @@
 body {
 	color:            #FFFFFF;
 	margin:           0;
-	font-size:        calc(2rem / 1.4);
-	font-family:      'josefin_sans_stdlight';
+	font-size:        1.175rem;
+	font-family:      'montserrat_std';
 	line-height:      2rem;
 	background-color: #3E365D;
+}
+
+h1 {
+	font-size:   3rem;
+	font-family: 'josefin_sans_stdlight';
 }
 
 .dash_main {
@@ -27,11 +32,11 @@ body {
 	color:            #AEA8D3;
 	width:            calc(100% - (100% / 17.5));
 	border:           none;
-	font-size:        1.1em;
-	font-family:      inherit;
-	margin-top:       20px;
-	margin-left:      calc(100% / 35);
-	margin-right:     calc(100% / 35);
+	font-size:        1.3em;
+	font-family:      'josefin_sans_stdlight';
+	margin-top:       18px;
+	margin-left:      calc(100% / 32);
+	margin-right:     calc(100% / 32);
 	padding-left:     2px;
 	border-bottom:    1px solid #AEA8D3;
 	background-color: #3E365D;
@@ -50,9 +55,9 @@ body {
 }
 
 #search_results {
-	margin-top:    20px;
-	margin-left:   calc(100% / 35);
-	margin-right:  calc(100% / 35);
+	margin-top:    18px;
+	margin-left:   calc(100% / 32);
+	margin-right:  calc(100% / 32);
 }
 
 .search_result {
@@ -80,12 +85,16 @@ body {
 	text-align: center;
 }
 
+.dash_settings_nav a {
+	text-decoration: none;
+}
+
 .dash_settings_nav img {
 	height:       28px;
 	display:      inline-block;
 	text-align:   center;
-	margin-left:  calc(100% / 35);
-	margin-right: calc(100% / 35);
+	margin-left:  calc(100% / 32);
+	margin-right: calc(100% / 32);
 }
 
 .dash_side {
@@ -95,6 +104,7 @@ body {
 	position:         fixed;
 	text-align:       center;
 	box-shadow:       inset 30px 0 45px -30px #000000;
+	font-family:      'josefin_sans_stdlight';
 	background-color: #1A1A1A;
 }
 
@@ -122,5 +132,5 @@ body {
 }
 
 .dash_button div {
-	font-size: .8em;
+	font-size: .9em;
 }

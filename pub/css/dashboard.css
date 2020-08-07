@@ -3,7 +3,9 @@
 body {
 	color:            #FFFFFF;
 	margin:           0;
+	font-size:        calc(2rem / 1.4);
 	font-family:      'josefin_sans_stdlight';
+	line-height:      2rem;
 	background-color: #3E365D;
 }
 
@@ -25,7 +27,7 @@ body {
 	color:            #AEA8D3;
 	width:            calc(100% - (100% / 17.5));
 	border:           none;
-	font-size:        1.2em;
+	font-size:        1.1em;
 	font-family:      inherit;
 	margin-top:       20px;
 	margin-left:      calc(100% / 35);

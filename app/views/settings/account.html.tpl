@@ -77,6 +77,17 @@
 							<INPUT type="text" name="display_name">
 						</DIV>
 					</DIV>
+
+					<DIV class="details_row">
+						<DIV class="details_left">
+							Bio.
+						</DIV>
+
+						<DIV class="details_right">
+							<TEXTAREA type="text" name="display_name">
+							</TEXTAREA>
+						</DIV>
+					</DIV>
 				</DIV>
 			</DIV>
 		</DIV>

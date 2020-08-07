@@ -47,9 +47,37 @@
 					Account Settings
 				</H1>
 
-				<P>
-					Rendered from FUCK!
-				</P>
+				<DIV class="account_details">
+					<DIV class="details_row">
+						<DIV class="details_left">
+							Username
+						</DIV>
+
+						<DIV class="details_right">
+							temp_boiler
+						</DIV>
+					</DIV>
+
+					<DIV class="details_row">
+						<DIV class="details_left">
+							E-mail
+						</DIV>
+
+						<DIV class="details_right">
+							temp_boiler@fake.com
+						</DIV>
+					</DIV>
+
+					<DIV class="details_row">
+						<DIV class="details_left">
+							Display Name
+						</DIV>
+
+						<DIV class="details_right">
+							<INPUT type="text" name="display_name">
+						</DIV>
+					</DIV>
+				</DIV>
 			</DIV>
 		</DIV>
 	</BODY>

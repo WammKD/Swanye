@@ -11,3 +11,28 @@
 .dash_account p {
 	font-family: 'josefin_sans_std';
 }
+
+.dash_account .account_details {
+	margin-left:  auto;
+	margin-right: auto;
+}
+
+.dash_account .account_details .details_row {
+	display:               -ms-grid;
+	display:               grid;
+	grid-gap:              20px;
+	margin-bottom:         30px;
+	-ms-grid-columns:      1fr 20px 1fr 20px 1fr 20px 1fr;
+	grid-template-columns: repeat(4, 1fr);
+}
+
+.dash_account .account_details .details_row .details_left {
+	font-weight:          bold;
+	grid-column:          span 1;
+	-ms-grid-column-span: 1;
+}
+
+.dash_account .account_details .details_row .details_right {
+	grid-column:          span 3;
+	-ms-grid-column-span: 3;
+}

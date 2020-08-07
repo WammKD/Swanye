@@ -117,8 +117,8 @@ body {
 
 .dash_button p {
 	font-size:          9.15vh;
-	margin-block-start: -.1em;
-	margin-block-end:   -.15em;
+	margin-block-start: .3em;
+	margin-block-end:   .15em;
 }
 
 .dash_button div {

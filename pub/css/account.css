@@ -36,3 +36,34 @@
 	grid-column:          span 3;
 	-ms-grid-column-span: 3;
 }
+
+.account_details input[type=email]:active,
+.account_details input[type=email]:focus,
+.account_details input[type=number]:active,
+.account_details input[type=number]:focus,
+.account_details input[type=password]:active,
+.account_details input[type=password]:focus,
+.account_details input[type=text]:active,
+.account_details input[type=text]:focus,
+.account_details textarea:active,
+.account_details textarea:focus              {
+	border-color: /* #1c4bce */ #1e90ff;
+}
+
+.account_details input[type=email],
+.account_details input[type=number],
+.account_details input[type=password],
+.account_details input[type=text],
+.account_details textarea             {
+	box-sizing:    border-box;
+	font-size:     16px;
+	display:       block;
+	width:         100%;
+	outline:       0;
+	font-family:   inherit;
+	resize:        vertical;
+	border:        1px solid #444444;
+	border-radius: 4px;
+	padding:       10px;
+	margin-top:    -4px;
+}

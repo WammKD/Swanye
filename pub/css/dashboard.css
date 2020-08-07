@@ -120,3 +120,7 @@ body {
 	margin-block-start: -.1em;
 	margin-block-end:   -.15em;
 }
+
+.dash_button div {
+	font-size: .8em;
+}

@@ -4,6 +4,7 @@
 (define-artanis-controller auth) ; DO NOT REMOVE THIS LINE!!!
 
 (use-modules (app models PEOPLE)
+             (app models ACTORS)
              (artanis sendmail)
              ((artanis utils) #:select (get-random-from-dev
                                         get-string-all-with-detected-charset))

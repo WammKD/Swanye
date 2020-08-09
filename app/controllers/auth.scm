@@ -109,7 +109,7 @@
             (let ([ACTIVITYPUB_ID (string-append/shared "https://" domain
                                                         "/users/"  username)]
                   [ACTOR_TYPE     "Person"])
-              ($ACTORS 'set #:AP_ID              ACTIVITYPUB_ID
+              ($ACTORS 'set #:AP_ID              (string-reverse ACTIVITYPUB_ID)
                             #:ACTOR_TYPE         ACTOR_TYPE
                             #:INBOX              (string-append/shared ACTIVITYPUB_ID "/inbox")
                             #:OUTBOX             (string-append/shared ACTIVITYPUB_ID "/outbox")
@@ -132,7 +132,7 @@
                                                                              ("publicKeyPem" . ,public))))))
 
               (let ([ACTOR_ID (cdaar ($ACTORS 'get #:columns   '(ACTOR_ID)
-                                                   #:condition (where #:AP_ID ACTIVITYPUB_ID)))])
+                                                   #:condition (where #:AP_ID (string-reverse ACTIVITYPUB_ID))))])
                 ($ENDPOINTS 'set #:ACTOR_ID     ACTOR_ID
                                  #:SHARED_INBOX (string-append/shared "https://" domain "/inbox"))
                 ($PEOPLE    'set #:ACTOR_ID           ACTOR_ID

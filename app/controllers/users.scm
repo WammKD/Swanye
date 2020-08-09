@@ -50,7 +50,7 @@
       (if-let* ([request                                        (rc-req rc)]
                 [accept   act-stream?              (request-accept request)]
                 [username             (assoc-ref user "PREFERRED_USERNAME")])
-          (let ([userURL (assoc-ref user "AP_ID")])
+          (let ([userURL (string-reverse (assoc-ref user "AP_ID"))])
             (:mime rc `(("@context"          . ("https://www.w3.org/ns/activitystreams"
                                                 "https://w3id.org/security/v1"))
                         ("id"                . ,userURL)

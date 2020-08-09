@@ -107,20 +107,6 @@
 
             (clear-blowfish-schedule! schedule)
 
-            ($PEOPLE 'set #:ACTOR_ID           ummm
-                          #:USERNAME           username
-                          #:E_MAIL             email
-                          #:PASSWORD           (SALTER
-                                                 (uri-decode (:from-post
-                                                               rc
-                                                               'get
-                                                               "password"))
-                                                 salt)
-                          #:SALT               salt
-                          #:CREATED_AT         createdAt
-                          #:CONFIRMATION_TOKEN token
-                          #:PUBLIC_KEY         (bv->string  public)
-                          #:PRIVATE_KEY        (bv->string private))
             (let ([ACTIVITYPUB_ID (string-append/shared "https://" domain
                                                         "/users/"  username)]
                   [ACTOR_TYPE     "Person"])
@@ -145,7 +131,22 @@
                                                                                                   ACTIVITYPUB_ID
                                                                                                   "#main-key"))
                                                                              ("owner"        . ,ACTIVITYPUB_ID)
-                                                                             ("publicKeyPem" . ,pubStr)))))))
+                                                                             ("publicKeyPem" . ,pubStr))))))
+              ($PEOPLE 'set #:ACTOR_ID           (cdaar ($ACTORS 'get #:columns   '(ACTOR_ID)
+                                                                      #:condition (where #:ACTOR_ID ACTIVITYPUB_ID)))
+                            #:USERNAME           username
+                            #:E_MAIL             email
+                            #:PASSWORD           (SALTER
+                                                   (uri-decode (:from-post
+                                                                 rc
+                                                                 'get
+                                                                 "password"))
+                                                   salt)
+                            #:SALT               salt
+                            #:CREATED_AT         createdAt
+                            #:CONFIRMATION_TOKEN token
+                            #:PUBLIC_KEY         (bv->string  public)
+                            #:PRIVATE_KEY        (bv->string private)))
 
             (send-the-mail ((make-simple-mail-sender
                               (string-append/shared "no-reply@" domain)

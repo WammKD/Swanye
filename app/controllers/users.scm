@@ -18,7 +18,14 @@
                         #:condition (where #:USERNAME (params rcVar "user")))])
             (if (null? poss)
                 (process-redirect rcVar "/404")
-              (let ([userVar (car poss)])
+              (let ([userVar (append
+                               (car poss)
+                               ($ACTORS
+                                 'get
+                                 #:columns   '(*)
+                                 #:condition (where #:ACTOR_ID (assoc-ref
+                                                                 (car poss)
+                                                                 "ACTOR_ID"))))])
                 then)))]))
 
 (define (act-stream? accept)

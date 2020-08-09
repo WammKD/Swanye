@@ -20,12 +20,12 @@
                 (process-redirect rcVar "/404")
               (let ([userVar (append
                                (car poss)
-                               ($ACTORS
-                                 'get
-                                 #:columns   '(*)
-                                 #:condition (where #:ACTOR_ID (assoc-ref
-                                                                 (car poss)
-                                                                 "ACTOR_ID"))))])
+                               (car ($ACTORS
+                                      'get
+                                      #:columns   '(*)
+                                      #:condition (where #:ACTOR_ID (assoc-ref
+                                                                      (car poss)
+                                                                      "ACTOR_ID")))))])
                 then)))]))
 
 (define (act-stream? accept)

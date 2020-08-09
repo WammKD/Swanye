@@ -3,10 +3,11 @@
 ;; This file is generated automatically by GNU Artanis.
 (define-artanis-controller users) ; DO NOT REMOVE THIS LINE!!!
 
-(use-modules (app       models    PEOPLE) (ice-9 eval-string) (srfi srfi-1)  ((srfi srfi-19) #:prefix d:)
-             (app       models FOLLOWERS) (ice-9     receive) (srfi srfi-26) (srfi srfi-98)
-             (app       models   INBOXES) (ice-9       regex) (web   client) (Swanye utils)
-             (industria crypto  blowfish) (rnrs  bytevectors) (web  request))
+(use-modules (app       models    PEOPLE) (ice-9 eval-string) (srfi srfi-1)                (Swanye utils)
+             (app       models    ACTORS) (ice-9     receive) ((srfi srfi-19) #:prefix d:) (web   client)
+             (app       models FOLLOWERS) (ice-9       regex) (srfi srfi-26)               (web  request)
+             (app       models   INBOXES) (rnrs  bytevectors) (srfi srfi-98)
+             (industria crypto  blowfish))
 
 (define-syntax process-user-account-as
   (syntax-rules ()

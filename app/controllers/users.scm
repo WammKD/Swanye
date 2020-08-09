@@ -47,13 +47,13 @@
 (get "/@:user" #:mime 'json
   (lambda (rc)
     (process-user-account-as user (rc)
-      (if-let* ([request                              (rc-req rc)]
-                [accept   act-stream?    (request-accept request)]
-                [username             (assoc-ref user "USERNAME")])
           (let ([userURL         (string-append/shared
                                    "https://" (car (request-host request))
                                    "/users/"  username)]
                 [publicEncrypted (eval-string (assoc-ref user "PUBLIC"))])
+      (if-let* ([request                                        (rc-req rc)]
+                [accept   act-stream?              (request-accept request)]
+                [username             (assoc-ref user "PREFERRED_USERNAME")])
             (blowfish-decrypt!
               publicEncrypted 0
               publicEncrypted 0
@@ -64,10 +64,10 @@
                                                 "https://w3id.org/security/v1"))
                         ("id"                . ,userURL)
                         ("type"              . "Person")
-                        ("preferredUsername" . ,(assoc-ref user "NAME"))
                         ("inbox"             . ,(string-append/shared
                                                   userURL
                                                   "/inbox"))
+                        ("preferredUsername" . ,(assoc-ref user "PREFERRED_USERNAME"))
                         ("publicKey"         . (("id"           . ,(string-append/shared
                                                                      userURL
                                                                      "#main-key"))
@@ -85,13 +85,13 @@
 
   (lambda (rc)
     (process-user-account-as user (rc)
-      (if-let* ([request                              (rc-req rc)]
-                [accept   act-stream?    (request-accept request)]
-                [username             (assoc-ref user "USERNAME")])
           (let* ([id        (string-append/shared
                               "https://"   (car (request-host request))
                               "/users/"    username
                               "/followers")]
+      (if-let* ([request                                        (rc-req rc)]
+                [accept   act-stream?              (request-accept request)]
+                [username             (assoc-ref user "PREFERRED_USERNAME")])
                  [followers ($FOLLOWERS
                               'get
                               #:columns   '(*)
@@ -155,7 +155,7 @@
             ;;   (http-get keyID #:headers `((Accept  . "application/ld+json")
             ;;                               (Profile . "https://www.w3.org/ns/activitystreams")))
 
-            (let* ([username                         (assoc-ref user "USERNAME")]
+            (let* ([username               (assoc-ref user "PREFERRED_USERNAME")]
                    [currentTime                  (number->string (current-time))]
                    [ sigFilename (string-append/shared "/tmp/signature_" username
                                                        currentTime       ".txt")]

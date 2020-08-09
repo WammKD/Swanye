@@ -15,5 +15,4 @@
   (PREFERRED_USERNAME char-field  (#:not-null #:maxlen 64))
   (NAME               char-field  (#:not-null #:maxlen 64  #:default ""))
   (SUMMARY            char-field  (#:not-null #:maxlen 704 #:default ""))
-  (ENDPOINTS          big-integer)
   (JSON               text        (#:not-null)))

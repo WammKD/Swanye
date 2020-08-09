@@ -120,7 +120,6 @@
                             #:LIKED              (string-append/shared ACTIVITYPUB_ID "/likes")
                             #:FEATURED           (string-append/shared ACTIVITYPUB_ID "/collections/featured")
                             #:PREFERRED_USERNAME username
-                            #:ENDPOINTS          ummmm
                             #:JSON               (scm->json-string
                                                    `(("@context"          . ("https://www.w3.org/ns/activitystreams"
                                                                              "https://w3id.org/security/v1"))

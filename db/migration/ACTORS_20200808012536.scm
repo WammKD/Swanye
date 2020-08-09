@@ -18,7 +18,6 @@
     '(NAME               char-field  (#:not-null #:maxlen 64))
     '(PREFERRED_USERNAME char-field  (#:not-null #:maxlen 64  #:default ""))
     '(SUMMARY            char-field  (#:not-null #:maxlen 704 #:default ""))
-    '(ENDPOINTS          big-integer)
     '(JSON               text        (#:not-null))))
 (migrate-up
   (display "Add your up code\n"))

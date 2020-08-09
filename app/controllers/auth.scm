@@ -5,6 +5,7 @@
 
 (use-modules (app models PEOPLE)
              (app models ACTORS)
+             (app models ENDPOINTS)
              (artanis sendmail)
              ((artanis utils) #:select (get-random-from-dev
                                         get-string-all-with-detected-charset))
@@ -132,21 +133,25 @@
                                                                                                   "#main-key"))
                                                                              ("owner"        . ,ACTIVITYPUB_ID)
                                                                              ("publicKeyPem" . ,pubStr))))))
-              ($PEOPLE 'set #:ACTOR_ID           (cdaar ($ACTORS 'get #:columns   '(ACTOR_ID)
-                                                                      #:condition (where #:ACTOR_ID ACTIVITYPUB_ID)))
-                            #:USERNAME           username
-                            #:E_MAIL             email
-                            #:PASSWORD           (SALTER
-                                                   (uri-decode (:from-post
-                                                                 rc
-                                                                 'get
-                                                                 "password"))
-                                                   salt)
-                            #:SALT               salt
-                            #:CREATED_AT         createdAt
-                            #:CONFIRMATION_TOKEN token
-                            #:PUBLIC_KEY         (bv->string  public)
-                            #:PRIVATE_KEY        (bv->string private)))
+
+              (let ([ACTOR_ID (cdaar ($ACTORS 'get #:columns   '(ACTOR_ID)
+                                                   #:condition (where #:ACTOR_ID ACTIVITYPUB_ID)))])
+                ($ENDPOINTS 'set #:ACTOR_ID     ACTOR_ID
+                                 #:SHARED_INBOX (string-append/shared "https://" domain "/inbox"))
+                ($PEOPLE    'set #:ACTOR_ID           ACTOR_ID
+                                 #:USERNAME           username
+                                 #:E_MAIL             email
+                                 #:PASSWORD           (SALTER
+                                                        (uri-decode (:from-post
+                                                                      rc
+                                                                      'get
+                                                                      "password"))
+                                                        salt)
+                                 #:SALT               salt
+                                 #:CREATED_AT         createdAt
+                                 #:CONFIRMATION_TOKEN token
+                                 #:PUBLIC_KEY         (bv->string  public)
+                                 #:PRIVATE_KEY        (bv->string private))))
 
             (send-the-mail ((make-simple-mail-sender
                               (string-append/shared "no-reply@" domain)

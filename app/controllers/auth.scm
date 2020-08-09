@@ -94,7 +94,7 @@
                              (string-trim-right
                                (get-string-all-with-detected-charset
                                 (string-append "/tmp/" privateFilename))))]
-                 [pubStr   (string-trim-right
+                 [public   (string-trim-right
                              (get-string-all-with-detected-charset
                                (string-append "/tmp/"  publicFilename)))]
                  [schedule (eval-string

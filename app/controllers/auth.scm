@@ -135,7 +135,7 @@
                                                                              ("publicKeyPem" . ,pubStr))))))
 
               (let ([ACTOR_ID (cdaar ($ACTORS 'get #:columns   '(ACTOR_ID)
-                                                   #:condition (where #:ACTOR_ID ACTIVITYPUB_ID)))])
+                                                   #:condition (where #:AP_ID ACTIVITYPUB_ID)))])
                 ($ENDPOINTS 'set #:ACTOR_ID     ACTOR_ID
                                  #:SHARED_INBOX (string-append/shared "https://" domain "/inbox"))
                 ($PEOPLE    'set #:ACTOR_ID           ACTOR_ID

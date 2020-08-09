@@ -107,7 +107,8 @@
 
             (clear-blowfish-schedule! schedule)
 
-            ($PEOPLE 'set #:USERNAME           username
+            ($PEOPLE 'set #:ACTOR_ID           ummm
+                          #:USERNAME           username
                           #:E_MAIL             email
                           #:PASSWORD           (SALTER
                                                  (uri-decode (:from-post

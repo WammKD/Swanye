@@ -83,22 +83,22 @@
                     " -outform PEM -pubout -out "
                     publicFilename))
 
-          (let ([token    (string->sha-512 (string-append/shared
                                              (number->string createdAt)
                                              email
                                              username))]
                 [salt                    (get-random-from-dev #:length 128)]
                 [domain                    (car (request-host (rc-req rc)))]
                 [private   (string->utf8
+          (let* ([token    (string->sha-512 (string-append/shared
                              (string-trim-right
                                (get-string-all-with-detected-charset
                                  (string-append "/tmp/" privateFilename))))]
-                [public    (string->utf8
-                             (string-trim-right
-                               (get-string-all-with-detected-charset
-                                 (string-append "/tmp/"  publicFilename))))]
                 [schedule (eval-string
                             (get-environment-variable "BLOWFISH_SCHEDULE"))])
+                 [pubStr   (string-trim-right
+                             (get-string-all-with-detected-charset
+                               (string-append "/tmp/"  publicFilename)))]
+                 [public   (string->utf8 pubStr)]
             (system (string-append/shared "rm /tmp/" privateFilename))
             (system (string-append/shared "rm /tmp/"  publicFilename))
 

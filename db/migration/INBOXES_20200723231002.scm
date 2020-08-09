@@ -6,11 +6,11 @@
 (migrate-create
   (create-table
     'INBOXES
-    '(ID        auto        (#:unique))
-    '(PERSON_ID big-integer (#:not-null))
-    '(ACTIVITY  text        (#:not-null))
-    '(TYPE      text        (#:not-null))))
+    '(ID       auto        (#:unique))
+    '(USER_ID  big-integer (#:not-null))
+    '(ACTIVITY text        (#:not-null))
+    '(TYPE     text        (#:not-null))))
 (migrate-up
   (display "Add your up code\n"))
 (migrate-down
-  (display "Add your down code\n"))
+  (drop-table 'INBOXES))

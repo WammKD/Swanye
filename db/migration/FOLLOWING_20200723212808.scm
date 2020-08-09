@@ -6,10 +6,10 @@
 (migrate-create
   (create-table
     'FOLLOWING
-    '(PEOPLE_ID__FOLLOWER big-integer  (#:not-null))
-    '( ACTOR_ID__FOLLOWEE big-integer  (#:not-null))
+    '( USER_ID__FOLLOWER big-integer  (#:not-null))
+    '(ACTOR_ID__FOLLOWEE big-integer  (#:not-null))
     '(PENDING   tiny-integer (#:not-null))
-    #:primary-keys '(PEOPLE_ID__FOLLOWER ACTOR_ID__FOLLOWEE)))
+    #:primary-keys '(USER_ID__FOLLOWER ACTOR_ID__FOLLOWEE)))
 (migrate-up
   (display "Add your up code\n"))
 (migrate-down

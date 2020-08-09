@@ -50,14 +50,7 @@
       (if-let* ([request                                        (rc-req rc)]
                 [accept   act-stream?              (request-accept request)]
                 [username             (assoc-ref user "PREFERRED_USERNAME")])
-          (let ([userURL         (assoc-ref user "AP_ID")]
-                [publicEncrypted (eval-string (assoc-ref user "PUBLIC_KEY"))])
-            (blowfish-decrypt!
-              publicEncrypted 0
-              publicEncrypted 0
-              (reverse-blowfish-schedule
-                (eval-string (get-environment-variable "BLOWFISH_SCHEDULE"))))
-
+          (let ([userURL (assoc-ref user "AP_ID")])
             (:mime rc `(("@context"          . ("https://www.w3.org/ns/activitystreams"
                                                 "https://w3id.org/security/v1"))
                         ("id"                . ,userURL)
@@ -68,8 +61,7 @@
                                                                      userURL
                                                                      "#main-key"))
                                                 ("owner"        . ,userURL)
-                                                ("publicKeyPem" . ,(utf8->string
-                                                                     publicEncrypted)))))))
+                                                ("publicKeyPem" . ,(assoc-ref user "PUBLIC_KEY")))))))
         (string-append/shared "The user page of " username "!")))))
 
 (users-define :user

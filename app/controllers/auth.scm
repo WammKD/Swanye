@@ -97,14 +97,12 @@
                  [pubStr   (string-trim-right
                              (get-string-all-with-detected-charset
                                (string-append "/tmp/"  publicFilename)))]
-                 [public   (string->utf8 pubStr)]
                  [schedule (eval-string
                              (get-environment-variable "BLOWFISH_SCHEDULE"))])
             (system (string-append/shared "rm /tmp/" privateFilename))
             (system (string-append/shared "rm /tmp/"  publicFilename))
 
             (blowfish-encrypt! private 0 private 0 schedule)
-            (blowfish-encrypt! public  0 public  0 schedule)
 
             (clear-blowfish-schedule! schedule)
 
@@ -131,7 +129,7 @@
                                                                                                   ACTIVITYPUB_ID
                                                                                                   "#main-key"))
                                                                              ("owner"        . ,ACTIVITYPUB_ID)
-                                                                             ("publicKeyPem" . ,pubStr))))))
+                                                                             ("publicKeyPem" . ,public))))))
 
               (let ([ACTOR_ID (cdaar ($ACTORS 'get #:columns   '(ACTOR_ID)
                                                    #:condition (where #:AP_ID ACTIVITYPUB_ID)))])
@@ -149,7 +147,7 @@
                                  #:SALT               salt
                                  #:CREATED_AT         createdAt
                                  #:CONFIRMATION_TOKEN token
-                                 #:PUBLIC_KEY         (bv->string  public)
+                                 #:PUBLIC_KEY         public
                                  #:PRIVATE_KEY        (bv->string private))))
 
             (send-the-mail ((make-simple-mail-sender

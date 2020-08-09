@@ -1,4 +1,4 @@
-;; Model PEOPLE definition of Swanye
+;; Model ACTORS definition of Swanye
 ;; Please add your license header here.
 ;; This file is generated automatically by GNU Artanis.
 (create-artanis-model   ; DO NOT REMOVE THIS LINE!!!

@@ -25,7 +25,7 @@
                (redirect-to rc "/404")
              (let ([domain                                    (cadr split)]
                    [poss   ((map-table-from-DB (:conn rc))
-                             'get        'PEOPLE
+                             'get        'USERS
                              #:columns   '(USERNAME)
                              #:condition (where #:USERNAME (cadr split2)))])
                (if (and

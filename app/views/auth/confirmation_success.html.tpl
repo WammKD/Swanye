@@ -41,7 +41,7 @@
 		</H1>
 
 		<P>
-			Hello, <%= person %>! You're all signed up!
+			Hello, <%= user %>! You're all signed up!
 		</P>
 
 		<P>

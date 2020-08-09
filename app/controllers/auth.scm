@@ -3,8 +3,8 @@
 ;; This file is generated automatically by GNU Artanis.
 (define-artanis-controller auth) ; DO NOT REMOVE THIS LINE!!!
 
-(use-modules (app models PEOPLE)
-             (app models ACTORS)
+(use-modules (app models     USERS)
+             (app models    ACTORS)
              (app models ENDPOINTS)
              (artanis sendmail)
              ((artanis utils) #:select (get-random-from-dev
@@ -43,8 +43,8 @@
         (process-redirect rc "/")
       (view-render "sign_in" (the-environment)))))
 
-(post "/auth/sign_in" #:auth      `(table PEOPLE "USERNAME" "PASSWORD"
-                                                 "SALT"     ,SALTER)
+(post "/auth/sign_in" #:auth      `(table USERS "USERNAME" "PASSWORD"
+                                                "SALT"     ,SALTER)
                       #:session   #t
                       #:from-post 'qstr-safe
   (lambda (rc)
@@ -69,8 +69,8 @@
     (let ([email     (uri-decode (:from-post rc 'get    "email"))]
           [username  (uri-decode (:from-post rc 'get "username"))]
           [createdAt                               (current-time)])
-      (if (not (null? ($PEOPLE 'get #:columns   '(*)
-                                    #:condition (where #:USERNAME username))))
+      (if (not (null? ($USERS 'get #:columns   '(*)
+                                   #:condition (where #:USERNAME username))))
           (view-render "sign_up_error" (the-environment))
         (let ([privateFilename (string-append "private_" username ".pem")]
               [ publicFilename (string-append  "public_" username ".pem")])
@@ -135,7 +135,7 @@
                                                    #:condition (where #:AP_ID (string-reverse ACTIVITYPUB_ID))))])
                 ($ENDPOINTS 'set #:ACTOR_ID     ACTOR_ID
                                  #:SHARED_INBOX (string-append/shared "https://" domain "/inbox"))
-                ($PEOPLE    'set #:ACTOR_ID           ACTOR_ID
+                ($USERS     'set #:ACTOR_ID           ACTOR_ID
                                  #:USERNAME           username
                                  #:E_MAIL             email
                                  #:PASSWORD           (SALTER
@@ -178,15 +178,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (auth-define confirmation
   (lambda (rc)
-    (let ([poss ($PEOPLE 'get #:columns   '(*)
-                              #:condition (where
-                                            #:CONFIRMATION_TOKEN
-                                            (get-from-qstr rc "token")))])
+    (let ([poss ($USERS 'get #:columns   '(*)
+                             #:condition (where
+                                           #:CONFIRMATION_TOKEN
+                                           (get-from-qstr rc "token")))])
       (if (null? poss)
           (view-render "confirmation_error" (the-environment))
-        (let ([person (car poss)])
-          ($PEOPLE 'set #:CONFIRMATION_TOKEN "confirmed"
-                        (where #:ID (assoc-ref person "ID")))
+        (let ([user (car poss)])
+          ($USERS 'set #:CONFIRMATION_TOKEN "confirmed"
+                       (where #:USER_ID (assoc-ref user "USER_ID")))
 
-          (let ([person (assoc-ref person "USERNAME")])
+          (let ([user (assoc-ref user "USERNAME")])
             (view-render "confirmation_success" (the-environment))))))))

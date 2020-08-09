@@ -3,7 +3,7 @@
 ;; This file is generated automatically by GNU Artanis.
 (define-artanis-controller users) ; DO NOT REMOVE THIS LINE!!!
 
-(use-modules (app       models    PEOPLE) (ice-9 eval-string) (srfi srfi-1)                (Swanye utils)
+(use-modules (app       models     USERS) (ice-9 eval-string) (srfi srfi-1)                (Swanye utils)
              (app       models    ACTORS) (ice-9     receive) ((srfi srfi-19) #:prefix d:) (web   client)
              (app       models FOLLOWERS) (ice-9       regex) (srfi srfi-26)               (web  request)
              (app       models   INBOXES) (rnrs  bytevectors) (srfi srfi-98)
@@ -12,7 +12,7 @@
 (define-syntax process-user-account-as
   (syntax-rules ()
     [(_ userVar (rcVar) then)
-          (let ([poss ($PEOPLE
+          (let ([poss ($USERS
                         'get
                         #:columns   '(*)
                         #:condition (where #:USERNAME (params rcVar "user")))])
@@ -81,8 +81,8 @@
                               'get
                               #:columns   '(*)
                               #:condition (where
-                                            #:FOLLOWEE
-                                            (assoc-ref user "ID")))]
+                                            #:USER_ID__FOLLOWEE
+                                            (assoc-ref user "USER_ID")))]
                  [followLen (length followers)])
             (:mime rc (append
                         `(("@context"   . "https://www.w3.org/ns/activitystreams")
@@ -110,7 +110,7 @@
                                                    "2")))))
                                 `(("partOf"       . ,id)
                                   ("orderedItems" . ,(map
-                                                       (cut assoc-ref <> "FOLLOWER")
+                                                       (cut assoc-ref <> "ACTOR_ID__FOLLOWER")
                                                        followers)))))
                           `(("id"         .                                  ,id)
                             ("first"      . ,(string-append/shared id "?page=1")))))))
@@ -243,11 +243,11 @@
                     (system (string-append/shared "rm " rsltFilename))
 
                     (let ([bodyStr (utf8->string body)])
-                      ($INBOXES 'set #:PERSON_ID (assoc-ref user "ID")
-                                     #:ACTIVITY  bodyStr
-                                     #:TYPE      (hash-ref
-                                                   (json-string->scm bodyStr)
-                                                   "type"))
+                      ($INBOXES 'set #:USER_ID  (assoc-ref user "USER_ID")
+                                     #:ACTIVITY bodyStr
+                                     #:TYPE     (hash-ref
+                                                  (json-string->scm bodyStr)
+                                                  "type"))
 
                       (response-emit "OK" #:status 200)))
                 (begin
@@ -261,8 +261,8 @@
   (options #:with-auth "/auth/sign_in")
 
   (lambda (rc)
-    (let ([poss ($PEOPLE 'get #:columns   '(*)
-                              #:condition (where #:USERNAME "wammkd"))])
+    (let ([poss ($USERS 'get #:columns   '(*)
+                             #:condition (where #:USERNAME "wammkd"))])
       (if (null? poss)
           (process-redirect rc "/404")
         (let* ([user                                              (car poss)]

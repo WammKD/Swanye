@@ -37,7 +37,7 @@
     ;; objects addressed to the Public special collection. Reading from the
     ;; `sharedInbox` endpoint MUST NOT present objects which are not addressed
     ;; to the Public endpoint.
-    '(SHARED_INBOX                 text))
+    '(SHARED_INBOX                 text)))
 (migrate-up
   (display "Add your up code\n"))
 (migrate-down

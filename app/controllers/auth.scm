@@ -119,8 +119,33 @@
                           #:SALT               salt
                           #:CREATED_AT         createdAt
                           #:CONFIRMATION_TOKEN token
-                          #:PUBLIC             (bv->string  public)
-                          #:PRIVATE            (bv->string private))
+                          #:PUBLIC_KEY         (bv->string  public)
+                          #:PRIVATE_KEY        (bv->string private))
+            (let ([ACTIVITYPUB_ID (string-append/shared "https://" domain
+                                                        "/users/"  username)]
+                  [ACTOR_TYPE     "Person"])
+              ($ACTORS 'set #:AP_ID              ACTIVITYPUB_ID
+                            #:ACTOR_TYPE         ACTOR_TYPE
+                            #:INBOX              (string-append/shared ACTIVITYPUB_ID "/inbox")
+                            #:OUTBOX             (string-append/shared ACTIVITYPUB_ID "/outbox")
+                            #:FOLLOWING          (string-append/shared ACTIVITYPUB_ID "/following")
+                            #:FOLLOWERS          (string-append/shared ACTIVITYPUB_ID "/followers")
+                            #:LIKED              (string-append/shared ACTIVITYPUB_ID "/likes")
+                            #:FEATURED           (string-append/shared ACTIVITYPUB_ID "/collections/featured")
+                            #:PREFERRED_USERNAME username
+                            #:ENDPOINTS          ummmm
+                            #:JSON               (scm->json-string
+                                                   `(("@context"          . ("https://www.w3.org/ns/activitystreams"
+                                                                             "https://w3id.org/security/v1"))
+                                                     ("id"                . ,ACTIVITYPUB_ID)
+                                                     ("type"              . ,ACTOR_TYPE)
+                                                     ("preferredUsername" . ,username)
+                                                     ("inbox"             . (string-append/shared ACTIVITYPUB_ID "/inbox"))
+                                                     ("publicKey"         . (("id"           . ,(string-append/shared
+                                                                                                  ACTIVITYPUB_ID
+                                                                                                  "#main-key"))
+                                                                             ("owner"        . ,ACTIVITYPUB_ID)
+                                                                             ("publicKeyPem" . ,pubStr)))))))
 
             (send-the-mail ((make-simple-mail-sender
                               (string-append/shared "no-reply@" domain)

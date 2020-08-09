@@ -47,13 +47,11 @@
 (get "/@:user" #:mime 'json
   (lambda (rc)
     (process-user-account-as user (rc)
-          (let ([userURL         (string-append/shared
-                                   "https://" (car (request-host request))
-                                   "/users/"  username)]
-                [publicEncrypted (eval-string (assoc-ref user "PUBLIC"))])
       (if-let* ([request                                        (rc-req rc)]
                 [accept   act-stream?              (request-accept request)]
                 [username             (assoc-ref user "PREFERRED_USERNAME")])
+          (let ([userURL         (assoc-ref user "AP_ID")]
+                [publicEncrypted (eval-string (assoc-ref user "PUBLIC_KEY"))])
             (blowfish-decrypt!
               publicEncrypted 0
               publicEncrypted 0
@@ -64,10 +62,8 @@
                                                 "https://w3id.org/security/v1"))
                         ("id"                . ,userURL)
                         ("type"              . "Person")
-                        ("inbox"             . ,(string-append/shared
-                                                  userURL
-                                                  "/inbox"))
                         ("preferredUsername" . ,(assoc-ref user "PREFERRED_USERNAME"))
+                        ("inbox"             . ,(assoc-ref user "INBOX"))
                         ("publicKey"         . (("id"           . ,(string-append/shared
                                                                      userURL
                                                                      "#main-key"))
@@ -85,13 +81,10 @@
 
   (lambda (rc)
     (process-user-account-as user (rc)
-          (let* ([id        (string-append/shared
-                              "https://"   (car (request-host request))
-                              "/users/"    username
-                              "/followers")]
       (if-let* ([request                                        (rc-req rc)]
                 [accept   act-stream?              (request-accept request)]
                 [username             (assoc-ref user "PREFERRED_USERNAME")])
+          (let* ([id        (assoc-ref user "FOLLOWERS")]
                  [followers ($FOLLOWERS
                               'get
                               #:columns   '(*)

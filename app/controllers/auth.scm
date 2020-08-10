@@ -124,7 +124,7 @@
                                                      ("id"                . ,ACTIVITYPUB_ID)
                                                      ("type"              . ,ACTOR_TYPE)
                                                      ("preferredUsername" . ,username)
-                                                     ("inbox"             . (string-append/shared ACTIVITYPUB_ID "/inbox"))
+                                                     ("inbox"             . ,(string-append/shared ACTIVITYPUB_ID "/inbox"))
                                                      ("publicKey"         . (("id"           . ,(string-append/shared
                                                                                                   ACTIVITYPUB_ID
                                                                                                   "#main-key"))

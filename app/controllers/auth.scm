@@ -5,6 +5,7 @@
 
 (use-modules (app models     USERS)
              (app models    ACTORS)
+             (app models   OBJECTS)
              (app models ENDPOINTS)
              (artanis sendmail)
              ((artanis utils) #:select (get-random-from-dev
@@ -108,34 +109,39 @@
 
             (let ([ACTIVITYPUB_ID (string-append/shared "https://" domain
                                                         "/users/"  username)]
-                  [ACTOR_TYPE     "Person"])
-              ($ACTORS 'set #:AP_ID              (string-reverse ACTIVITYPUB_ID)
-                            #:ACTOR_TYPE         ACTOR_TYPE
-                            #:INBOX              (string-append/shared ACTIVITYPUB_ID "/inbox")
-                            #:OUTBOX             (string-append/shared ACTIVITYPUB_ID "/outbox")
-                            #:FOLLOWING          (string-append/shared ACTIVITYPUB_ID "/following")
-                            #:FOLLOWERS          (string-append/shared ACTIVITYPUB_ID "/followers")
-                            #:LIKED              (string-append/shared ACTIVITYPUB_ID "/likes")
-                            #:FEATURED           (string-append/shared ACTIVITYPUB_ID "/collections/featured")
-                            #:PREFERRED_USERNAME username
-                            #:JSON               (scm->json-string
-                                                   `(("@context"          . ("https://www.w3.org/ns/activitystreams"
-                                                                             "https://w3id.org/security/v1"))
-                                                     ("id"                . ,ACTIVITYPUB_ID)
-                                                     ("type"              . ,ACTOR_TYPE)
-                                                     ("preferredUsername" . ,username)
-                                                     ("inbox"             . ,(string-append/shared ACTIVITYPUB_ID "/inbox"))
-                                                     ("publicKey"         . (("id"           . ,(string-append/shared
-                                                                                                  ACTIVITYPUB_ID
-                                                                                                  "#main-key"))
-                                                                             ("owner"        . ,ACTIVITYPUB_ID)
-                                                                             ("publicKeyPem" . ,public))))))
+                  [OBJECT_TYPE     "Person"])
+              ($OBJECTS 'set #:AP_ID       (string-reverse ACTIVITYPUB_ID)
+                             #:OBJECT_TYPE OBJECT_TYPE
+                             #:JSON        (scm->json-string
+                                             `(("@context"          . ("https://www.w3.org/ns/activitystreams"
+                                                                       "https://w3id.org/security/v1"))
+                                               ("id"                . ,ACTIVITYPUB_ID)
+                                               ("type"              . ,ACTOR_TYPE)
+                                               ("preferredUsername" . ,username)
+                                               ("inbox"             . ,(string-append/shared ACTIVITYPUB_ID "/inbox"))
+                                               ("publicKey"         . (("id"           . ,(string-append/shared
+                                                                                            ACTIVITYPUB_ID
+                                                                                            "#main-key"))
+                                                                       ("owner"        . ,ACTIVITYPUB_ID)
+                                                                       ("publicKeyPem" . ,public))))))
 
-              (let ([ACTOR_ID (cdaar ($ACTORS 'get #:columns   '(ACTOR_ID)
-                                                   #:condition (where #:AP_ID (string-reverse ACTIVITYPUB_ID))))])
-                ($ENDPOINTS 'set #:ACTOR_ID     ACTOR_ID
+              (let ([OBJECT_ID (cdaar ($OBJECTS 'get #:columns   '(OBJECT_ID)
+                                                     #:condition (where #:AP_ID (string-reverse ACTIVITYPUB_ID))))])
+                ($ACTORS    'set #:ACTOR_ID           OBJECT_ID
+                                 #:AP_ID              (string-reverse ACTIVITYPUB_ID)
+                                 #:ACTOR_TYPE         OBJECT_TYPE
+                                 #:INBOX              (string-append/shared ACTIVITYPUB_ID "/inbox")
+                                 #:OUTBOX             (string-append/shared ACTIVITYPUB_ID "/outbox")
+                                 #:FOLLOWING          (string-append/shared ACTIVITYPUB_ID "/following")
+                                 #:FOLLOWERS          (string-append/shared ACTIVITYPUB_ID "/followers")
+                                 #:LIKED              (string-append/shared ACTIVITYPUB_ID "/likes")
+                                 #:FEATURED           (string-append/shared ACTIVITYPUB_ID "/collections/featured")
+                                 #:PREFERRED_USERNAME username)
+
+                ($ENDPOINTS 'set #:ACTOR_ID     OBJECT_ID
                                  #:SHARED_INBOX (string-append/shared "https://" domain "/inbox"))
-                ($USERS     'set #:ACTOR_ID           ACTOR_ID
+
+                ($USERS     'set #:USER_ID            OBJECT_ID
                                  #:USERNAME           username
                                  #:E_MAIL             email
                                  #:PASSWORD           (SALTER

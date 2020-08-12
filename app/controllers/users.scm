@@ -5,8 +5,9 @@
 
 (use-modules (app       models     USERS) (ice-9 eval-string) (srfi srfi-1)                (Swanye utils)
              (app       models    ACTORS) (ice-9     receive) ((srfi srfi-19) #:prefix d:) (web   client)
-             (app       models FOLLOWERS) (ice-9       regex) (srfi srfi-26)               (web  request)
-             (app       models   INBOXES) (rnrs  bytevectors) (srfi srfi-98)
+             (app       models   OBJECTS) (ice-9       regex) (srfi srfi-26)               (web  request)
+             (app       models FOLLOWERS) (rnrs  bytevectors) (srfi srfi-98)
+             (app       models   INBOXES)
              (industria crypto  blowfish))
 
 (define-syntax process-user-account-as
@@ -25,7 +26,13 @@
                                       #:columns   '(*)
                                       #:condition (where #:ACTOR_ID (assoc-ref
                                                                       (car poss)
-                                                                      "ACTOR_ID")))))])
+                                                                      "USER_ID"))))
+                               (car ($OBJECTS
+                                      'get
+                                      #:columns   '(*)
+                                      #:condition (where #:OBJECT_ID (assoc-ref
+                                                                       (car poss)
+                                                                       "USER_ID")))))])
                 then)))]))
 
 (define (act-stream? accept)

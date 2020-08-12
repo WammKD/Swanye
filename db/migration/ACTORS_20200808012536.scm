@@ -6,9 +6,9 @@
 (migrate-create
   (create-table
     'ACTORS
-    '(ACTOR_ID           auto        (#:unique))
     '(AP_ID              text        (#:not-null))
     '(ACTOR_TYPE         char-field  (#:not-null #:maxlen 50))
+    '(ACTOR_ID           big-integer (#:not-null #:unique     #:primary-key))
     '( INBOX             text        (#:not-null))
     '(OUTBOX             text        (#:not-null))
     '(FOLLOWING          text)
@@ -17,8 +17,7 @@
     '(FEATURED           text)
     '(NAME               char-field  (#:not-null #:maxlen 64))
     '(PREFERRED_USERNAME char-field  (#:not-null #:maxlen 64  #:default ""))
-    '(SUMMARY            char-field  (#:not-null #:maxlen 704 #:default ""))
-    '(JSON               text        (#:not-null))))
+    '(SUMMARY            char-field  (#:not-null #:maxlen 704 #:default ""))))
 (migrate-up
   (display "Add your up code\n"))
 (migrate-down

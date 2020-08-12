@@ -6,8 +6,6 @@
 (migrate-create
   (create-table
     'USERS
-    '(USER_ID            auto        (#:primary-key  #:not-null #:unique))
-    '(ACTOR_ID           big-integer                (#:not-null #:unique))
     '(USERNAME           char-field  (#:maxlen    64 #:not-null #:unique))
     '(E_MAIL             char-field  (#:maxlen   255 #:not-null))
     '(PASSWORD           char-field  (#:maxlen   128 #:not-null))
@@ -16,6 +14,7 @@
     '(CONFIRMATION_TOKEN char-field  (#:maxlen   128 #:not-null))
     '( PUBLIC_KEY        text                       (#:not-null))
     '(PRIVATE_KEY        text                       (#:not-null))))
+    '(USER_ID            big-integer (#:primary-key #:not-null #:unique))
 (migrate-up
   (change-table
     'USERS

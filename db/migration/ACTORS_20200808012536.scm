@@ -6,17 +6,17 @@
 (migrate-create
   (create-table
     'ACTORS
-    '(AP_ID              text        (#:not-null))
-    '(ACTOR_TYPE         char-field  (#:not-null #:maxlen 50))
     '(ACTOR_ID           big-integer (#:not-null #:unique     #:primary-key))
+    '(   AP_ID           text        (#:not-null))
+    '(ACTOR_TYPE         char-field  (#:not-null #:maxlen  50))
     '( INBOX             text        (#:not-null))
     '(OUTBOX             text        (#:not-null))
     '(FOLLOWING          text)
     '(FOLLOWERS          text)
     '(LIKED              text)
     '(FEATURED           text)
-    '(NAME               char-field  (#:not-null #:maxlen 64))
-    '(PREFERRED_USERNAME char-field  (#:not-null #:maxlen 64  #:default ""))
+    '(NAME               char-field  (#:not-null #:maxlen  64))
+    '(PREFERRED_USERNAME char-field  (#:not-null #:maxlen  64 #:default ""))
     '(SUMMARY            char-field  (#:not-null #:maxlen 704 #:default ""))))
 (migrate-up
   (display "Add your up code\n"))

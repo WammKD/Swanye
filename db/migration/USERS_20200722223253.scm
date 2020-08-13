@@ -6,15 +6,15 @@
 (migrate-create
   (create-table
     'USERS
-    '(USERNAME           char-field  (#:maxlen    64 #:not-null #:unique))
-    '(E_MAIL             char-field  (#:maxlen   255 #:not-null))
-    '(PASSWORD           char-field  (#:maxlen   128 #:not-null))
-    '(SALT               char-field  (#:maxlen   256 #:not-null))
-    '(CREATED_AT         big-integer                (#:not-null))
-    '(CONFIRMATION_TOKEN char-field  (#:maxlen   128 #:not-null))
-    '( PUBLIC_KEY        text                       (#:not-null))
-    '(PRIVATE_KEY        text                       (#:not-null))))
     '(USER_ID            big-integer (#:primary-key #:not-null #:unique))
+    '(USERNAME           char-field  (#:maxlen  64  #:not-null #:unique))
+    '(E_MAIL             char-field  (#:maxlen 255  #:not-null))
+    '(PASSWORD           char-field  (#:maxlen 128  #:not-null))
+    '(SALT               char-field  (#:maxlen 256  #:not-null))
+    '(CREATED_AT         big-integer               (#:not-null))
+    '(CONFIRMATION_TOKEN char-field  (#:maxlen 128  #:not-null))
+    '( PUBLIC_KEY        text                      (#:not-null))
+    '(PRIVATE_KEY        text                      (#:not-null))))
 (migrate-up
   (change-table
     'USERS

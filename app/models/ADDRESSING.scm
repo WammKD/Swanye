@@ -6,4 +6,4 @@
   (    OBJECT_ID   big-integer (#:not-null))
   (ADDRESSING_TYPE char-field  (#:not-null #:maxlen 3))
   (     ACTOR_ID   big-integer (#:not-null))
-  #:primary-keys '(OBJECT_ID ADDRESSING_TYPE ACTOR_ID))
+  #:primary-keys (OBJECT_ID ADDRESSING_TYPE ACTOR_ID))

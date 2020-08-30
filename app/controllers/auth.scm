@@ -116,7 +116,7 @@
                                              `(("@context"          . ("https://www.w3.org/ns/activitystreams"
                                                                        "https://w3id.org/security/v1"))
                                                ("id"                . ,ACTIVITYPUB_ID)
-                                               ("type"              . ,ACTOR_TYPE)
+                                               ("type"              . ,OBJECT_TYPE)
                                                ("preferredUsername" . ,username)
                                                ("inbox"             . ,(string-append/shared ACTIVITYPUB_ID "/inbox"))
                                                ("publicKey"         . (("id"           . ,(string-append/shared

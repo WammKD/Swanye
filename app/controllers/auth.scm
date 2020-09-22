@@ -6,6 +6,7 @@
 (use-modules (app models     USERS)
              (app models    ACTORS)
              (app models   OBJECTS)
+             (app models  SESSIONS)
              (app models ENDPOINTS)
              (artanis sendmail)
              ((artanis utils) #:select (get-random-from-dev
@@ -51,7 +52,21 @@
   (lambda (rc)
     (cond
      [(:session rc 'check) (process-redirect rc "/main/home")]
-     [(:auth    rc)        (:session rc 'spawn)
+     [(:auth    rc)        (let ([userID (assoc-ref
+                                           (car ($USERS 'get #:columns   '(USER_ID)
+                                                             #:condition (where
+                                                                           #:USERNAME
+                                                                           (:from-post rc 'get "USERNAME"))))
+                                           "USER_ID")])
+                             (if (null? ($SESSIONS 'get #:columns   '(*)
+                                                        #:condition (where
+                                                                      #:USER_ID
+                                                                      userID)))
+                                 ($SESSIONS 'set #:SESSION_ID (:session rc 'spawn)
+                                                 #:USER_ID    userID)
+                               ($SESSIONS 'set #:SESSION_ID (:session rc 'spawn)
+                                               (where #:USER_ID userID))))
+
                            (process-redirect rc "/")]
      [else                   "Go to fail page."])))
 

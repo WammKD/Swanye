@@ -265,77 +265,92 @@
                                       #:columns   '(ACTOR_ID)
                                       #:condition (where #:AP_ID revActorID))])
                         (when (null? actors)
-                          (let ([actor (receive (httpHead httpBody)
-                                           (http-get
-                                             actorID
-                                             #:headers `((Accept  . "application/ld+json")
-                                                         (Profile . "https://www.w3.org/ns/activitystreams")))
-                                         (json-string->scm (utf8->string httpBody)))])
-                            ($OBJECTS 'set #:AP_ID       revActorID
-                                           #:OBJECT_TYPE (hash-ref actor "type")
-                                           #:JSON        bodyStr)
+                          ;; (let ([actor (receive (httpHead httpBody)
+                          ;;                  (http-get
+                          ;;                    actorID
+                          ;;                    #:headers `((Accept  . "application/ld+json")
+                          ;;                                (Profile . "https://www.w3.org/ns/activitystreams")))
+                          ;;                (json-string->scm (utf8->string httpBody)))])
+                          (let ([actorFilename (string-append/shared
+                                                 "actor_"
+                                                 currentTime
+                                                 (get-random-from-dev #:length 64))])
+                            (system (string-append/shared
+                                      "curl -H \"Accept: application/ld+json\" "
+                                           "-H \"Profile: https://www.w3.org/ns/activitystreams\" "
+                                      actorID
+                                      " > " actorFilename))
 
-                            (let ([OBJECT_ID (cdaar ($OBJECTS
-                                                      'get
-                                                      #:columns   '(OBJECT_ID)
-                                                      #:condition (where #:AP_ID revActorID)))])
-                              ($ACTORS 'set #:ACTOR_ID           OBJECT_ID
-                                            #:AP_ID              revActorID
-                                            #:ACTOR_TYPE         (hash-ref actor "type")
-                                            #:INBOX              (hash-ref actor "inbox")
-                                            #:OUTBOX             (hash-ref actor "outbox")
-                                            #:FOLLOWING          (if-let ([following (hash-ref actor "following")])
-                                                                     following
-                                                                   'null)
-                                            #:FOLLOWERS          (if-let ([followers (hash-ref actor "followers")])
-                                                                     followers
-                                                                   'null)
-                                            #:LIKED              (if-let ([liked     (hash-ref actor     "liked")])
-                                                                     liked
-                                                                   'null)
-                                            #:FEATURED           (if-let ([featured  (hash-ref actor  "featured")])
-                                                                     featured
-                                                                   'null)
-                                            #:PREFERRED_USERNAME (hash-ref actor "preferredUsername"))
+                            (let ([actor (json-string->scm
+                                           (get-string-all-with-detected-charset
+                                             actorFilename))])
+                              (system (string-append/shared "rm " actorFilename))
 
-                              (let ([endpoints (hash-ref actor "endpoints")])
-                                (when endpoints
-                                  ($ENDPOINTS 'set #:ACTOR_ID
-                                                      OBJECT_ID
-                                                   #:PROXY_URL
-                                                      (if-let ([proxyURL (hash-ref endpoints "proxyUrl")])
-                                                          proxyURL
-                                                        'null)
-                                                   #:OAUTH_AUTHORIZATION_ENDPOINT
-                                                      (if-let ([oauthAuthorizationEndpoint (hash-ref
-                                                                                             endpoints
-                                                                                             "oauthAuthorizationEndpoint")])
-                                                          oauthAuthorizationEndpoint
-                                                        'null)
-                                                   #:OAUTH_TOKEN_ENDPOINT
-                                                      (if-let ([oauthTokenEndpoint (hash-ref
+                              ($OBJECTS 'set #:AP_ID       revActorID
+                                             #:OBJECT_TYPE (hash-ref actor "type")
+                                             #:JSON        bodyStr)
+
+                              (let ([OBJECT_ID (cdaar ($OBJECTS
+                                                        'get
+                                                        #:columns   '(OBJECT_ID)
+                                                        #:condition (where #:AP_ID revActorID)))])
+                                ($ACTORS 'set #:ACTOR_ID           OBJECT_ID
+                                              #:AP_ID              revActorID
+                                              #:ACTOR_TYPE         (hash-ref actor "type")
+                                              #:INBOX              (hash-ref actor "inbox")
+                                              #:OUTBOX             (hash-ref actor "outbox")
+                                              #:FOLLOWING          (if-let ([following (hash-ref actor "following")])
+                                                                       following
+                                                                     'null)
+                                              #:FOLLOWERS          (if-let ([followers (hash-ref actor "followers")])
+                                                                       followers
+                                                                     'null)
+                                              #:LIKED              (if-let ([liked     (hash-ref actor     "liked")])
+                                                                       liked
+                                                                     'null)
+                                              #:FEATURED           (if-let ([featured  (hash-ref actor  "featured")])
+                                                                       featured
+                                                                     'null)
+                                              #:PREFERRED_USERNAME (hash-ref actor "preferredUsername"))
+
+                                (let ([endpoints (hash-ref actor "endpoints")])
+                                  (when endpoints
+                                    ($ENDPOINTS 'set #:ACTOR_ID
+                                                        OBJECT_ID
+                                                     #:PROXY_URL
+                                                        (if-let ([proxyURL (hash-ref endpoints "proxyUrl")])
+                                                            proxyURL
+                                                          'null)
+                                                     #:OAUTH_AUTHORIZATION_ENDPOINT
+                                                        (if-let ([oauthAuthorizationEndpoint (hash-ref
+                                                                                               endpoints
+                                                                                               "oauthAuthorizationEndpoint")])
+                                                            oauthAuthorizationEndpoint
+                                                          'null)
+                                                     #:OAUTH_TOKEN_ENDPOINT
+                                                        (if-let ([oauthTokenEndpoint (hash-ref
+                                                                                       endpoints
+                                                                                       "oauthTokenEndpoint")])
+                                                            oauthTokenEndpoint
+                                                          'null)
+                                                     #:PROVIDE_CLIENT_KEY
+                                                        (if-let ([provideClientKey (hash-ref
                                                                                      endpoints
-                                                                                     "oauthTokenEndpoint")])
-                                                          oauthTokenEndpoint
-                                                        'null)
-                                                   #:PROVIDE_CLIENT_KEY
-                                                      (if-let ([provideClientKey (hash-ref
-                                                                                   endpoints
-                                                                                   "provideClientKey")])
-                                                          provideClientKey
-                                                        'null)
-                                                   #:SIGN_CLIENT_KEY
-                                                      (if-let ([signClientKey (hash-ref
+                                                                                     "provideClientKey")])
+                                                            provideClientKey
+                                                          'null)
+                                                     #:SIGN_CLIENT_KEY
+                                                        (if-let ([signClientKey (hash-ref
+                                                                                  endpoints
+                                                                                  "signClientKey")])
+                                                            signClientKey
+                                                          'null)
+                                                     #:SHARED_INBOX
+                                                        (if-let ([sharedInbox (hash-ref
                                                                                 endpoints
-                                                                                "signClientKey")])
-                                                          signClientKey
-                                                        'null)
-                                                   #:SHARED_INBOX
-                                                      (if-let ([sharedInbox (hash-ref
-                                                                              endpoints
-                                                                              "sharedInbox")])
-                                                          sharedInbox
-                                                        'null))))))))
+                                                                                "sharedInbox")])
+                                                            sharedInbox
+                                                          'null)))))))))
 
                       ($INBOXES 'set #:USER_ID   (assoc-ref user "USER_ID")
                                      #:ACTOR_ID  (cdaar ($ACTORS

@@ -67,7 +67,7 @@
                                ($SESSIONS 'set #:SESSION_ID (:session rc 'spawn)
                                                (where #:USER_ID userID))))
 
-                           (process-redirect rc "/")]
+                           (process-redirect rc "/main/home")]
      [else                   "Go to fail page."])))
 
 ;;;;;;;;;;;;;;;;;;;;;

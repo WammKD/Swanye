@@ -271,6 +271,14 @@
                                              #:headers `((Accept  . "application/ld+json")
                                                          (Profile . "https://www.w3.org/ns/activitystreams")))
                                          (json-string->scm (utf8->string httpBody)))])
+                            ($OBJECTS 'set #:AP_ID       revActorID
+                                           #:OBJECT_TYPE (hash-ref actor "type")
+                                           #:JSON        bodyStr)
+
+                            (let ([OBJECT_ID (cdaar ($OBJECTS
+                                                      'get
+                                                      #:columns   '(OBJECT_ID)
+                                                      #:condition (where #:AP_ID revActorID)))])
                       ($INBOXES 'set #:USER_ID   (assoc-ref user "USER_ID")
                                      #:ACTOR_ID  (cdaar ($ACTORS
                                                           'get

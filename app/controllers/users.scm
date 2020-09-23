@@ -260,6 +260,11 @@
                                        #:OBJECT_TYPE (hash-ref object "type")
                                        #:JSON        (scm->json-string object)))
 
+                      (let ([actors ($ACTORS
+                                      'get
+                                      #:columns   '(ACTOR_ID)
+                                      #:condition (where #:AP_ID revActorID))])
+                        (when (null? actors)
                       ($INBOXES 'set #:USER_ID   (assoc-ref user "USER_ID")
                                      #:ACTOR_ID  (cdaar ($ACTORS
                                                           'get

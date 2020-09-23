@@ -101,7 +101,7 @@
 						</PATH>
 					</SVG>
 
-					<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1.3em" height="1.3em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" class="iconify icon:gridicons-reblog" data-inline="false" data-width="1.3em" data-height="1.3em" data-icon="gridicons-reblog" style="transform: rotate(360deg);"><path d="M22.086 9.914L20 7.828V18a2 2 0 0 1-2 2h-7v-2h7V7.828l-2.086 2.086L14.5 8.5L19 4l4.5 4.5l-1.414 1.414zM6 16.172V6h7V4H6a2 2 0 0 0-2 2v10.172l-2.086-2.086L.5 15.5L5 20l4.5-4.5l-1.414-1.414L6 16.172z" fill="#707B97" id="reblog"></path></svg>
+					<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1.3em" height="1.3em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" class="iconify icon:gridicons-reblog" data-inline="false" data-width="1.3em" data-height="1.3em" data-icon="gridicons-reblog" style="transform: rotate(360deg);" id="reblog"><path d="M22.086 9.914L20 7.828V18a2 2 0 0 1-2 2h-7v-2h7V7.828l-2.086 2.086L14.5 8.5L19 4l4.5 4.5l-1.414 1.414zM6 16.172V6h7V4H6a2 2 0 0 0-2 2v10.172l-2.086-2.086L.5 15.5L5 20l4.5-4.5l-1.414-1.414L6 16.172z" fill="#707B97"></path><rect height="4" y="10" ry="2" fill-opacity="null" stroke-width="null" id="svg_9" width="4" x="10" rx="2" stroke-opacity="null" stroke="null" /></svg>
 
 					<SVG xmlns="http://www.w3.org/2000/svg"
 					     xmlns:xlink="http://www.w3.org/1999/xlink"

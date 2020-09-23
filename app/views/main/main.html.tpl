@@ -8,6 +8,7 @@
 		</TITLE>
 
 		<@css dashboard.css %>
+		<@css     posts.css %>
 
 		<SCRIPT type="text/javascript">
 			/*

@@ -42,13 +42,7 @@
 		<@include dashboard.html %>
 
 		<DIV class="dash_main">
-			<H1>
-				auth#password
-			</H1>
 
-			<P>
-				Rendered from app/views/auth/password.html.tpl.
-			</P>
 		</DIV>
 	</BODY>
 </HTML>

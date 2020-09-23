@@ -5,8 +5,9 @@
 
 (use-modules (app       models     USERS) (ice-9 eval-string) (srfi srfi-1)                (Swanye utils)
              (app       models    ACTORS) (ice-9     receive) ((srfi srfi-19) #:prefix d:) (web   client)
-             (app       models   OBJECTS) (ice-9       regex) (srfi srfi-26)               (web  request)
-             (app       models FOLLOWERS) (rnrs  bytevectors) (srfi srfi-98)
+             (app       models ENDPOINTS) (ice-9       regex) (srfi srfi-26)               (web  request)
+             (app       models   OBJECTS) (rnrs  bytevectors) (srfi srfi-98)
+             (app       models FOLLOWERS)
              (app       models   INBOXES)
              (industria crypto  blowfish))
 

@@ -279,6 +279,25 @@
                                                       'get
                                                       #:columns   '(OBJECT_ID)
                                                       #:condition (where #:AP_ID revActorID)))])
+                              ($ACTORS 'set #:ACTOR_ID           OBJECT_ID
+                                            #:AP_ID              revActorID
+                                            #:ACTOR_TYPE         (hash-ref actor "type")
+                                            #:INBOX              (hash-ref actor "inbox")
+                                            #:OUTBOX             (hash-ref actor "outbox")
+                                            #:FOLLOWING          (if-let ([following (hash-ref actor "following")])
+                                                                     following
+                                                                   'null)
+                                            #:FOLLOWERS          (if-let ([followers (hash-ref actor "followers")])
+                                                                     followers
+                                                                   'null)
+                                            #:LIKED              (if-let ([liked     (hash-ref actor     "liked")])
+                                                                     liked
+                                                                   'null)
+                                            #:FEATURED           (if-let ([featured  (hash-ref actor  "featured")])
+                                                                     featured
+                                                                   'null)
+                                            #:PREFERRED_USERNAME (hash-ref actor "preferredUsername"))
+
                       ($INBOXES 'set #:USER_ID   (assoc-ref user "USER_ID")
                                      #:ACTOR_ID  (cdaar ($ACTORS
                                                           'get

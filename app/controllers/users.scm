@@ -298,6 +298,45 @@
                                                                    'null)
                                             #:PREFERRED_USERNAME (hash-ref actor "preferredUsername"))
 
+                              (let ([endpoints (hash-ref actor "endpoints")])
+                                (when endpoints
+                                  ($ENDPOINTS 'set #:ACTOR_ID
+                                                      OBJECT_ID
+                                                   #:PROXY_URL
+                                                      (if-let ([proxyURL (hash-ref endpoints "proxyUrl")])
+                                                          proxyURL
+                                                        'null)
+                                                   #:OAUTH_AUTHORIZATION_ENDPOINT
+                                                      (if-let ([oauthAuthorizationEndpoint (hash-ref
+                                                                                             endpoints
+                                                                                             "oauthAuthorizationEndpoint")])
+                                                          oauthAuthorizationEndpoint
+                                                        'null)
+                                                   #:OAUTH_TOKEN_ENDPOINT
+                                                      (if-let ([oauthTokenEndpoint (hash-ref
+                                                                                     endpoints
+                                                                                     "oauthTokenEndpoint")])
+                                                          oauthTokenEndpoint
+                                                        'null)
+                                                   #:PROVIDE_CLIENT_KEY
+                                                      (if-let ([provideClientKey (hash-ref
+                                                                                   endpoints
+                                                                                   "provideClientKey")])
+                                                          provideClientKey
+                                                        'null)
+                                                   #:SIGN_CLIENT_KEY
+                                                      (if-let ([signClientKey (hash-ref
+                                                                                endpoints
+                                                                                "signClientKey")])
+                                                          signClientKey
+                                                        'null)
+                                                   #:SHARED_INBOX
+                                                      (if-let ([sharedInbox (hash-ref
+                                                                              endpoints
+                                                                              "sharedInbox")])
+                                                          sharedInbox
+                                                        'null))))))))
+
                       ($INBOXES 'set #:USER_ID   (assoc-ref user "USER_ID")
                                      #:ACTOR_ID  (cdaar ($ACTORS
                                                           'get

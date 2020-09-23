@@ -249,12 +249,27 @@
                   (begin
                     (system (string-append/shared "rm " rsltFilename))
 
-                    (let ([bodyStr (utf8->string body)])
-                      ($INBOXES 'set #:USER_ID  (assoc-ref user "USER_ID")
-                                     #:ACTIVITY bodyStr
-                                     #:TYPE     (hash-ref
-                                                  (json-string->scm bodyStr)
-                                                  "type"))
+                    (let* ([bodyStr             (utf8->string body)]
+                           [bodyHash     (json-string->scm bodyStr)]
+                           [actorID     (hash-ref bodyHash "actor")]
+                           [revActorID     (string-reverse actorID)]
+                           [object     (hash-ref bodyHash "object")])
+                      ($INBOXES 'set #:USER_ID   (assoc-ref user "USER_ID")
+                                     #:ACTOR_ID  (cdaar ($ACTORS
+                                                          'get
+                                                          #:columns   '(ACTOR_ID)
+                                                          #:condition (where #:AP_ID revActorID)))
+                                     #:OBJECT_ID (cdaar ($OBJECTS
+                                                          'get
+                                                          #:columns   '(OBJECT_ID)
+                                                          #:condition (where
+                                                                        #:AP_ID
+                                                                        (string-reverse
+                                                                          (if (hash-table? object)
+                                                                              (hash-ref object "id")
+                                                                            object)))))
+                                     #:ACTIVITY  bodyStr
+                                     #:TYPE      (hash-ref bodyHash "type"))
 
                       (response-emit "OK" #:status 200)))
                 (begin

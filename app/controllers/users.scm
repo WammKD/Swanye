@@ -265,6 +265,12 @@
                                       #:columns   '(ACTOR_ID)
                                       #:condition (where #:AP_ID revActorID))])
                         (when (null? actors)
+                          (let ([actor (receive (httpHead httpBody)
+                                           (http-get
+                                             actorID
+                                             #:headers `((Accept  . "application/ld+json")
+                                                         (Profile . "https://www.w3.org/ns/activitystreams")))
+                                         (json-string->scm (utf8->string httpBody)))])
                       ($INBOXES 'set #:USER_ID   (assoc-ref user "USER_ID")
                                      #:ACTOR_ID  (cdaar ($ACTORS
                                                           'get

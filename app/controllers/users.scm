@@ -254,6 +254,12 @@
                            [actorID     (hash-ref bodyHash "actor")]
                            [revActorID     (string-reverse actorID)]
                            [object     (hash-ref bodyHash "object")])
+                      (when (hash-table? object)
+                        ($OBJECTS 'set #:AP_ID       (string-reverse
+                                                       (hash-ref object "id"))
+                                       #:OBJECT_TYPE (hash-ref object "type")
+                                       #:JSON        (scm->json-string object)))
+
                       ($INBOXES 'set #:USER_ID   (assoc-ref user "USER_ID")
                                      #:ACTOR_ID  (cdaar ($ACTORS
                                                           'get

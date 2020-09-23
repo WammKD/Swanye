@@ -101,7 +101,7 @@
 						</PATH>
 					</SVG>
 
-					<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1.3em" height="1.3em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" class="iconify icon:gridicons-reblog" data-inline="false" data-width="1.3em" data-height="1.3em" data-icon="gridicons-reblog" style="transform: rotate(360deg);"><path d="M22.086 9.914L20 7.828V18a2 2 0 0 1-2 2h-7v-2h7V7.828l-2.086 2.086L14.5 8.5L19 4l4.5 4.5l-1.414 1.414zM6 16.172V6h7V4H6a2 2 0 0 0-2 2v10.172l-2.086-2.086L.5 15.5L5 20l4.5-4.5l-1.414-1.414L6 16.172z" fill="#707B97"></path></svg>
+					<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1.3em" height="1.3em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" class="iconify icon:gridicons-reblog" data-inline="false" data-width="1.3em" data-height="1.3em" data-icon="gridicons-reblog" style="transform: rotate(360deg);"><path d="M22.086 9.914L20 7.828V18a2 2 0 0 1-2 2h-7v-2h7V7.828l-2.086 2.086L14.5 8.5L19 4l4.5 4.5l-1.414 1.414zM6 16.172V6h7V4H6a2 2 0 0 0-2 2v10.172l-2.086-2.086L.5 15.5L5 20l4.5-4.5l-1.414-1.414L6 16.172z" fill="#707B97" id="reblog"></path></svg>
 
 					<SVG xmlns="http://www.w3.org/2000/svg"
 					     xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -138,7 +138,8 @@
 					     data-width="1.3em"
 					     data-height="1.3em"
 					     data-icon="gridicons:heart-outline"
-					     style="transform: rotate(360deg);">
+					     style="transform: rotate(360deg);"
+					     id="favorite">
 						<PATH d="M16.5 4.5c2.206 0 4 1.794 4 4c0 4.67-5.543 8.94-8.5 11.023C9.043 17.44 3.5 13.17 3.5 8.5c0-2.206 1.794-4 4-4a4.01 4.01 0 0 1 3.273 1.706L12 7.953l1.227-1.746A4.004 4.004 0 0 1 16.5 4.5m0-1.5A5.49 5.49 0 0 0 12 5.344A5.49 5.49 0 0 0 7.5 3A5.5 5.5 0 0 0 2 8.5c0 5.72 6.5 10.438 10 12.85c3.5-2.412 10-7.13 10-12.85A5.5 5.5 0 0 0 16.5 3z"
 						      fill="#707B97">
 						</PATH>

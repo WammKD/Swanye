@@ -69,3 +69,10 @@
 	margin-left:  .3em;
 	margin-right: .3em;
 }
+
+.dash_post .dash_post-interactions svg#reblog:hover   path {
+	fill: #006633;
+}
+.dash_post .dash_post-interactions svg#favorite:hover path {
+	fill: #CF000F;
+}

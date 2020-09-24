@@ -7,6 +7,7 @@
              (app       models    ACTORS) (ice-9     receive) ((srfi srfi-19) #:prefix d:) (web   client)
              (app       models ENDPOINTS) (ice-9       regex) (srfi srfi-26)               (web  request)
              (app       models   OBJECTS) (rnrs  bytevectors) (srfi srfi-98)
+             (app       models TIMELINES)
              (app       models FOLLOWERS)
              (app       models   INBOXES)
              (industria crypto  blowfish))
@@ -260,6 +261,16 @@
                                                        (hash-ref object "id"))
                                        #:OBJECT_TYPE (hash-ref object "type")
                                        #:JSON        (scm->json-string object)))
+                      (cond
+                       [(string=? (hash-ref bodyHash "type") "Create")
+                             ($TIMELINES 'set #:USER_ID   (assoc-ref user "USER_ID")
+                                              #:OBJECT_ID (cdaar ($OBJECTS
+                                                                   'get
+                                                                   #:columns   '(OBJECT_ID)
+                                                                   #:condition (where
+                                                                                 #:AP_ID
+                                                                                 (string-reverse
+                                                                                   (hash-ref object "id"))))))])
 
                       (let ([actors ($ACTORS
                                       'get

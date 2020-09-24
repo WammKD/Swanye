@@ -252,7 +252,7 @@
 
                     (let* ([bodyStr             (utf8->string body)]
                            [bodyHash     (json-string->scm bodyStr)]
-                           [actorID     (hash-ref bodyHash "actor")]
+                           [   actorID  (hash-ref bodyHash "actor")]
                            [revActorID     (string-reverse actorID)]
                            [object     (hash-ref bodyHash "object")])
                       (when (hash-table? object)

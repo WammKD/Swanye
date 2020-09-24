@@ -353,22 +353,22 @@
                                                             sharedInbox
                                                           'null)))))))))
 
-                      ($INBOXES 'set #:USER_ID   (assoc-ref user "USER_ID")
-                                     #:ACTOR_ID  (cdaar ($ACTORS
-                                                          'get
-                                                          #:columns   '(ACTOR_ID)
-                                                          #:condition (where #:AP_ID revActorID)))
-                                     #:OBJECT_ID (cdaar ($OBJECTS
-                                                          'get
-                                                          #:columns   '(OBJECT_ID)
-                                                          #:condition (where
-                                                                        #:AP_ID
-                                                                        (string-reverse
-                                                                          (if (hash-table? object)
-                                                                              (hash-ref object "id")
-                                                                            object)))))
-                                     #:ACTIVITY  bodyStr
-                                     #:TYPE      (hash-ref bodyHash "type"))
+                      ($INBOXES 'set #:USER_ID       (assoc-ref user "USER_ID")
+                                     #:ACTOR_ID      (cdaar ($ACTORS
+                                                              'get
+                                                              #:columns   '(ACTOR_ID)
+                                                              #:condition (where #:AP_ID revActorID)))
+                                     #:OBJECT_ID     (cdaar ($OBJECTS
+                                                              'get
+                                                              #:columns   '(OBJECT_ID)
+                                                              #:condition (where
+                                                                            #:AP_ID
+                                                                            (string-reverse
+                                                                              (if (hash-table? object)
+                                                                                  (hash-ref object "id")
+                                                                                object)))))
+                                     #:ACTIVITY      bodyStr
+                                     #:ACTIVITY_TYPE (hash-ref bodyHash "type"))
 
                       (response-emit "OK" #:status 200)))
                 (begin

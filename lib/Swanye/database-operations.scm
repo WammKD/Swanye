@@ -2,14 +2,16 @@
 ;;;; And please respect the freedom of other people, please.
 ;;;; <YOUR LICENSE HERE>
 
-(define-module (Swanye database)
-  #:use-module (artanis utils)
+(define-module (Swanye database-operations)
   #:use-module (Swanye  utils)
-  #:use-module (app models     USERS)
-  #:use-module (app models    ACTORS)
-  #:use-module (app models ENDPOINTS)
-  #:use-module (app models   OBJECTS)
-  #:export (lookup-remote-account))
+  #:use-module (artanis utils)
+  #:use-module (artanis  ssql)
+  #:use-module (artanis third-party      json)
+  #:use-module (app     models          USERS)
+  #:use-module (app     models         ACTORS)
+  #:use-module (app     models      ENDPOINTS)
+  #:use-module (app     models        OBJECTS)
+  #:export (lookup-and-add-remote-account))
 
 (define (lookup-and-add-remote-account activityPubID)
   (let* ([revActorID            (string-reverse activityPubID)]

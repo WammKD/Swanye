@@ -9,7 +9,7 @@
   ;;;; These can be a single or many relation
   ;;;; I'll probably want to handle these with a linking table
   ;; (ATTACHMENT    big-integer)
-  ;; (ATTRIBUTED_TO )
+  (ATTRIBUTED_TO big-integer)
   ;; (AUDIENCE      )
   (CONTENT       text)
   ;;;; The spec. says this is intentionally vague but that reads

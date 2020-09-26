@@ -256,6 +256,7 @@
                            [   actorID  (hash-ref bodyHash "actor")]
                            [revActorID     (string-reverse actorID)]
                            [object     (hash-ref bodyHash "object")])
+                      ;; Add the object of the Activity to the DB
                       (when (hash-table? object)
                         ($OBJECTS 'set #:AP_ID         (string-reverse
                                                          (hash-ref object "id"))
@@ -276,6 +277,7 @@
                                                            endtime
                                                          'null)
                                        #:JSON          (scm->json-string object)))
+                      ;; If creating an Object, make sure the object we just added is in the user's timeline
                       (cond
                        [(string=? (hash-ref bodyHash "type") "Create")
                              ($TIMELINES 'set #:USER_ID   (assoc-ref user "USER_ID")
@@ -286,8 +288,10 @@
                                                                                  #:AP_ID
                                                                                  (string-reverse
                                                                                    (hash-ref object "id"))))))])
-
+                      ;; Add the actor who did the Activity to the DB
+                      ;; (likely taken care of by ATTRIBUTED_TO but let's be thorough)
                       (lookup-and-add-remote-account actorID)
+                      ;; Finally, add the Activity to the INBOX
                       ($INBOXES 'set #:USER_ID       (assoc-ref user "USER_ID")
                                      #:ACTOR_ID      (cdaar ($ACTORS
                                                               'get

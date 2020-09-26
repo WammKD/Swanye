@@ -53,7 +53,7 @@
                          #:ENDTIME     (if-let ([endtime (hash-ref actor "endtime")])
                                            endtime
                                          'null)
-                         #:JSON        bodyStr)
+                         #:JSON        (scm->json-string actor))
 
           (let ([OBJECT_ID (cdaar ($OBJECTS
                                     'get

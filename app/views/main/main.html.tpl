@@ -41,6 +41,10 @@
 	<BODY>
 		<@include dashboard.html %>
 
+		<P>
+			Wut: <%= (json-string->scm (assoc-ref (car posts) "JSON")) %>, 
+		</P>
+
 		<DIV class="dash_main">
 			<DIV class="dash_post">
 				<HEADER class="dash_post-info">

@@ -260,6 +260,18 @@
                         ($OBJECTS 'set #:AP_ID       (string-reverse
                                                        (hash-ref object "id"))
                                        #:OBJECT_TYPE (hash-ref object "type")
+                                       #:CONTENT     (if-let ([content (hash-ref actor "content")])
+                                                         content
+                                                       'null)
+                                       #:NAME        (if-let ([name (hash-ref actor "name")])
+                                                         name
+                                                       'null)
+                                       #:STARTTIME   (if-let ([starttime (hash-ref actor "starttime")])
+                                                         starttime
+                                                       'null)
+                                       #:ENDTIME     (if-let ([endtime (hash-ref actor "endtime")])
+                                                         endtime
+                                                       'null)
                                        #:JSON        (scm->json-string object)))
                       (cond
                        [(string=? (hash-ref bodyHash "type") "Create")
@@ -300,6 +312,18 @@
 
                               ($OBJECTS 'set #:AP_ID       revActorID
                                              #:OBJECT_TYPE (hash-ref actor "type")
+                                             #:CONTENT     (if-let ([content (hash-ref actor "content")])
+                                                               content
+                                                             'null)
+                                             #:NAME        (if-let ([name (hash-ref actor "name")])
+                                                               name
+                                                             'null)
+                                             #:STARTTIME   (if-let ([starttime (hash-ref actor "starttime")])
+                                                               starttime
+                                                             'null)
+                                             #:ENDTIME     (if-let ([endtime (hash-ref actor "endtime")])
+                                                               endtime
+                                                             'null)
                                              #:JSON        bodyStr)
 
                               (let ([OBJECT_ID (cdaar ($OBJECTS

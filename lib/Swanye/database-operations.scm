@@ -27,7 +27,7 @@
       ;;                (json-string->scm (utf8->string httpBody)))])
       (let ([actorFilename (string-append/shared
                              "actor_"
-                             currentTime
+                             (number->string (current-time))
                              (get-random-from-dev #:length 64))])
         (system (string-append/shared
                   "curl -H \"Accept: application/ld+json\" "

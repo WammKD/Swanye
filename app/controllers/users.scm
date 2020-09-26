@@ -261,19 +261,19 @@
                         ($OBJECTS 'set #:AP_ID         (string-reverse
                                                          (hash-ref object "id"))
                                        #:OBJECT_TYPE   (hash-ref object "type")
-                                       #:ATTRIBUTED_TO (if-let ([attributedTo (hash-ref actor "attributedTo")])
+                                       #:ATTRIBUTED_TO (if-let ([attributedTo (hash-ref object "attributedTo")])
                                                            (lookup-and-add-remote-account attributedTo)
                                                          'null)
-                                       #:CONTENT       (if-let ([content (hash-ref actor "content")])
+                                       #:CONTENT       (if-let ([content (hash-ref object "content")])
                                                            content
                                                          'null)
-                                       #:NAME          (if-let ([name (hash-ref actor "name")])
+                                       #:NAME          (if-let ([name (hash-ref object "name")])
                                                            name
                                                          'null)
-                                       #:STARTTIME     (if-let ([starttime (hash-ref actor "starttime")])
+                                       #:STARTTIME     (if-let ([starttime (hash-ref object "starttime")])
                                                            starttime
                                                          'null)
-                                       #:ENDTIME       (if-let ([endtime (hash-ref actor "endtime")])
+                                       #:ENDTIME       (if-let ([endtime (hash-ref object "endtime")])
                                                            endtime
                                                          'null)
                                        #:JSON          (scm->json-string object)))

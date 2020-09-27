@@ -192,6 +192,10 @@
                               keyID
                              " > " profFilename))
 
+              (display "\n\n\n\n")
+              (display (get-string-all-with-detected-charset profFilename))
+              (display "\n\n\n\n")
+
               (display (hash-ref
                          (hash-ref           ;; replace with (utf8->string httpBody)
                            (json-string->scm (get-string-all-with-detected-charset profFilename))

@@ -41,12 +41,11 @@
 	<BODY>
 		<@include dashboard.html %>
 
-		<P>
-			Wut: <%= (assoc-ref post "CONTENT") %>, 
-		</P>
-
 		<DIV class="dash_main">
-			<% (for-each (lambda (post) %>
+			<% (for-each
+			     (lambda (postAndCreator)
+			       (let ([post    (car postAndCreator)]
+			             [creator (cdr postAndCreator)]) %>
 				<DIV class="dash_post">
 					<HEADER class="dash_post-info">
 						<IMG id="icon"
@@ -55,11 +54,11 @@
 						<DIV id="post-info">
 							<DIV id="poster">
 								<B>
-									bumble's (🐝) rumple (🦄)
+									<%= (assoc-ref creator "NAME") %>
 								</B>
 
 								<SPAN style="color: #888888">
-									&nbsp;&nbsp;WammKD@queer.garden
+									&nbsp;&nbsp;<%= (assoc-ref creator "PREFERRED_USERNAME") %>@queer.garden
 								</SPAN>
 							</DIV>
 
@@ -160,7 +159,7 @@
 						</SVG>
 					</FOOTER>
 				</DIV>
-			<% ) posts) %>
+			<% )) postsAndCreator) %>
 		</DIV>
 	</BODY>
 </HTML>

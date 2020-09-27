@@ -268,7 +268,7 @@
                                                            content
                                                          'null)
                                        #:NAME          (if-let ([name (hash-ref object "name")])
-                                                           name
+                                                           (gsub "'" "''" name)
                                                          'null)
                                        #:STARTTIME     (if-let ([starttime (hash-ref object "starttime")])
                                                            starttime
@@ -276,7 +276,7 @@
                                        #:ENDTIME       (if-let ([endtime (hash-ref object "endtime")])
                                                            endtime
                                                          'null)
-                                       #:JSON          (gsub "'" "`" (scm->json-string object))))
+                                       #:JSON          (gsub "'" "''" (scm->json-string object))))
                       ;; If creating an Object, make sure the object we just added is in the user's timeline
                       (cond
                        [(string=? (hash-ref bodyHash "type") "Create")

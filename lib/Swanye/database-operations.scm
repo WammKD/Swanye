@@ -55,7 +55,7 @@
                                            content
                                          'null)
                          #:NAME        (if-let ([name (hash-ref actor "name")])
-                                           name
+                                           (gsub "'" "''" name)
                                          'null)
                          #:STARTTIME   (if-let ([starttime (hash-ref actor "starttime")])
                                            starttime
@@ -63,7 +63,7 @@
                          #:ENDTIME     (if-let ([endtime (hash-ref actor "endtime")])
                                            endtime
                                          'null)
-                         #:JSON        (gsub "'" "`" (scm->json-string actor)))
+                         #:JSON        (gsub "'" "''" (scm->json-string actor)))
 
           (let ([OBJECT_ID (cdaar ($OBJECTS
                                     'get

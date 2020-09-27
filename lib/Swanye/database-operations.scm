@@ -3,6 +3,7 @@
 ;;;; <YOUR LICENSE HERE>
 
 (define-module (Swanye database-operations)
+  #:use-module (ice-9   regex)
   #:use-module (Swanye  utils)
   #:use-module (artanis utils)
   #:use-module (artanis  ssql)
@@ -12,6 +13,13 @@
   #:use-module (app     models      ENDPOINTS)
   #:use-module (app     models        OBJECTS)
   #:export (lookup-and-add-remote-account))
+
+(define (gsub regexp replacement str)
+  (if-let ([isMatch (string-match regexp str)])
+      (regexp-substitute #f isMatch 'pre replacement 'post)
+    str))
+
+
 
 (define (lookup-and-add-remote-account activityPubID)
   (let* ([revActorID            (string-reverse activityPubID)]
@@ -55,7 +63,7 @@
                          #:ENDTIME     (if-let ([endtime (hash-ref actor "endtime")])
                                            endtime
                                          'null)
-                         #:JSON        (scm->json-string actor))
+                         #:JSON        (gsub "'" "`" (scm->json-string actor)))
 
           (let ([OBJECT_ID (cdaar ($OBJECTS
                                     'get

@@ -37,19 +37,19 @@
     (process-user-account-as user (rc)
       (if-let* ([request                                        (rc-req rc)]
                 [accept   act-stream?              (request-accept request)]
-                [username             (assoc-ref user "PREFERRED_USERNAME")])
-          (let ([userURL (string-reverse (assoc-ref user "AP_ID"))])
+                [username             (swanye-user-preferred-username user)])
+          (let ([userURL (uri->string (swanye-user-ap-id user))])
             (:mime rc `(("@context"          . ("https://www.w3.org/ns/activitystreams"
                                                 "https://w3id.org/security/v1"))
                         ("id"                . ,userURL)
                         ("type"              . "Person")
-                        ("preferredUsername" . ,(assoc-ref user "PREFERRED_USERNAME"))
-                        ("inbox"             . ,(assoc-ref user "INBOX"))
+                        ("preferredUsername" . ,username)
+                        ("inbox"             . ,(uri->string (swanye-user-inbox user)))
                         ("publicKey"         . (("id"           . ,(string-append/shared
                                                                      userURL
                                                                      "#main-key"))
                                                 ("owner"        . ,userURL)
-                                                ("publicKeyPem" . ,(assoc-ref user "PUBLIC_KEY")))))))
+                                                ("publicKeyPem" . ,(swanye-user-public-key user)))))))
         (string-append/shared "The user page of " username "!")))))
 
 (users-define :user

@@ -53,9 +53,22 @@
                                                                  ()
                                                                  (binding-funct-value ...) then else)]))
 
+
+
+(define-syntax case-pred
+  (syntax-rules (else)
+    [(_ key [pred result] ... [else lastResort]) (cond
+                                                  [(pred key)     result]
+                                                  ...
+                                                  [else       lastResort])]
+    [(_ key [pred result] ...)                   (cond
+                                                  [(pred key) result] ...)]))
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  U T I L I T I E S  ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;
+(define (return-if this else)
+  (if this this else))
+
 (define (gsub regexp replacement str)
   (if-let ([isMatch (string-match regexp str)])
       (regexp-substitute #f isMatch 'pre replacement 'post)

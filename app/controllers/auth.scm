@@ -54,7 +54,7 @@
      [(:auth    rc)        (let ([userID (swanye-user-db-id
                                            (car (get-only-user-where
                                                   #:PREFERRED_USERNAME
-                                                  (:from-post rc 'get "USERNAME"))))])
+                                                  (:from-post rc 'get "PREFERRED_USERNAME"))))])
                              (if (null? ($SESSIONS 'get #:columns   '(*)
                                                         #:condition (where
                                                                       #:USER_ID

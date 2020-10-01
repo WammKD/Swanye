@@ -24,6 +24,7 @@
                    #:ATTRIBUTED_TO (case-pred ATTRIBUTED_TO
                                      [not        'null]
                                      [number?    ATTRIBUTED_TO]
+                                     [string?    (get-object-dbID-by-apID ATTRIBUTED_TO)]
                                      [ap-object? (if-let ([at null? (ap-object-attributed-to
                                                                       ATTRIBUTED_TO)])
                                                      'null

@@ -108,7 +108,10 @@
 
 (define (get-object-dbID-by-apID activityPubID)
   (if-let ([possObj null? ($OBJECTS 'get #:columns   '(OBJECT_ID)
-                                         #:condition (where #:AP_ID activityPubID))])
+                                         #:condition (where
+                                                       #:AP_ID
+                                                       (string-reverse
+                                                         activityPubID)))])
       #f
     (cdaar possObj)))
 

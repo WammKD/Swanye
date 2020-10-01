@@ -266,20 +266,9 @@
                              ($TIMELINES 'set #:USER_ID   (swanye-user-db-id user)
                                               #:OBJECT_ID objectID)])
                       ;; Finally, add the Activity to the INBOX
-                      ($INBOXES 'set #:USER_ID       (assoc-ref user "USER_ID")
-                                     #:ACTOR_ID      (cdaar ($ACTORS
-                                                              'get
-                                                              #:columns   '(ACTOR_ID)
-                                                              #:condition (where #:AP_ID revActorID)))
-                                     #:OBJECT_ID     (cdaar ($OBJECTS
-                                                              'get
-                                                              #:columns   '(OBJECT_ID)
-                                                              #:condition (where
-                                                                            #:AP_ID
-                                                                            (string-reverse
-                                                                              (if (hash-table? object)
-                                                                                  (hash-ref object "id")
-                                                                                object)))))
+                      ($INBOXES 'set #:USER_ID       (swanye-user-db-id user)
+                                     #:ACTOR_ID       actorID
+                                     #:OBJECT_ID     objectID
                                      #:ACTIVITY      bodyStr
                                      #:ACTIVITY_TYPE (hash-ref bodyHash "type"))
 

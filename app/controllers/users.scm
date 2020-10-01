@@ -92,9 +92,7 @@
                                                      (number->string (1+ num))
                                                    "2")))))
                                 `(("partOf"       . ,id)
-                                  ("orderedItems" . ,(map
-                                                       (cut assoc-ref <> "ACTOR_ID__FOLLOWER")
-                                                       followers)))))
+                                  ("orderedItems" . ,(map ap-actor-ap-id followers)))))
                           `(("id"         .                                  ,id)
                             ("first"      . ,(string-append/shared id "?page=1")))))))
         (string-append/shared "The followers page of " username "!")))))

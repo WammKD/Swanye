@@ -63,15 +63,10 @@
     (process-user-account-as user (rc)
       (if-let* ([request                                        (rc-req rc)]
                 [accept   act-stream?              (request-accept request)]
-                [username             (assoc-ref user "PREFERRED_USERNAME")])
-          (let* ([id        (assoc-ref user "FOLLOWERS")]
-                 [followers ($FOLLOWERS
-                              'get
-                              #:columns   '(*)
-                              #:condition (where
-                                            #:USER_ID__FOLLOWEE
-                                            (assoc-ref user "USER_ID")))]
-                 [followLen (length followers)])
+                [username             (swanye-user-preferred-username user)])
+          (let* ([id        (swanye-user-followers user)]
+                 [followers      (get-followers-of user)]
+                 [followLen           (length followers)])
             (:mime rc (append
                         `(("@context"   . "https://www.w3.org/ns/activitystreams")
                           ("type"       .                     "OrderedCollection")

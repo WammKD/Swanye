@@ -14,11 +14,11 @@
 
 (define-syntax process-user-account-as
   (syntax-rules ()
-    [(_ userVar (rcVar) then)
           (let ([poss ($USERS
                         'get
                         #:columns   '(*)
                         #:condition (where #:USERNAME (params rcVar "user")))])
+    [(_ userVar (rcVar) then ...)
             (if (null? poss)
                 (process-redirect rcVar "/404")
               (let ([userVar (append

@@ -284,12 +284,11 @@
   (options #:with-auth "/auth/sign_in")
 
   (lambda (rc)
-    (let ([poss ($USERS 'get #:columns   '(*)
-                             #:condition (where #:USERNAME "wammkd"))])
+    (let ([poss (get-users-where #:PREFERRED_USERNAME "wammkd")])
       (if (null? poss)
           (process-redirect rc "/404")
         (let* ([user                                              (car poss)]
-               [username                         (assoc-ref user "USERNAME")]
+               [username               (swanye-user-preferred-username user)]
                [userURL          (string-append/shared
                                    "https://" (car (request-host (rc-req rc)))
                                    "/users/"  username)]
@@ -307,7 +306,7 @@
                                                  "/users/" utfName "/inbox")]
                [utfURL                       (string-append/shared
                                                "https://" utfDomain utfPath)]
-               [privateEncrypted    (eval-string (assoc-ref user "PRIVATE"))]
+               [privateEncrypted (eval-string (swanye-user-private-key user))]
                [baseFilename     (string-append/shared "/tmp/siB64_" username
                                                        currentTime   ".txt")]
                [ sigFilename     (string-append/shared "/tmp/signa_" username

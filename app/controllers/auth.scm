@@ -156,15 +156,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (auth-define confirmation
   (lambda (rc)
-    (let ([poss ($USERS 'get #:columns   '(*)
-                             #:condition (where
-                                           #:CONFIRMATION_TOKEN
-                                           (get-from-qstr rc "token")))])
+    (let ([poss (get-only-user-where #:CONFIRMATION_TOKEN (get-from-qstr rc "token"))])
       (if (null? poss)
           (view-render "confirmation_error" (the-environment))
         (let ([user (car poss)])
           ($USERS 'set #:CONFIRMATION_TOKEN "confirmed"
-                       (where #:USER_ID (assoc-ref user "USER_ID")))
+                       (where #:USER_ID (swanye-user-db-id user)))
 
-          (let ([user (assoc-ref user "USERNAME")])
+          (let ([user (swanye-user-preferred-username user)])
             (view-render "confirmation_success" (the-environment))))))))

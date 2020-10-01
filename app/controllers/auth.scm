@@ -51,12 +51,10 @@
   (lambda (rc)
     (cond
      [(:session rc 'check) (process-redirect rc "/main/home")]
-     [(:auth    rc)        (let ([userID (assoc-ref
-                                           (car ($USERS 'get #:columns   '(USER_ID)
-                                                             #:condition (where
-                                                                           #:USERNAME
-                                                                           (:from-post rc 'get "USERNAME"))))
-                                           "USER_ID")])
+     [(:auth    rc)        (let ([userID (swanye-user-db-id
+                                           (car (get-only-user-where
+                                                  #:PREFERRED_USERNAME
+                                                  (:from-post rc 'get "USERNAME"))))])
                              (if (null? ($SESSIONS 'get #:columns   '(*)
                                                         #:condition (where
                                                                       #:USER_ID
@@ -84,8 +82,7 @@
     (let ([email     (uri-decode (:from-post rc 'get    "email"))]
           [username  (uri-decode (:from-post rc 'get "username"))]
           [createdAt                               (current-time)])
-      (if (not (null? ($USERS 'get #:columns   '(*)
-                                   #:condition (where #:USERNAME username))))
+      (if (not (null? (get-only-user-where #:PREFERRED_USERNAME username)))
           (view-render "sign_up_error" (the-environment))
         (let ([privateFilename (string-append "private_" username ".pem")]
               [ publicFilename (string-append  "public_" username ".pem")])

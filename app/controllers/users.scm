@@ -121,7 +121,7 @@
             ;;   (http-get keyID #:headers `((Accept  . "application/ld+json")
             ;;                               (Profile . "https://www.w3.org/ns/activitystreams")))
 
-            (let* ([username               (assoc-ref user "PREFERRED_USERNAME")]
+            (let* ([username               (swanye-user-preferred-username user)]
                    [currentTime                  (number->string (current-time))]
                    [ sigFilename (string-append/shared "/tmp/signature_" username
                                                        currentTime       ".txt")]

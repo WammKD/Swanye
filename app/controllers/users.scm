@@ -231,6 +231,35 @@
                            [bodyHash                           (json-string->scm bodyStr)]
                            ;; actors may also be IDs need to handle that…
                            [objectID (insert-object-auto #t (hash-ref bodyHash "object"))]
+                           ;; Add the actor who did the Activity to the DB
+                           ;; (likely taken care of by ATTRIBUTED_TO but let's be thorough)
+                           [ actorID (let ([actors (get-actors-where
+                                                     #:AP_ID
+                                                     (string-reverse
+                                                       (hash-ref bodyHash "actor")))])
+                                       (if (not (null? actors))
+                                           (ap-actor-db-id (car actors))
+                                         ;; (let ([actor (receive (httpHead httpBody)
+                                         ;;                  (http-get
+                                         ;;                    activityPubID
+                                         ;;                    #:headers `((Accept  . "application/ld+json")
+                                         ;;                                (Profile . "https://www.w3.org/ns/activitystreams")))
+                                         ;;                (json-string->scm (utf8->string httpBody)))])
+                                         (let ([actorFilename (string-append/shared
+                                                                "actor_"
+                                                                (number->string (current-time))
+                                                                (get-random-from-dev #:length 64))])
+                                           (system (string-append/shared
+                                             "curl -H \"Accept: application/ld+json\" "
+                                                  "-H \"Profile: https://www.w3.org/ns/activitystreams\" "
+                                             (hash-ref bodyHash "actor")
+                                             " > " actorFilename))
+
+                                   (let ([actor (json-string->scm
+                                                  (get-string-all-with-detected-charset actorFilename))])
+                                     (system (string-append/shared "rm " actorFilename))
+
+                                     (insert-actor-auto #t actor)))))])
                       ;; If creating an Object, make sure the object we just added is in the user's timeline
                       (cond
                        [(string=? (hash-ref bodyHash "type") "Create")
@@ -242,9 +271,6 @@
                                                                                  #:AP_ID
                                                                                  (string-reverse
                                                                                    (hash-ref object "id"))))))])
-                      ;; Add the actor who did the Activity to the DB
-                      ;; (likely taken care of by ATTRIBUTED_TO but let's be thorough)
-                      (lookup-and-add-remote-account actorID)
                       ;; Finally, add the Activity to the INBOX
                       ($INBOXES 'set #:USER_ID       (assoc-ref user "USER_ID")
                                      #:ACTOR_ID      (cdaar ($ACTORS

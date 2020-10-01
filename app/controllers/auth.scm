@@ -44,8 +44,8 @@
         (process-redirect rc "/main/home")
       (view-render "sign_in" (the-environment)))))
 
-(post "/auth/sign_in" #:auth      `(table USERS "USERNAME" "PASSWORD"
-                                                "SALT"     ,SALTER)
+(post "/auth/sign_in" #:auth      `(table USERS "PREFERRED_USERNAME" "PASSWORD"
+                                                "SALT"               ,SALTER)
                       #:session   #t
                       #:from-post 'qstr-safe
   (lambda (rc)

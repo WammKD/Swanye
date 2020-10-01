@@ -3,7 +3,6 @@
 ;; This file is generated automatically by GNU Artanis.
 (create-artanis-model   ; DO NOT REMOVE THIS LINE!!!
   USERS
-  (USER_ID            auto        (#:primary-key  #:not-null #:unique))
   (USERNAME           char-field  (#:maxlen    64 #:not-null #:unique))
   (E_MAIL             char-field  (#:maxlen   255 #:not-null))
   (PASSWORD           char-field  (#:maxlen   128 #:not-null))
@@ -13,3 +12,4 @@
   ( PUBLIC_KEY        text                       (#:not-null))
   (PRIVATE_KEY        text                       (#:not-null)))
 
+  (USER_ID            auto                                (#:unique))

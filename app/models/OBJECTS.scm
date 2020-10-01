@@ -34,7 +34,7 @@
   ;; (PREVIEW       )
   (PUBLISHED     big-integer)
   ;; (REPLIES       )
-  ;; (SUMMARY       )
+  (SUMMARY       char-field  (#:maxlen 704))
   ;; (TAG           )
   ;; (UPDATED       )
   ;; (URL           )

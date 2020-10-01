@@ -263,14 +263,8 @@
                       ;; If creating an Object, make sure the object we just added is in the user's timeline
                       (cond
                        [(string=? (hash-ref bodyHash "type") "Create")
-                             ($TIMELINES 'set #:USER_ID   (assoc-ref user "USER_ID")
-                                              #:OBJECT_ID (cdaar ($OBJECTS
-                                                                   'get
-                                                                   #:columns   '(OBJECT_ID)
-                                                                   #:condition (where
-                                                                                 #:AP_ID
-                                                                                 (string-reverse
-                                                                                   (hash-ref object "id"))))))])
+                             ($TIMELINES 'set #:USER_ID   (swanye-user-db-id user)
+                                              #:OBJECT_ID objectID)])
                       ;; Finally, add the Activity to the INBOX
                       ($INBOXES 'set #:USER_ID       (assoc-ref user "USER_ID")
                                      #:ACTOR_ID      (cdaar ($ACTORS

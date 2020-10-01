@@ -14,28 +14,12 @@
 
 (define-syntax process-user-account-as
   (syntax-rules ()
-          (let ([poss ($USERS
-                        'get
-                        #:columns   '(*)
-                        #:condition (where #:USERNAME (params rcVar "user")))])
     [(_ userVar (rcVar) then ...)
+          (let ([poss (get-users-where #:PREFERRED_USERNAME (params rcVar "user"))])
             (if (null? poss)
                 (process-redirect rcVar "/404")
-              (let ([userVar (append
-                               (car poss)
-                               (car ($ACTORS
-                                      'get
-                                      #:columns   '(*)
-                                      #:condition (where #:ACTOR_ID (assoc-ref
-                                                                      (car poss)
-                                                                      "USER_ID"))))
-                               (car ($OBJECTS
-                                      'get
-                                      #:columns   '(*)
-                                      #:condition (where #:OBJECT_ID (assoc-ref
-                                                                       (car poss)
-                                                                       "USER_ID")))))])
-                then)))]))
+              (let ([userVar (car poss)])
+                then ...)))]))
 
 (define (act-stream? accept)
   (or

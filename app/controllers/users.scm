@@ -227,32 +227,10 @@
                   (begin
                     (system (string-append/shared "rm " rsltFilename))
 
-                    (let* ([bodyStr             (utf8->string body)]
-                           [bodyHash     (json-string->scm bodyStr)]
-                           [   actorID  (hash-ref bodyHash "actor")]
-                           [revActorID     (string-reverse actorID)]
-                           [object     (hash-ref bodyHash "object")])
-                      ;; Add the object of the Activity to the DB
-                      (when (hash-table? object)
-                        ($OBJECTS 'set #:AP_ID         (string-reverse
-                                                         (hash-ref object "id"))
-                                       #:OBJECT_TYPE   (hash-ref object "type")
-                                       #:ATTRIBUTED_TO (if-let ([attributedTo (hash-ref object "attributedTo")])
-                                                           (lookup-and-add-remote-account attributedTo)
-                                                         'null)
-                                       #:CONTENT       (if-let ([content (hash-ref object "content")])
-                                                           content
-                                                         'null)
-                                       #:NAME          (if-let ([name (hash-ref object "name")])
-                                                           (gsub "'" "''" name)
-                                                         'null)
-                                       #:STARTTIME     (if-let ([starttime (hash-ref object "starttime")])
-                                                           starttime
-                                                         'null)
-                                       #:ENDTIME       (if-let ([endtime (hash-ref object "endtime")])
-                                                           endtime
-                                                         'null)
-                                       #:JSON          (gsub "'" "''" (scm->json-string object))))
+                    (let* ([bodyStr                                   (utf8->string body)]
+                           [bodyHash                           (json-string->scm bodyStr)]
+                           ;; actors may also be IDs need to handle that…
+                           [objectID (insert-object-auto #t (hash-ref bodyHash "object"))]
                       ;; If creating an Object, make sure the object we just added is in the user's timeline
                       (cond
                        [(string=? (hash-ref bodyHash "type") "Create")

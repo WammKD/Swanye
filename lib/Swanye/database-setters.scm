@@ -18,8 +18,8 @@
 (define* (insert-object onlyGetID   AP_ID
                         OBJECT_TYPE JSON  #:key ATTRIBUTED_TO CONTENT NAME
                                                 STARTTIME     ENDTIME PUBLISHED)
-  (let ([apID    (if (uri? AP_ID) (uri->string AP_ID) AP_ID)]
-        [apIDrev                       (string-reverse apID)])
+  (let* ([apID    (if (uri? AP_ID) (uri->string AP_ID) AP_ID)]
+         [apIDrev                       (string-reverse apID)])
     ($OBJECTS 'set #:AP_ID         apIDrev
                    #:OBJECT_TYPE   OBJECT_TYPE
                    #:ATTRIBUTED_TO (case-pred ATTRIBUTED_TO

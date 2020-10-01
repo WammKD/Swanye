@@ -230,8 +230,6 @@
 
                     (let* ([bodyStr                                   (utf8->string body)]
                            [bodyHash                           (json-string->scm bodyStr)]
-                           ;; actors may also be IDs need to handle that…
-                           [objectID (insert-object-auto #t (hash-ref bodyHash "object"))]
                            ;; Add the actor who did the Activity to the DB
                            ;; (likely taken care of by ATTRIBUTED_TO but let's be thorough)
                            [ actorID (let ([actors (get-actors-where
@@ -260,7 +258,9 @@
                                                   (get-string-all-with-detected-charset actorFilename))])
                                      (system (string-append/shared "rm " actorFilename))
 
-                                     (insert-actor-auto #t actor)))))])
+                                     (insert-actor-auto #t actor)))))]
+                           ;; actors may also be IDs need to handle that…
+                           [objectID (insert-object-auto #t (hash-ref bodyHash "object"))])
                       ;; If creating an Object, make sure the object we just added is in the user's timeline
                       (cond
                        [(string=? (hash-ref bodyHash "type") "Create")

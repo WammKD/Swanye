@@ -47,7 +47,7 @@
 			<FORM class="basic_form" action="/auth/sign_in" method="post">
 					Username:
 				<BR />
-					<INPUT  type="text"     name="USERNAME">
+					<INPUT  type="text"     name="PREFERRED_USERNAME">
 				<BR />
 					Password:
 				<BR />

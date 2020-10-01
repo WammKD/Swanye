@@ -8,9 +8,10 @@
   #:use-module (artanis route)
   #:use-module (web     request)
   #:use-module (web     uri)
-  #:export (if-let
-            if-let*
-            process-redirect))
+  #:export (if-let  case-pred
+            if-let* create-database-entity
+            return-if process-redirect
+            gsub))
 
 ;;;;;;;;;;;;;;;;;;;
 ;;  M A C R O S  ;;
@@ -63,6 +64,41 @@
                                                   [else       lastResort])]
     [(_ key [pred result] ...)                   (cond
                                                   [(pred key) result] ...)]))
+
+
+
+(define-syntax create-database-entity-helper
+  (syntax-rules ()
+    [(_ creation-funct alist
+        (args                            ...)
+        ()                                   ) (apply creation-funct (list args ...))]
+    [(_ creation-funct alist
+        (args                            ...)
+        ([key check? transform-funct] . rest)) (create-database-entity-helper creation-funct alist
+                                                                              (args ... (let ([value (assoc-ref alist key)])
+                                                                                          (if (and
+                                                                                                value
+                                                                                                (check? value)
+                                                                                                (not (eq? value 'null)))
+                                                                                              (transform-funct value)
+                                                                                            #f)))
+                                                                              rest)]
+    [(_ creation-funct alist
+        (args                            ...)
+        ([key check?]                 . rest)) (create-database-entity-helper creation-funct alist
+                                                                              (args ... (let ([value (assoc-ref alist key)])
+                                                                                          (if (and
+                                                                                                value
+                                                                                                (check? value)
+                                                                                                (not (eq? value 'null))) value #f)))
+                                                                              rest)]))
+
+(define-syntax create-database-entity
+  (syntax-rules ()
+    [(_ creation-funct alist args ...)  (create-database-entity-helper creation-funct alist
+                                                                       ()
+                                                                       (args ...))]))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  U T I L I T I E S  ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;

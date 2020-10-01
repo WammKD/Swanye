@@ -17,8 +17,8 @@
   ;;;; determine if it's even needed
   ;; (CONTEXT       )
   (NAME          char-field  (#:maxlen 64))
-  (STARTTIME     int)
-  (  ENDTIME     int)
+  (STARTTIME     big-integer)
+  (  ENDTIME     big-integer)
   ;;;; Also vague; seems it stores any kind of object so we'll put
   ;;;; an ID, here; we'll also not bother with it, for now
   ;; (GENERATOR     big-integer)
@@ -32,7 +32,7 @@
   ;; (IN_REPLY_TO   )
   ;; (LOCATION      )
   ;; (PREVIEW       )
-  (PUBLISHED     int)
+  (PUBLISHED     big-integer)
   ;; (REPLIES       )
   ;; (SUMMARY       )
   ;; (TAG           )

@@ -45,11 +45,6 @@
                 (assoc-ref ld 'profile)
                 "https://www.w3.org/ns/activitystreams")))))
 
-(define (gsub regexp replacement str)
-  (if-let ([isMatch (string-match regexp str)])
-      (regexp-substitute #f isMatch 'pre replacement 'post)
-    str))
-
 
 
 

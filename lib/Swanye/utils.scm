@@ -3,6 +3,7 @@
 ;;;; <YOUR LICENSE HERE>
 
 (define-module (Swanye utils)
+  #:use-module (ice-9   regex)
   #:use-module (artanis page)
   #:use-module (artanis route)
   #:use-module (web     request)
@@ -55,6 +56,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  U T I L I T I E S  ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;
+(define (gsub regexp replacement str)
+  (if-let ([isMatch (string-match regexp str)])
+      (regexp-substitute #f isMatch 'pre replacement 'post)
+    str))
+
 (define (process-redirect rc path)
   (redirect-to
     rc 

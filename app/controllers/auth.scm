@@ -118,54 +118,15 @@
 
             (clear-blowfish-schedule! schedule)
 
-            (let ([ACTIVITYPUB_ID (string-append/shared "https://" domain
-                                                        "/users/"  username)]
-                  [OBJECT_TYPE     "Person"])
-              ($OBJECTS 'set #:AP_ID       (string-reverse ACTIVITYPUB_ID)
-                             #:OBJECT_TYPE OBJECT_TYPE
-                             #:JSON        (scm->json-string
-                                             `(("@context"          . ("https://www.w3.org/ns/activitystreams"
-                                                                       "https://w3id.org/security/v1"))
-                                               ("id"                . ,ACTIVITYPUB_ID)
-                                               ("type"              . ,OBJECT_TYPE)
-                                               ("preferredUsername" . ,username)
-                                               ("inbox"             . ,(string-append/shared ACTIVITYPUB_ID "/inbox"))
-                                               ("publicKey"         . (("id"           . ,(string-append/shared
-                                                                                            ACTIVITYPUB_ID
-                                                                                            "#main-key"))
-                                                                       ("owner"        . ,ACTIVITYPUB_ID)
-                                                                       ("publicKeyPem" . ,public))))))
-
-              (let ([OBJECT_ID (cdaar ($OBJECTS 'get #:columns   '(OBJECT_ID)
-                                                     #:condition (where #:AP_ID (string-reverse ACTIVITYPUB_ID))))])
-                ($ACTORS    'set #:ACTOR_ID           OBJECT_ID
-                                 #:AP_ID              (string-reverse ACTIVITYPUB_ID)
-                                 #:ACTOR_TYPE         OBJECT_TYPE
-                                 #:INBOX              (string-append/shared ACTIVITYPUB_ID "/inbox")
-                                 #:OUTBOX             (string-append/shared ACTIVITYPUB_ID "/outbox")
-                                 #:FOLLOWING          (string-append/shared ACTIVITYPUB_ID "/following")
-                                 #:FOLLOWERS          (string-append/shared ACTIVITYPUB_ID "/followers")
-                                 #:LIKED              (string-append/shared ACTIVITYPUB_ID "/likes")
-                                 #:FEATURED           (string-append/shared ACTIVITYPUB_ID "/collections/featured")
-                                 #:PREFERRED_USERNAME username)
-
-                ($ENDPOINTS 'set #:ACTOR_ID     OBJECT_ID
-                                 #:SHARED_INBOX (string-append/shared "https://" domain "/inbox"))
-
-                ($USERS     'set #:USER_ID            OBJECT_ID
-                                 #:USERNAME           username
-                                 #:E_MAIL             email
-                                 #:PASSWORD           (SALTER
-                                                        (uri-decode (:from-post
-                                                                      rc
-                                                                      'get
-                                                                      "password"))
-                                                        salt)
-                                 #:SALT               salt
-                                 #:CREATED_AT         createdAt
-                                 #:CONFIRMATION_TOKEN token
-                                 #:PUBLIC_KEY         public
-                                 #:PRIVATE_KEY        (bv->string private))))
+            (insert-user #t domain
+                            email
+                            (SALTER (uri-decode (:from-post rc 'get "password")) salt)
+                            salt
+                            createdAt
+                            token
+                            public
+                            (bv->string private)
+                            username)
 
             (send-the-mail ((make-simple-mail-sender
                               (string-append/shared "no-reply@" domain)

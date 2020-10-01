@@ -4,10 +4,7 @@
 (define-artanis-controller auth) ; DO NOT REMOVE THIS LINE!!!
 
 (use-modules (app models     USERS)
-             (app models    ACTORS)
-             (app models   OBJECTS)
              (app models  SESSIONS)
-             (app models ENDPOINTS)
              (artanis sendmail)
              ((artanis utils) #:select (get-random-from-dev
                                         get-string-all-with-detected-charset))
@@ -16,6 +13,8 @@
              (rnrs bytevectors)
              ((srfi srfi-1)   #:select (fold))
              (srfi srfi-98)
+             (Swanye database-getters)
+             (Swanye database-setters)
              (Swanye utils)
              (web request))
 

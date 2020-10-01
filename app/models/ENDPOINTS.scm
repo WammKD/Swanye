@@ -3,7 +3,7 @@
 ;; This file is generated automatically by GNU Artanis.
 (create-artanis-model   ; DO NOT REMOVE THIS LINE!!!
   ENDPOINTS
-  (ACTOR_ID                     big-integer (#:primary-key #:not-null #:unique))
+  (ACTOR_ID                     auto (#:unique))
   ; Endpoint URI so this actor's clients may access remote ActivityStreams
   ; objects which require authentication to access. To use this endpoint, the
   ; client posts an `x-www-form-urlencoded` id parameter with the value being

@@ -56,7 +56,9 @@
 
     (if onlyGetID
         (get-object-dbID-by-apID apIDrev)
-      (car (get-objects-where #:AP_ID apIDrev)))))
+      (if-let ([obj null? (get-objects-where #:AP_ID apIDrev)])
+          #f
+        (car obj)))))
 
 (define (insert-object-auto onlyGetID object)
   (let ([ref (if (hash-table? object) hash-ref assoc-ref)])

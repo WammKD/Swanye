@@ -97,7 +97,7 @@
           ["OBJECT_ID"     identity]
           [    "AP_ID"     identity  (compose string->uri string-reverse)]
           ["OBJECT_TYPE"   identity]
-          ["ATTRIBUTED_TO" positive? (cut get-objects-where #:OBJECT_ID <>)]
+          ["ATTRIBUTED_TO" positive? (cut get-actors-where #:ACTOR_ID <> #t)]
           ["CONTENT"       identity]
           ["NAME"          identity]
           ["STARTTIME"     positive? (compose time-utc->date (cut make-time time-utc 0 <>))]
@@ -142,11 +142,13 @@
   (published         ap-actor-published          ap-actor-published-set!)
   (summary           ap-actor-summary            ap-actor-summary-set!))
 
-(define (get-actors-where column values)
+(define* (get-actors-where column values #:optional [returnObjectIfPresent #f])
   (if (null? values)
       '()
-    (let ([isACTOR (memq column '(#:ACTOR_ID  #:INBOX #:FOLLOWING #:OUTBOX
-                                  #:OBJECT_ID #:LIKED #:FOLLOWERS #:FEATURED #:PREFERRED_USERNAME))])
+    (let ([isACTOR (and
+                     (not returnObjectIfPresent)
+                     (memq column '(#:ACTOR_ID  #:INBOX #:FOLLOWING #:OUTBOX
+                                    #:OBJECT_ID #:LIKED #:FOLLOWERS #:FEATURED #:PREFERRED_USERNAME)))])
       (filter
         identity
         (map
@@ -159,7 +161,7 @@
                                                         (assoc-ref
                                                           dbENTITY
                                                           (if isACTOR "ACTOR_ID" "OBJECT_ID"))))])
-                #f
+                (if returnObjectIfPresent dbENTITY #f)
               (create-database-entity make-ap-actor (apply append (cons dbENTITY otherENTITY))
                 ["OBJECT_ID"          identity]
                 [    "AP_ID"          identity              (compose string->uri string-reverse)]
@@ -180,9 +182,12 @@
                 ["SUMMARY"            identity])))
           ((if isACTOR $ACTORS $OBJECTS) 'get #:columns   '(*)
                                               #:condition (where
-                                                            (if (eq? column #:OBJECT_ID)
-                                                                #:ACTOR_ID
-                                                              column)
+                                                            (cond
+                                                             [(and (eq? column #:OBJECT_ID) isACTOR)
+                                                                   #:ACTOR_ID]
+                                                             [(and (eq? column #:ACTOR_ID)  (not isACTOR))
+                                                                   #:OBJECT_ID]
+                                                             [else column])
                                                             values)))))))
 
 ;;;;;;;;;;;;;;;;;

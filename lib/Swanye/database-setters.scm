@@ -52,6 +52,16 @@
                                      [date?   (time-second
                                                 (date->time-utc   ENDTIME))]
                                      [time?   (time-second         ENDTIME)])
+                   #:PUBLISHED     (case-pred PUBLISHED
+                                     [not                             'null]
+                                     [string? (time-second
+                                                (date->time-utc
+                                                  (string->date
+                                                    PUBLISHED
+                                                    "~Y-~m-~dT~H:~M:~SZ")))]
+                                     [date?   (time-second
+                                                (date->time-utc PUBLISHED))]
+                                     [time?   (time-second       PUBLISHED)])
                    #:JSON          (gsub "'" "''" (if (hash-table? JSON)
                                                       (scm->json-string JSON)
                                                     JSON)))

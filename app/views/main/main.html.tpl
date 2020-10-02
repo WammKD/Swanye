@@ -43,9 +43,8 @@
 
 		<DIV class="dash_main">
 			<% (for-each
-			     (lambda (postAndCreator)
-			       (let ([post    (car postAndCreator)]
-			             [creator (cdr postAndCreator)]) %>
+			     (lambda (post)
+			       (let ([creator (car (ap-object-attributed-to post))]) %>
 				<DIV class="dash_post">
 					<HEADER class="dash_post-info">
 						<IMG id="icon"
@@ -159,7 +158,7 @@
 						</SVG>
 					</FOOTER>
 				</DIV>
-			<% )) postsAndCreator) %>
+			<% )) posts) %>
 		</DIV>
 	</BODY>
 </HTML>

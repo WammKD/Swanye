@@ -160,7 +160,7 @@
                                                           dbENTITY
                                                           (if isACTOR "ACTOR_ID" "OBJECT_ID"))))])
                 #f
-              (create-database-entity make-ap-actor (append dbENTITY otherENTITY)
+              (create-database-entity make-ap-actor (apply append (cons dbENTITY otherENTITY))
                 ["OBJECT_ID"          identity]
                 [    "AP_ID"          identity              (compose string->uri string-reverse)]
                 ["OBJECT_TYPE"        identity]

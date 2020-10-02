@@ -64,7 +64,11 @@
 							<DIV id="timestamp">
 								<I>
 									<%= (if-let ([publishDate (ap-object-published post)])
-									        (date->string publishDate "~a, ~d ~b ~Y ~3")
+									        (string-append
+									          (date->string publishDate "~a: ~B ~d, ~Y – ")
+									          "<u>"
+									          (date->string publishDate "~l:~M:~S ~p")
+									          "</u>")
 									      "") %>
 								</I>
 							</DIV>

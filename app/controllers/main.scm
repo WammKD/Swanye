@@ -3,7 +3,7 @@
 ;; This file is generated automatically by GNU Artanis.
 (define-artanis-controller main) ; DO NOT REMOVE THIS LINE!!!
 
-(use-modules (app models    ACTORS) (srfi            srfi-19)
+(use-modules (app models    ACTORS) (srfi            srfi-19) (web uri)
              (app models   OBJECTS) (srfi            srfi-26)
              (app models  SESSIONS) (Swanye database-getters)
              (app models TIMELINES) (Swanye            utils))

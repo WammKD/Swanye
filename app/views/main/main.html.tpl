@@ -57,7 +57,7 @@
 								</B>
 
 								<SPAN style="color: #888888">
-									&nbsp;&nbsp;<%= (ap-actor-preferred-username creator) %>@queer.garden
+									&nbsp;&nbsp;<%= (ap-actor-preferred-username creator) %>@<%= (uri-host (ap-actor-ap-id creator)) %>
 								</SPAN>
 							</DIV>
 

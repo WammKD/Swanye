@@ -53,11 +53,11 @@
 						<DIV id="post-info">
 							<DIV id="poster">
 								<B>
-									<%= (assoc-ref creator "NAME") %>
+									<%= (ap-actor-name creator) %>
 								</B>
 
 								<SPAN style="color: #888888">
-									&nbsp;&nbsp;<%= (assoc-ref creator "PREFERRED_USERNAME") %>@queer.garden
+									&nbsp;&nbsp;<%= (ap-actor-preferred-username creator) %>@queer.garden
 								</SPAN>
 							</DIV>
 
@@ -70,7 +70,7 @@
 					</HEADER>
 
 					<DIV class="dash_post-content">
-						<%= (assoc-ref post "CONTENT") %>
+						<%= (ap-object-content post) %>
 					</DIV>
 
 					<FOOTER class="dash_post-interactions">

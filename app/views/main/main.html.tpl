@@ -63,7 +63,9 @@
 
 							<DIV id="timestamp">
 								<I>
-									12 hours ago
+									<%= (if-let ([publishDate (ap-object-published post)])
+									        (date->string publishDate "~a, ~d ~b ~Y ~3")
+									      "") %>
 								</I>
 							</DIV>
 						</DIV>

@@ -16,6 +16,8 @@
   #:use-module (app     models         ACTORS)
   #:use-module (app     models      ENDPOINTS)
   #:use-module (app     models        OBJECTS)
+  #:use-module (app     models       SESSIONS)
+  #:use-module (app     models      TIMELINES)
   #:use-module (app     models      FOLLOWERS)
   #:export (<activityPub-object> ap-object?   ap-object-attributed-to ap-object-db-id
                                               ap-object-content       ap-object-ap-id
@@ -68,6 +70,7 @@
                                               swanye-user-summary
             get-users-where
             get-only-user-where
+            get-home-timeline
             get-followers-of))
 
 ;;;;;;;;;;;;;;;;;;;;;
@@ -330,6 +333,24 @@
           ["PUBLISHED"          positive?             (compose time-utc->date (cut make-time time-utc 0 <>))]
           ["SUMMARY"            identity]))
       ($USERS 'get #:columns '(*) #:condition (where column values)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  T I M E L I N E S  ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+(define (get-home-timeline sID)
+  (apply
+    append
+    (map
+      (compose (cut get-objects-where #:OBJECT_ID <>) cdar)
+      ($TIMELINES
+        'get
+        #:columns   '(OBJECT_ID)
+        #:condition (where #:USER_ID (assoc-ref
+                                       (car ($SESSIONS
+                                              'get
+                                              #:columns   '(USER_ID)
+                                              #:condition (where #:SESSION_ID sID)))
+                                       "USER_ID"))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  F O L L O W E R S  ;;

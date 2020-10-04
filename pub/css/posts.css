@@ -70,6 +70,9 @@
 	margin-right: .3em;
 }
 
+.dash_post .dash_post-interactions .iconify:hover {
+	cursor: pointer;
+}
 .dash_post .dash_post-interactions .iconify#reblog         rect {
 	display: none;
 }

@@ -44,7 +44,16 @@
 		<DIV class="dash_main">
 			<% (for-each
 			     (lambda (post)
-			       (let ([creator (car (ap-object-attributed-to post))]) %>
+			       (let* ([creator               (car (ap-object-attributed-to post))]
+			              [editorID        (string-append/shared
+			                                 "editor_"
+			                                 (number->string (ap-object-db-id post)))]
+			              [fullCreatorName (string-append/shared
+			                                 (ap-actor-preferred-username creator)
+			                                 "@"
+			                                 (uri-host (ap-actor-ap-id creator))
+			                                 "&#10;"
+			                                 "&#10;")]) %>
 				<DIV class="dash_post">
 					<HEADER class="dash_post-info">
 						<IMG id="icon"
@@ -57,7 +66,7 @@
 								</B>
 
 								<SPAN style="color: #888888">
-									&nbsp;&nbsp;<%= (ap-actor-preferred-username creator) %>@<%= (uri-host (ap-actor-ap-id creator)) %>
+									&nbsp;&nbsp;<%= fullCreatorName %>
 								</SPAN>
 							</DIV>
 

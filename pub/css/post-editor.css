@@ -1,0 +1,50 @@
+.post-editor {
+	display:       none;
+	border-top:    1px solid rgba(0,0,0,0.13);
+	padding-left:  1.8em;
+	padding-right: 1.8em;
+}
+
+.post-editor.show {
+	display: inherit;
+}
+.dash_post-interactions.hide {
+	display: none;
+}
+
+.post-editor textarea {
+	width:         100%;
+	border:        0;
+	resize:        none;
+	outline:       none;
+	margin-top:    0.9em;
+}
+
+.post-editor div#confirm-or-decline {
+	width:          100%;
+	padding-top:    .7em;
+	padding-bottom: .9em;
+}
+
+.post-editor div#confirm-or-decline button {
+	cursor:          pointer;
+	border:          0;
+	border-radius:   4px;
+	color:           #FFFFFF;
+	font-size:       18px;
+	font-family:     inherit;
+	line-height:     inherit;
+	height:          auto;
+	width:           6em;
+}
+
+.post-editor div#confirm-or-decline button#cancel {
+	background:  #707B97;
+	margin-left: 6em;
+}
+
+.post-editor div#confirm-or-decline button#send {
+	float:        right;
+	background:   #7b11b0;
+	margin-right: 6em;
+}

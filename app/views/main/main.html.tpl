@@ -7,8 +7,9 @@
 			<%= (current-appname) %>
 		</TITLE>
 
-		<@css dashboard.css %>
-		<@css     posts.css %>
+		<@css   dashboard.css %>
+		<@css       posts.css %>
+		<@css post-editor.css %>
 
 		<SCRIPT type="text/javascript">
 			/*
@@ -87,6 +88,8 @@
 					<ARTICLE class="dash_post-content" data-users=<%= fullCreatorName %>>
 						<%= (ap-object-content post) %>
 					</ARTICLE>
+
+					<@include post-editor.html %>
 
 					<FOOTER class="dash_post-interactions">
 						<@include chat-button.html %>

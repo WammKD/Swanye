@@ -84,9 +84,9 @@
 						</DIV>
 					</HEADER>
 
-					<DIV class="dash_post-content">
+					<ARTICLE class="dash_post-content" data-users=<%= fullCreatorName %>>
 						<%= (ap-object-content post) %>
-					</DIV>
+					</ARTICLE>
 
 					<FOOTER class="dash_post-interactions">
 						<@include chat-button.html %>

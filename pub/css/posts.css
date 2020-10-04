@@ -70,14 +70,14 @@
 	margin-right: .3em;
 }
 
-.dash_post .dash_post-interactions svg#reblog         rect {
+.dash_post .dash_post-interactions .iconify#reblog         rect {
 	display: none;
 }
-.dash_post .dash_post-interactions svg#reblog:hover   rect {
+.dash_post .dash_post-interactions .iconify#reblog:hover   rect {
 	fill:    #117EB0;
 	display: inherit;
 }
-.dash_post .dash_post-interactions svg#reblog:hover   path {
+.dash_post .dash_post-interactions .iconify#reblog:hover   path {
 	fill: #117EB0;
 }
 .dash_post .dash_post-interactions svg#favorite:hover path {

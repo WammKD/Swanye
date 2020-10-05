@@ -125,6 +125,38 @@
 
     objID))
 
+(define (insert-activity-auto onlyGetID activity)
+  (let ([ref (if (hash-table? activity) hash-ref assoc-ref)])
+    (insert-activity
+      onlyGetID
+      (ref activity "id")
+      (ref activity "type")
+      (if-let ([obj (lambda (str)
+                      (char=? (string-ref
+                                (string-trim str)
+                                0)                 #\{)) (ref activity "object")])
+          (json-string->scm obj)
+        obj)
+      (if-let ([actors (lambda (str)
+                         (or
+                           (char=? (string-ref
+                                     (string-trim str)
+                                     0)                 #\{)
+                           (char=? (string-ref
+                                     (string-trim str)
+                                     0)                 #\[))) (ref activity "actor")])
+          (json-string->scm actors)
+        actors)
+      activity
+      #:ATTRIBUTED_TO         (ref activity "attributedTo")
+      #:CONTENT               (ref activity "content")
+      #:NAME                  (ref activity "name")
+      #:STARTTIME             (ref activity "starttime")
+      #:ENDTIME               (ref activity "endtime")
+      #:PUBLISHED             (ref activity "published"))))
+
+
+
 (define* (insert-actor onlyGetID AP_ID              OBJECT_TYPE
                                  INBOX              OUTBOX
                                  PREFERRED_USERNAME JSON        #:key ATTRIBUTED_TO        CONTENT

@@ -3,10 +3,6 @@
 ;;;; <YOUR LICENSE HERE>
 
 (define-module (Swanye database-setters)
-  #:use-module (srfi            srfi-19)
-  #:use-module (web                 uri)
-  #:use-module (Swanye database-getters)
-  #:use-module (Swanye            utils)
   #:use-module (artanis third-party      json)
   #:use-module (app     models          USERS)
   #:use-module (app     models         ACTORS)
@@ -14,6 +10,11 @@
   #:use-module (app     models        OBJECTS)
   #:export (insert-object      insert-actor      insert-user
             insert-object-auto insert-actor-auto))
+  #:use-module (srfi             srfi-19)
+  #:use-module (web                  uri)
+  #:use-module (Swanye  database-getters)
+  #:use-module (Swanye             utils)
+  #:use-module (artanis            utils)
 
 (define* (insert-object onlyGetID   AP_ID
                         OBJECT_TYPE JSON  #:key ATTRIBUTED_TO CONTENT NAME
@@ -154,6 +155,40 @@
       #:PROVIDE_CLIENT_KEY            (if endpoints (ref endpoints "provideClientKey")           #f)
       #:SIGN_CLIENT_KEY               (if endpoints (ref endpoints "signClientKey")              #f)
       #:SHARED_INBOX                  (if endpoints (ref endpoints "sharedInbox")                #f))))
+
+(define (get-actor-dbID-by-apID activityPubID)
+  (if-let* ([convert (lambda (str)
+                       (string-reverse (if (uri? str) (uri->string str) str)))]
+            [actors  (get-actors-where #:AP_ID (if (list? activityPubID)
+                                                   (map convert activityPubID)
+                                                 (convert activityPubID)))])
+      (if (list? activityPubID)
+          (map ap-actor-db-id actors)
+        (ap-actor-db-id (car actors)))
+    ;; (let ([actor (receive (httpHead httpBody)
+    ;;                  (http-get
+    ;;                    activityPubID
+    ;;                    #:headers `((Accept  . "application/ld+json")
+    ;;                                (Profile . "https://www.w3.org/ns/activitystreams")))
+    ;;                (json-string->scm (utf8->string httpBody)))])
+    ((if (list? activityPubID) car)
+      (map
+        (lambda (apID)
+          (let ([actorFilename (string-append/shared
+                                 "actor_"
+                                 (number->string (current-time))
+                                 (get-random-from-dev #:length 64))])
+            (system (string-append/shared
+                      "curl -H \"Accept: application/ld+json\" "
+                           "-H \"Profile: https://www.w3.org/ns/activitystreams\" "
+                           apID " > " actorFilename))
+
+            (let ([actorTbl (json-string->scm
+                              (get-string-all-with-detected-charset actorFilename))])
+              (system (string-append/shared "rm " actorFilename))
+
+              (insert-actor-auto #t actorTbl))))
+        (if (list? activityPubID) activityPubID (list activityPubID))))))
 
 
 

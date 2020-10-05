@@ -3,18 +3,20 @@
 ;;;; <YOUR LICENSE HERE>
 
 (define-module (Swanye database-setters)
-  #:use-module (artanis third-party      json)
-  #:use-module (app     models          USERS)
-  #:use-module (app     models         ACTORS)
-  #:use-module (app     models      ENDPOINTS)
-  #:use-module (app     models        OBJECTS)
-  #:export (insert-object      insert-actor      insert-user
-            insert-object-auto insert-actor-auto))
   #:use-module (srfi             srfi-19)
   #:use-module (web                  uri)
   #:use-module (Swanye  database-getters)
   #:use-module (Swanye             utils)
   #:use-module (artanis            utils)
+  #:use-module (artanis third-party                 json)
+  #:use-module (app     models                     USERS)
+  #:use-module (app     models                    ACTORS)
+  #:use-module (app     models                 ENDPOINTS)
+  #:use-module (app     models                ACTIVITIES)
+  #:use-module (app     models      ACTIVITIES_BY_ACTORS)
+  #:use-module (app     models                   OBJECTS)
+  #:export (insert-object      insert-activity      insert-actor      insert-user
+            insert-object-auto insert-activity-auto insert-actor-auto get-actor-dbID-by-apID))
 
 (define* (insert-object onlyGetID   AP_ID
                         OBJECT_TYPE JSON  #:key ATTRIBUTED_TO CONTENT NAME
@@ -84,6 +86,44 @@
                              #:PUBLISHED       (ref object "published"))))
 
 
+
+(define* (insert-activity onlyGetID   AP_ID
+                          OBJECT      ACTORS
+                          OBJECT_TYPE JSON      #:key ATTRIBUTED_TO CONTENT NAME
+                                                      STARTTIME     ENDTIME PUBLISHED)
+  (let ([objID (insert-object #t AP_ID
+                                 OBJECT_TYPE
+                                 JSON
+                                 #:ATTRIBUTED_TO ATTRIBUTED_TO
+                                 #:CONTENT       CONTENT
+                                 #:NAME          NAME
+                                 #:STARTTIME     STARTTIME
+                                 #:ENDTIME       ENDTIME
+                                 #:PUBLISHED     PUBLISHED)])
+    (for-each
+      (lambda (actor)
+        ($ACTIVITIES_BY_ACTORS
+          'set
+          #:ACTIVITY_ID objID
+          #:ACTOR_ID    (get-actor-dbID-by-apID
+                          (case-pred actor
+                            [      list? (map
+                                           (lambda (act)
+                                             (if (string? act) act (hash-ref act "id")))
+                                           actor)]
+                            [    string?                 actor]
+                            [hash-table? (hash-ref actor "id")]))))
+      ACTORS)
+
+    ($ACTIVITIES 'set #:ACTIVITY_ID objID
+                      #:OBJECT_ID   (if-let ([actObjID (get-object-dbID-by-apID
+                                                         ((if (hash-table? OBJECT)
+                                                              hash-ref
+                                                            assoc-ref) OBJECT "id"))])
+                                        actObjID
+                                      (insert-object-auto #t OBJECT)))
+
+    objID))
 
 (define* (insert-actor onlyGetID AP_ID              OBJECT_TYPE
                                  INBOX              OUTBOX

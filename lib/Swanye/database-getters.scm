@@ -11,14 +11,16 @@
   #:use-module (Swanye    utils)
   #:use-module (artanis   utils)
   #:use-module (artanis    ssql)
-  #:use-module (artanis third-party      json)
-  #:use-module (app     models          USERS)
-  #:use-module (app     models         ACTORS)
-  #:use-module (app     models      ENDPOINTS)
-  #:use-module (app     models        OBJECTS)
-  #:use-module (app     models       SESSIONS)
-  #:use-module (app     models      TIMELINES)
-  #:use-module (app     models      FOLLOWERS)
+  #:use-module (artanis third-party                 json)
+  #:use-module (app     models                     USERS)
+  #:use-module (app     models                    ACTORS)
+  #:use-module (app     models                 ENDPOINTS)
+  #:use-module (app     models                ACTIVITIES)
+  #:use-module (app     models      ACTIVITIES_BY_ACTORS)
+  #:use-module (app     models                   OBJECTS)
+  #:use-module (app     models                  SESSIONS)
+  #:use-module (app     models                 TIMELINES)
+  #:use-module (app     models                 FOLLOWERS)
   #:export (<activityPub-object> ap-object?   ap-object-attributed-to ap-object-db-id
                                               ap-object-content       ap-object-ap-id
                                               ap-object-start-time    ap-object-type
@@ -142,6 +144,70 @@
   (endTime       ap-activity-end-time      ap-activity-end-time-set!)
   (published     ap-activity-published     ap-activity-published-set!)
   (summary       ap-activity-summary       ap-activity-summary-set!))
+
+(define (get-activities-where column values)
+  (if (null? values)
+      '()
+    (let ([type (cond
+                 [(memq column '(#:ACTIVITY_ID #:OBJECT_ID)) 'activity]
+                 [(eq?  column                   #:ACTOR_ID)    'actor]
+                 [else                                         'object])])
+      (filter
+        identity
+        (map
+          (lambda (dbENTITY)
+            (if-let ([otherENTITY null? (let ([isACTIVITY (memq type '(activity actor))])
+                                          ((if isACTIVITY $OBJECTS $ACTIVITIES)
+                                            'get
+                                            #:columns   '(*)
+                                            #:condition (where
+                                                          (if isACTIVITY #:OBJECT_ID #:ACTIVITY_ID)
+                                                          (assoc-ref
+                                                            dbENTITY
+                                                            (if isACTIVITY "ACTIVITY_ID" "OBJECT_ID")))))])
+                #f
+              (let ([finalENTITY (apply append (cons dbENTITY otherENTITY))])
+                (create-database-entity make-ap-activity finalENTITY
+                  ["ACTIVITY_ID"   identity]
+                  [      "AP_ID"   identity   (compose string->uri string-reverse)]
+                  [  "OBJECT_TYPE" identity]
+                  [   "ACTOR_ID"   (const #t) (const
+                                                (if (eq? type 'actor)
+                                                    (get-actors-where #:ACTOR_ID values)
+                                                  (get-actors-where
+                                                    #:ACTOR_ID
+                                                    (map
+                                                      (cut assoc-ref <> "ACTOR_ID")
+                                                      ($ACTIVITIES_BY_ACTORS
+                                                        'get
+                                                        #:columns   '(*)
+                                                        #:condition (where
+                                                                      #:ACTIVITY_ID
+                                                                      (assoc-ref
+                                                                        finalENTITY
+                                                                        "ACTIVITY_ID")))))))]
+                  [  "OBJECT_ID"   identity   (compose car (cut get-objects-where #:OBJECT_ID <>))]
+                  ["NAME"          identity]
+                  ["ATTRIBUTED_TO" positive?  (cut get-actors-where #:ACTOR_ID <> #t)]
+                  ["CONTENT"       identity]
+                  ["STARTTIME"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
+                  [  "ENDTIME"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
+                  ["PUBLISHED"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
+                  ["SUMMARY"       identity]))))
+          (if (eq? type 'actor)
+              ($ACTIVITIES
+                'get
+                #:columns   '(*)
+                #:condition (where
+                              #:ACTIVITY_ID
+                              (map
+                                (cut assoc-ref <> "ACTIVITY_ID")
+                                ($ACTIVITIES_BY_ACTORS 'get #:columns   '(*)
+                                                            #:condition (where column values)))))
+            ((if (eq? type 'activity) $ACTIVITIES $OBJECTS)
+              'get
+              #:columns   '(*)
+              #:condition (where column values))))))))
 
 ;;;;;;;;;;;;;;;;;;;
 ;;  A C T O R S  ;;

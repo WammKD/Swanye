@@ -123,6 +123,26 @@
         (map (cut assoc-ref <> "OBJECT_ID") possObj)
       (cdaar possObj))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  A C T I V I T I E S  ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define-record-type <activityPub-activity>
+  (make-ap-activity databaseID   activityPubID type      actors  object    name
+                    attributedTo content       startTime endTime published summary)
+  ap-activity?
+  (databaseID    ap-activity-db-id         ap-activity-db-id-set!)
+  (activityPubID ap-activity-ap-id         ap-activity-ap-id-set!)
+  (type          ap-activity-type          ap-activity-type-set!)
+  (actors        ap-activity-actors        ap-activity-actors-set!)
+  (object        ap-activity-object        ap-activity-object-set!)
+  (name          ap-activity-name          ap-activity-name-set!)
+  (attributedTo  ap-activity-attributed-to ap-activity-attributed-to-set!)
+  (content       ap-activity-content       ap-activity-content-set!)
+  (startTime     ap-activity-start-time    ap-activity-start-time-set!)
+  (endTime       ap-activity-end-time      ap-activity-end-time-set!)
+  (published     ap-activity-published     ap-activity-published-set!)
+  (summary       ap-activity-summary       ap-activity-summary-set!))
+
 ;;;;;;;;;;;;;;;;;;;
 ;;  A C T O R S  ;;
 ;;;;;;;;;;;;;;;;;;;

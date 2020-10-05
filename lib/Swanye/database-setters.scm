@@ -231,6 +231,9 @@
 (define (get-actor-dbID-by-apID activityPubID)
   (if-let* ([convert (lambda (str)
                        (string-reverse (if (uri? str) (uri->string str) str)))]
+            ;; This'll, currently, not return everything needed if some of
+            ;; the actors are in the database and some aren't
+            ;;; Need to adjust this function to handle partially having actors
             [actors  (get-actors-where #:AP_ID (if (list? activityPubID)
                                                    (map convert activityPubID)
                                                  (convert activityPubID)))])

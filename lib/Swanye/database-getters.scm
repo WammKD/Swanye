@@ -110,13 +110,18 @@
       ($OBJECTS 'get #:columns '(*) #:condition (where column values)))))
 
 (define (get-object-dbID-by-apID activityPubID)
-  (if-let ([possObj null? ($OBJECTS 'get #:columns   '(OBJECT_ID)
-                                         #:condition (where
-                                                       #:AP_ID
-                                                       (string-reverse
-                                                         activityPubID)))])
+  (if-let* ([convert       (lambda (str)
+                             (string-reverse (if (uri? str) (uri->string str) str)))]
+            [possObj null? ($OBJECTS 'get #:columns   '(OBJECT_ID)
+                                          #:condition (where
+                                                        #:AP_ID
+                                                        (if (list? activityPubID)
+                                                            (map convert activityPubID)
+                                                          (convert activityPubID))))])
       #f
-    (cdaar possObj)))
+    (if (list? activityPubID)
+        (map (cut assoc-ref <> "OBJECT_ID") possObj)
+      (cdaar possObj))))
 
 ;;;;;;;;;;;;;;;;;;;
 ;;  A C T O R S  ;;

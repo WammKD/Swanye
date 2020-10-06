@@ -99,22 +99,32 @@
 
 (define (insert-object-auto onlyGetID object)
   (let ([ref (if (hash-table? object) hash-ref assoc-ref)])
-    (insert-object onlyGetID (ref object "id") (ref object "type")         object
-                             #:ATTRIBUTED_TO   (ref object "attributedTo")
-                             #:CONTENT         (ref object "content")
-                             #:NAME            (ref object "name")
-                             #:STARTTIME       (ref object "starttime")
-                             #:ENDTIME         (ref object "endtime")
-                             #:PUBLISHED       (ref object "published"))))
+    (insert-object onlyGetID (ref object "id")
+                             (ref object "type")
+                             (if-let ([ to string? (ref object  "to")]) (list  to)  to)
+                             (if-let ([bto string? (ref object "bto")]) (list bto) bto)
+                             (if-let ([ cc string? (ref object  "cc")]) (list  cc)  cc)
+                             (if-let ([bcc string? (ref object "bcc")]) (list bcc) bcc)
+                             object
+                             #:ATTRIBUTED_TO (ref object "attributedTo")
+                             #:CONTENT       (ref object "content")
+                             #:NAME          (ref object "name")
+                             #:STARTTIME     (ref object "starttime")
+                             #:ENDTIME       (ref object "endtime")
+                             #:PUBLISHED     (ref object "published"))))
 
 
 
-(define* (insert-activity onlyGetID   AP_ID
-                          OBJECT      ACTORS
-                          OBJECT_TYPE JSON      #:key ATTRIBUTED_TO CONTENT NAME
-                                                      STARTTIME     ENDTIME PUBLISHED)
+(define* (insert-activity onlyGetID userID
+                          AP_ID     OBJECT
+                          ACTORS    OBJECT_TYPE JSON #:key  TO  CC ATTRIBUTED_TO CONTENT NAME
+                                                           BTO BCC STARTTIME     ENDTIME PUBLISHED)
   (let ([objID (insert-object #t AP_ID
                                  OBJECT_TYPE
+                                 (return-if  TO '())
+                                 (return-if BTO '())
+                                 (return-if  CC '())
+                                 (return-if BCC '())
                                  JSON
                                  #:ATTRIBUTED_TO ATTRIBUTED_TO
                                  #:CONTENT       CONTENT
@@ -181,7 +191,9 @@
 
 (define* (insert-actor onlyGetID AP_ID              OBJECT_TYPE
                                  INBOX              OUTBOX
-                                 PREFERRED_USERNAME JSON        #:key ATTRIBUTED_TO        CONTENT
+                                 PREFERRED_USERNAME JSON        #:key  TO                   CC
+                                                                      BTO                  BCC
+                                                                      ATTRIBUTED_TO        CONTENT
                                                                       NAME                 STARTTIME
                                                                       ENDTIME              PUBLISHED
                                                                       FOLLOWING            FOLLOWERS
@@ -195,6 +207,10 @@
                                                     elem)))]
         [objID             (insert-object #t AP_ID
                                              OBJECT_TYPE
+                                             (return-if  TO '())
+                                             (return-if BTO '())
+                                             (return-if  CC '())
+                                             (return-if BCC '())
                                              JSON
                                              #:ATTRIBUTED_TO ATTRIBUTED_TO
                                              #:CONTENT       CONTENT

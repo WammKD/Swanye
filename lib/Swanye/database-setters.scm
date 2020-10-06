@@ -133,14 +133,8 @@
                                  #:STARTTIME     STARTTIME
                                  #:ENDTIME       ENDTIME
                                  #:PUBLISHED     PUBLISHED)])
-    (display "\n\n\n\nPISSERSHIT\n\n\n\n")
-    (display (scm->json-string ACTORS))
-    (newline)
     (for-each
       (lambda (actor)
-        (display "\n\n\n\nDAMNERSHIT\n\n\n\n")
-        (display (scm->json-string actor))
-        (newline)
         ($ACTIVITIES_BY_ACTORS
           'set  ;; check is 'set can handle multiple #:ACTOR_IDs, later
           #:ACTIVITY_ID objID
@@ -263,14 +257,15 @@
       #:SHARED_INBOX                  (if endpoints (ref endpoints "sharedInbox")                #f))))
 
 (define (get-actor-dbID-by-apID activityPubID)
-  (if-let* ([convert (lambda (str)
-                       (string-reverse (if (uri? str) (uri->string str) str)))]
+  (if-let* ([convert                (lambda (str)
+                                      (string-reverse
+                                        (if (uri? str) (uri->string str) str)))]
             ;; This'll, currently, not return everything needed if some of
             ;; the actors are in the database and some aren't
             ;;; Need to adjust this function to handle partially having actors
-            [actors  (get-actors-where #:AP_ID (if (list? activityPubID)
-                                                   (map convert activityPubID)
-                                                 (convert activityPubID)))])
+            [actors  (negate null?) (get-actors-where #:AP_ID (if (list? activityPubID)
+                                                                  (map convert activityPubID)
+                                                                (convert activityPubID)))])
       (if (list? activityPubID)
           (map ap-actor-db-id actors)
         (ap-actor-db-id (car actors)))

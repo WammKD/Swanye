@@ -228,9 +228,6 @@
                   (begin
                     (system (string-append/shared "rm " rsltFilename))
 
-                    (display "\n\n\n\nFUCKERSHIT\n\n\n\n")
-                    (display (utf8->string body))
-                    (newline)
                     ($INBOXES 'set #:USER_ID     (swanye-user-db-id user)
                                    #:ACTIVITY_ID (insert-activity-auto
                                                    #t

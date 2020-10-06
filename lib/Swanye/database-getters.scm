@@ -21,55 +21,68 @@
   #:use-module (app     models                  SESSIONS)
   #:use-module (app     models                 TIMELINES)
   #:use-module (app     models                 FOLLOWERS)
-  #:export (<activityPub-object> ap-object?   ap-object-attributed-to ap-object-db-id
-                                              ap-object-content       ap-object-ap-id
-                                              ap-object-start-time    ap-object-type
-                                              ap-object-end-time      ap-object-name
-                                              ap-object-published
+  #:export (<activityPub-object>   ap-object?   ap-object-attributed-to ap-object-db-id
+                                                ap-object-content       ap-object-ap-id
+                                                ap-object-start-time    ap-object-type
+                                                ap-object-end-time      ap-object-name
+                                                ap-object-published
             get-objects-where
             get-object-dbID-by-apID
-            <activityPub-actor>  ap-actor?    ap-actor-db-id
-                                              ap-actor-ap-id
-                                              ap-actor-type
-                                              ap-actor-inbox
-                                              ap-actor-outbox
-                                              ap-actor-following
-                                              ap-actor-followers
-                                              ap-actor-liked
-                                              ap-actor-featured
-                                              ap-actor-name
-                                              ap-actor-preferred-username
-                                              ap-actor-attributed-to
-                                              ap-actor-content
-                                              ap-actor-start-time
-                                              ap-actor-end-time
-                                              ap-actor-published
-                                              ap-actor-summary
+            <activityPub-activity> ap-activity? ap-activity-db-id
+                                                ap-activity-ap-id
+                                                ap-activity-type
+                                                ap-activity-actors
+                                                ap-activity-object
+                                                ap-activity-name
+                                                ap-activity-attributed-to
+                                                ap-activity-content
+                                                ap-activity-start-time
+                                                ap-activity-end-time
+                                                ap-activity-published
+                                                ap-activity-summary
+            get-activities-where
+            <activityPub-actor>    ap-actor?    ap-actor-db-id
+                                                ap-actor-ap-id
+                                                ap-actor-type
+                                                ap-actor-inbox
+                                                ap-actor-outbox
+                                                ap-actor-following
+                                                ap-actor-followers
+                                                ap-actor-liked
+                                                ap-actor-featured
+                                                ap-actor-name
+                                                ap-actor-preferred-username
+                                                ap-actor-attributed-to
+                                                ap-actor-content
+                                                ap-actor-start-time
+                                                ap-actor-end-time
+                                                ap-actor-published
+                                                ap-actor-summary
             get-actors-where
-            <swanye-user>        swanye-user? swanye-user-db-id
-                                              swanye-user-ap-id
-                                              swanye-user-email
-                                              swanye-user-password
-                                              swanye-user-salt
-                                              swanye-user-created-at
-                                              swanye-user-confirmation-token
-                                              swanye-user-public-key
-                                              swanye-user-private-key
-                                              swanye-user-type
-                                              swanye-user-inbox
-                                              swanye-user-outbox
-                                              swanye-user-following
-                                              swanye-user-followers
-                                              swanye-user-liked
-                                              swanye-user-featured
-                                              swanye-user-name
-                                              swanye-user-preferred-username
-                                              swanye-user-attributed-to
-                                              swanye-user-content
-                                              swanye-user-start-time
-                                              swanye-user-end-time
-                                              swanye-user-published
-                                              swanye-user-summary
+            <swanye-user>          swanye-user? swanye-user-db-id
+                                                swanye-user-ap-id
+                                                swanye-user-email
+                                                swanye-user-password
+                                                swanye-user-salt
+                                                swanye-user-created-at
+                                                swanye-user-confirmation-token
+                                                swanye-user-public-key
+                                                swanye-user-private-key
+                                                swanye-user-type
+                                                swanye-user-inbox
+                                                swanye-user-outbox
+                                                swanye-user-following
+                                                swanye-user-followers
+                                                swanye-user-liked
+                                                swanye-user-featured
+                                                swanye-user-name
+                                                swanye-user-preferred-username
+                                                swanye-user-attributed-to
+                                                swanye-user-content
+                                                swanye-user-start-time
+                                                swanye-user-end-time
+                                                swanye-user-published
+                                                swanye-user-summary
             get-users-where
             get-only-user-where
             get-home-timeline

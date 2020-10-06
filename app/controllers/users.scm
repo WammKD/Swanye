@@ -229,7 +229,7 @@
                     (system (string-append/shared "rm " rsltFilename))
 
                     (display "\n\n\n\nFUCKERSHIT\n\n\n\n")
-                    (display (json-string->scm (utf8->string body)))
+                    (display (utf8->string body))
                     (newline)
                     ($INBOXES 'set #:USER_ID     (swanye-user-db-id user)
                                    #:ACTIVITY_ID (insert-activity-auto

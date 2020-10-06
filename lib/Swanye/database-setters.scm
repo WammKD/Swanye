@@ -14,13 +14,30 @@
   #:use-module (app     models                 ENDPOINTS)
   #:use-module (app     models                ACTIVITIES)
   #:use-module (app     models      ACTIVITIES_BY_ACTORS)
+  #:use-module (app     models                ADDRESSING)
   #:use-module (app     models                   OBJECTS)
   #:export (insert-object      insert-activity      insert-actor      insert-user
             insert-object-auto insert-activity-auto insert-actor-auto get-actor-dbID-by-apID))
 
 (define* (insert-object onlyGetID   AP_ID
-                        OBJECT_TYPE JSON  #:key ATTRIBUTED_TO CONTENT NAME
+                        OBJECT_TYPE TO
+                        BTO         CC
+                        BCC         JSON  #:key ATTRIBUTED_TO CONTENT NAME
                                                 STARTTIME     ENDTIME PUBLISHED)
+  (define (insert-addressing actors type objectID)
+    (for-each
+      (lambda (actor)
+        ($ADDRESSING
+          'set
+          #:OBJECT_ID       objectID
+          #:ADDRESSING_TYPE type
+          #:ACTOR_ID        (get-actor-dbID-by-apID (if (string? actor)
+                                                        actor
+                                                      ((if (hash-table? actor)
+                                                           hash-ref
+                                                         assoc-ref) actor "id")))))
+      actors))
+
   (let* ([apID    (if (uri? AP_ID) (uri->string AP_ID) AP_ID)]
          [apIDrev                       (string-reverse apID)])
     ($OBJECTS 'set #:AP_ID         apIDrev
@@ -69,11 +86,16 @@
                                                       (scm->json-string JSON)
                                                     JSON)))
 
-    (if onlyGetID
-        (get-object-dbID-by-apID apID)
-      (if-let ([obj null? (get-objects-where #:AP_ID apIDrev)])
-          #f
-        (car obj)))))
+    (let* ([obj      (if onlyGetID
+                         (get-object-dbID-by-apID apID)
+                       (car (get-objects-where #:AP_ID apIDrev)))]
+           [objID (if (ap-object? obj) (ap-object-db-id obj) obj)])
+      (insert-addressing  TO  "to" objID)
+      (insert-addressing BTO "bto" objID)
+      (insert-addressing  CC  "cc" objID)
+      (insert-addressing BCC "bcc" objID)
+
+      obj)))
 
 (define (insert-object-auto onlyGetID object)
   (let ([ref (if (hash-table? object) hash-ref assoc-ref)])

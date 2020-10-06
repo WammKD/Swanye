@@ -117,8 +117,8 @@
 
 
 (define* (insert-activity onlyGetID userID
-                          AP_ID     OBJECT
-                          ACTORS    OBJECT_TYPE JSON #:key  TO  CC ATTRIBUTED_TO CONTENT NAME
+                          AP_ID     OBJECT_TYPE
+                          ACTORS    OBJECT      JSON #:key  TO  CC ATTRIBUTED_TO CONTENT NAME
                                                            BTO BCC STARTTIME     ENDTIME PUBLISHED)
   (let ([objID (insert-object #t AP_ID
                                  OBJECT_TYPE
@@ -169,19 +169,19 @@
 
 (define (insert-activity-auto onlyGetID userID activity)
   (let ([ref (if (hash-table? activity) hash-ref assoc-ref)])
-    (insert-activity onlyGetID               userID
-                     (ref activity "id")     (ref activity "type")
-                     (ref activity "object") (ref activity "actor")        activity
-                     #:TO                    (ref activity  "to")
-                     #:BTO                   (ref activity "bto")
-                     #:CC                    (ref activity  "cc")
-                     #:BCC                   (ref activity "bcc")
-                     #:ATTRIBUTED_TO         (ref activity "attributedTo")
-                     #:CONTENT               (ref activity "content")
-                     #:NAME                  (ref activity "name")
-                     #:STARTTIME             (ref activity "starttime")
-                     #:ENDTIME               (ref activity "endtime")
-                     #:PUBLISHED             (ref activity "published"))))
+    (insert-activity onlyGetID              userID
+                     (ref activity "id")    (ref activity "type")
+                     (ref activity "actor") (ref activity "object")       activity
+                     #:TO                   (ref activity  "to")
+                     #:BTO                  (ref activity "bto")
+                     #:CC                   (ref activity  "cc")
+                     #:BCC                  (ref activity "bcc")
+                     #:ATTRIBUTED_TO        (ref activity "attributedTo")
+                     #:CONTENT              (ref activity "content")
+                     #:NAME                 (ref activity "name")
+                     #:STARTTIME            (ref activity "starttime")
+                     #:ENDTIME              (ref activity "endtime")
+                     #:PUBLISHED            (ref activity "published"))))
 
 
 

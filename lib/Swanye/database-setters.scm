@@ -16,6 +16,7 @@
   #:use-module (app     models      ACTIVITIES_BY_ACTORS)
   #:use-module (app     models                ADDRESSING)
   #:use-module (app     models                   OBJECTS)
+  #:use-module (app     models                 TIMELINES)
   #:export (insert-object      insert-activity      insert-actor      insert-user
             insert-object-auto insert-activity-auto insert-actor-auto get-actor-dbID-by-apID))
 
@@ -152,7 +153,13 @@
                                         actObjID
                                       (insert-object-auto #t OBJECT)))
 
-    objID))
+    (cond
+     [(string=? OBJECT_TYPE "Create")
+           ($TIMELINES 'set #:USER_ID userID #:OBJECT_ID objID)])
+
+    (if onlyGetID
+        objID
+      (car (get-activities-where #:ACTIVITY_ID objID)))))
 
 (define (insert-activity-auto onlyGetID userID activity)
   (let ([ref (if (hash-table? activity) hash-ref assoc-ref)])

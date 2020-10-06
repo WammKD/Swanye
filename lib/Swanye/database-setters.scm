@@ -135,17 +135,14 @@
     (for-each
       (lambda (actor)
         ($ACTIVITIES_BY_ACTORS
-          'set
+          'set  ;; check is 'set can handle multiple #:ACTOR_IDs, later
           #:ACTIVITY_ID objID
-          #:ACTOR_ID    (get-actor-dbID-by-apID
-                          (case-pred actor
-                            [      list? (map
-                                           (lambda (act)
-                                             (if (string? act) act (hash-ref act "id")))
-                                           actor)]
-                            [    string?                 actor]
-                            [hash-table? (hash-ref actor "id")]))))
-      ACTORS)
+          #:ACTOR_ID    (get-actor-dbID-by-apID  ;; maybe adjust to use the object
+                          (case-pred actor       ;; rather than make another HTTP call
+                            [      list? (assoc-ref actor "id")]
+                            [    string?                  actor]
+                            [hash-table? ( hash-ref actor "id")]))))
+      (if (list? ACTORS) ACTORS (list ACTORS)))
 
     ($ACTIVITIES 'set #:ACTIVITY_ID objID
                       #:OBJECT_ID   (if-let ([actObjID (get-object-dbID-by-apID

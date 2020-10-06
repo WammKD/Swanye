@@ -133,8 +133,14 @@
                                  #:STARTTIME     STARTTIME
                                  #:ENDTIME       ENDTIME
                                  #:PUBLISHED     PUBLISHED)])
+    (display "\n\n\n\nPISSERSHIT\n\n\n\n")
+    (display ACTORS)
+    (newline)
     (for-each
       (lambda (actor)
+        (display "\n\n\n\nDAMNERSHIT\n\n\n\n")
+        (display actor)
+        (newline)
         ($ACTIVITIES_BY_ACTORS
           'set  ;; check is 'set can handle multiple #:ACTOR_IDs, later
           #:ACTIVITY_ID objID

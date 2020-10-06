@@ -3,9 +3,9 @@
 ;; This file is generated automatically by GNU Artanis.
 (define-artanis-controller users) ; DO NOT REMOVE THIS LINE!!!
 
-(use-modules (ice-9       eval-string) (srfi srfi-1)                (app       models TIMELINES)
-             (ice-9           receive) ((srfi srfi-19) #:prefix d:) (app       models   INBOXES)
-             (Swanye database-getters) (srfi srfi-98)               (industria crypto  blowfish)
+(use-modules (ice-9       eval-string) (srfi srfi-1)                (app       models   INBOXES)
+             (ice-9           receive) ((srfi srfi-19) #:prefix d:) (industria crypto  blowfish)
+             (Swanye database-getters) (srfi srfi-98)
              (Swanye database-setters)
              (Swanye            utils)
              (rnrs        bytevectors)

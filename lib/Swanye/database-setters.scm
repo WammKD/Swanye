@@ -280,7 +280,7 @@
         (lambda (apID)
           (let ([actorFilename (string-append/shared
                                  "actor_"
-                                 (number->string (current-time))
+                                 (number->string (time-second (current-time)))
                                  (get-random-from-dev #:length 64))])
             (system (string-append/shared
                       "curl -H \"Accept: application/ld+json\" "

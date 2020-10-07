@@ -75,7 +75,7 @@
 								<I>
 									<%= (if-let ([publishDate (ap-object-published post)])
 									        (string-append
-									          (date->string publishDate "~a: ~B ~d, ~Y – ")
+									          (date->string publishDate "~a: ~B ~d, ~Y &mldr; ")
 									          "<u>"
 									          (date->string publishDate "~l:~M:~S ~p")
 									          "</u>")

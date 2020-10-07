@@ -283,7 +283,7 @@
     ;;                    #:headers `((Accept  . "application/ld+json")
     ;;                                (Profile . "https://www.w3.org/ns/activitystreams")))
     ;;                (json-string->scm (utf8->string httpBody)))])
-    ((if (list? activityPubID) car identity)
+    ((if (list? activityPubID) identity car)
       (map
         (lambda (apID)
           (let ([actorFilename (string-append/shared

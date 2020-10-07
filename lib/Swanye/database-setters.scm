@@ -153,17 +153,17 @@
                             [hash-table? ( hash-ref actor "id")]))))
       (if (list? ACTORS) ACTORS (list ACTORS)))
 
-    ($ACTIVITIES 'set #:ACTIVITY_ID objID
-                      #:OBJECT_ID   (if-let ([actObjID (get-object-dbID-by-apID
-                                                         ((if (hash-table? OBJECT)
-                                                              hash-ref
-                                                            assoc-ref) OBJECT "id"))])
-                                        actObjID
-                                      (insert-object-auto #t OBJECT)))
+    (let ([activityObjectID (if-let ([actObjID (get-object-dbID-by-apID
+                                                 ((if (hash-table? OBJECT)
+                                                      hash-ref
+                                                    assoc-ref) OBJECT "id"))])
+                                actObjID
+                              (insert-object-auto #t OBJECT))])
+      ($ACTIVITIES 'set #:ACTIVITY_ID objID #:OBJECT_ID activityObjectID)
 
-    (cond
-     [(string=? OBJECT_TYPE "Create")
-           ($TIMELINES 'set #:USER_ID userID #:OBJECT_ID objID)])
+      (cond
+       [(string=? OBJECT_TYPE "Create")
+             ($TIMELINES 'set #:USER_ID userID #:OBJECT_ID activityObjectID)]))
 
     (if onlyGetID
         objID

@@ -174,6 +174,53 @@
   (published     ap-image-published     ap-image-published-set!)
   (summary       ap-image-summary       ap-image-summary-set!))
 
+(define (get-IMAGES-where column values findIcons)
+  (if (null? values)
+      '()
+    (let ([isIMAGE (memq column '(#:IMAGE_ID #:WIDTH #:OBJECT_ID #:HEIGHT))])
+      (filter
+        (lambda (elem)
+          (and (((if findIcons identity negate) ap-image-is-icon?) elem) elem))
+        (map
+          (lambda (dbENTITY)
+            (if-let ([otherENTITY null? ((if isIMAGE $OBJECTS $IMAGES)
+                                          'get
+                                          #:columns   '(*)
+                                          #:condition (where
+                                                        (if isIMAGE #:OBJECT_ID #:IMAGE_ID)
+                                                        (assoc-ref
+                                                          dbENTITY
+                                                          (if isIMAGE "IMAGE_ID" "OBJECT_ID"))))])
+                #f
+              (create-database-entity make-ap-image (apply append (cons dbENTITY otherENTITY))
+                ["OBJECT_ID"     identity]
+                [    "AP_ID"     identity   (compose string->uri string-reverse)]
+                ["OBJECT_TYPE"   identity]
+                ["IS_ICON"       identity]
+                ["WIDTH"         identity]
+                ["HEIGHT"        identity]
+                ["ATTRIBUTED_TO" positive?  (cut get-actors-where #:ACTOR_ID <> #t)]
+                ["CONTENT"       identity]
+                ["NAME"          identity]
+                ["STARTTIME"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
+                [  "ENDTIME"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
+                ["ICON"          (const #t) (const (get-icons-where
+                                                     #:OBJECT_ID (assoc-ref
+                                                                   (apply append (cons
+                                                                                      dbENTITY
+                                                                                   otherENTITY))
+                                                                   "OBJECT_ID")))]
+                ["IMAGE"         (const #t) (const (get-images-where
+                                                     #:OBJECT_ID (assoc-ref
+                                                                   (apply append (cons
+                                                                                      dbENTITY
+                                                                                   otherENTITY))
+                                                                   "OBJECT_ID")))]
+                ["PUBLISHED"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
+                ["SUMMARY"       identity])))
+          ((if isIMAGE $IMAGES $OBJECTS) 'get #:columns   '(*)
+                                              #:condition (where column values)))))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  A C T I V I T I E S  ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;

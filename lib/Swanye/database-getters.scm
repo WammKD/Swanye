@@ -25,7 +25,8 @@
   #:export (<activityPub-object>   ap-object?   ap-object-attributed-to ap-object-db-id
                                                 ap-object-content       ap-object-ap-id
                                                 ap-object-start-time    ap-object-type
-                                                ap-object-end-time      ap-object-name
+                                                ap-object-end-time      ap-object-icon
+                                                ap-object-image         ap-object-name
                                                 ap-object-published
             get-objects-where
             get-object-dbID-by-apID
@@ -93,8 +94,8 @@
 ;;  O B J E C T S  ;;
 ;;;;;;;;;;;;;;;;;;;;;
 (define-record-type <activityPub-object>
-  (make-ap-object databaseID activityPubID type    attributedTo content
-                  name       startTime     endTime published    summary)
+  (make-ap-object databaseID activityPubID type attributedTo content   name
+                  startTime  endTime       icon image        published summary)
   ap-object?
   (databaseID    ap-object-db-id         ap-object-db-id-set!)
   (activityPubID ap-object-ap-id         ap-object-ap-id-set!)
@@ -104,6 +105,8 @@
   (name          ap-object-name          ap-object-name-set!)
   (startTime     ap-object-start-time    ap-object-start-time-set!)
   (endTime       ap-object-end-time      ap-object-end-time-set!)
+  (icon          ap-object-icon          ap-object-icon-set!)
+  (image         ap-object-image         ap-object-image-set!)
   (published     ap-object-published     ap-object-published-set!)
   (summary       ap-object-summary       ap-object-summary-set!))
 

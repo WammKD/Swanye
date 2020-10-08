@@ -268,7 +268,7 @@
                                                         (assoc-ref
                                                           dbENTITY
                                                           (if isACTOR "ACTOR_ID" "OBJECT_ID"))))])
-                (if returnObjectIfPresent (list dbENTITY) #f)
+                (if returnObjectIfPresent dbENTITY #f)
               (create-database-entity make-ap-actor (apply append (cons dbENTITY otherENTITY))
                 ["OBJECT_ID"          identity]
                 [    "AP_ID"          identity              (compose string->uri string-reverse)]

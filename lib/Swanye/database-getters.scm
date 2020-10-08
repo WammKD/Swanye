@@ -30,6 +30,14 @@
                                                 ap-object-published
             get-objects-where
             get-object-dbID-by-apID
+            <activityPub-image>    ap-image?    ap-image-db-id         ap-image-ap-id
+                                                ap-image-type          ap-image-is-icon?
+                                                ap-image-width         ap-image-height
+                                                ap-image-attributed-to ap-image-content
+                                                ap-image-name          ap-image-start-time
+                                                ap-image-end-time      ap-image-icon
+                                                ap-image-image         ap-image-published
+                                                ap-image-summary
             <activityPub-activity> ap-activity? ap-activity-db-id
                                                 ap-activity-ap-id
                                                 ap-activity-type
@@ -141,6 +149,30 @@
     (if (list? activityPubID)
         (map (cut assoc-ref <> "OBJECT_ID") possObj)
       (cdaar possObj))))
+
+;;;;;;;;;;;;;;;;;;;
+;;  I M A G E S  ;;
+;;;;;;;;;;;;;;;;;;;
+(define-record-type <activityPub-image>
+  (make-ap-image databaseID activityPubID type    isIcon    width
+                 height     attributedTo  content name      startTime
+                 endTime    icon          image   published summary)
+  ap-image?
+  (databaseID    ap-image-db-id         ap-image-db-id-set!)
+  (activityPubID ap-image-ap-id         ap-image-ap-id-set!)
+  (type          ap-image-type          ap-image-type-set!)
+  (isIcon        ap-image-is-icon?      ap-image-is-icon-set!)
+  (width         ap-image-width         ap-image-width-set!)
+  (height        ap-image-height        ap-image-height-set!)
+  (attributedTo  ap-image-attributed-to ap-image-attributed-to-set!)
+  (content       ap-image-content       ap-image-content-set!)
+  (name          ap-image-name          ap-image-name-set!)
+  (startTime     ap-image-start-time    ap-image-start-time-set!)
+  (endTime       ap-image-end-time      ap-image-end-time-set!)
+  (icon          ap-image-icon          ap-image-icon-set!)
+  (image         ap-image-image         ap-image-image-set!)
+  (published     ap-image-published     ap-image-published-set!)
+  (summary       ap-image-summary       ap-image-summary-set!))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  A C T I V I T I E S  ;;

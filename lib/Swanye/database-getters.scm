@@ -38,6 +38,8 @@
                                                 ap-image-end-time      ap-image-icon
                                                 ap-image-image         ap-image-published
                                                 ap-image-summary
+            get-icons-where
+            get-images-where
             <activityPub-activity> ap-activity? ap-activity-db-id
                                                 ap-activity-ap-id
                                                 ap-activity-type
@@ -173,6 +175,12 @@
   (image         ap-image-image         ap-image-image-set!)
   (published     ap-image-published     ap-image-published-set!)
   (summary       ap-image-summary       ap-image-summary-set!))
+
+(define (get-images-where column values)
+  (get-IMAGES-where column values #f))
+
+(define (get-icons-where column values)
+  (get-IMAGES-where column values #t))
 
 (define (get-IMAGES-where column values findIcons)
   (if (null? values)

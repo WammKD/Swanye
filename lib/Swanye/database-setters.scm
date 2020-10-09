@@ -37,7 +37,7 @@
                                                       ((if (hash-table? actor)
                                                            hash-ref
                                                          assoc-ref) actor "id")))))
-      actors))
+      (if (string? actors) (list actors) (return-if actors '()))))
 
   (let* ([apID    (if (uri? AP_ID) (uri->string AP_ID) (return-if AP_ID ""))]
          [apIDrev                                      (string-reverse apID)])
@@ -100,27 +100,18 @@
 
 (define (insert-object-auto onlyGetID object)
   (let ([ref (if (hash-table? object) hash-ref assoc-ref)])
-    (insert-object onlyGetID (ref object "id")
-                             (ref object "type")
-                             (if-let ([ to string? (ref object  "to")])
-                                 (list  to)
-                               (return-if  to '()))
-                             (if-let ([bto string? (ref object "bto")])
-                                 (list bto)
-                               (return-if bto '()))
-                             (if-let ([ cc string? (ref object  "cc")])
-                                 (list  cc)
-                               (return-if  cc '()))
-                             (if-let ([bcc string? (ref object "bcc")])
-                                 (list bcc)
-                               (return-if bcc '()))
-                             object
-                             #:ATTRIBUTED_TO (ref object "attributedTo")
-                             #:CONTENT       (ref object "content")
-                             #:NAME          (ref object "name")
-                             #:STARTTIME     (ref object "starttime")
-                             #:ENDTIME       (ref object "endtime")
-                             #:PUBLISHED     (ref object "published"))))
+    (insert-object onlyGetID (ref object "id") (ref object "type")
+                             (ref object "to") (ref object "bto")
+                             (ref object "cc") (ref object "bcc")          object
+                             #:ATTRIBUTED_TO   (ref object "attributedTo")
+                             #:CONTENT         (ref object "content")
+                             #:NAME            (ref object "name")
+                             #:STARTTIME       (ref object "starttime")
+                             #:ENDTIME         (ref object "endtime")
+                             #:ICONS           (ref object "icon")
+                             #:IMAGES          (ref object "image")
+                             #:PUBLISHED       (ref object "published")
+                             #:URL             (ref object "url"))))
 
 
 

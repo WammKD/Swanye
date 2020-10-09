@@ -27,7 +27,8 @@
                                                 ap-object-start-time    ap-object-type
                                                 ap-object-end-time      ap-object-icon
                                                 ap-object-image         ap-object-name
-                                                ap-object-published
+                                                ap-object-published     ap-object-summary
+                                                ap-object-url
             get-objects-where
             get-object-dbID-by-apID
             <activityPub-image>    ap-image?    ap-image-db-id         ap-image-ap-id
@@ -37,7 +38,7 @@
                                                 ap-image-name          ap-image-start-time
                                                 ap-image-end-time      ap-image-icon
                                                 ap-image-image         ap-image-published
-                                                ap-image-summary
+                                                ap-image-summary       ap-image-url
             get-icons-where
             get-images-where
             <activityPub-activity> ap-activity? ap-activity-db-id
@@ -52,6 +53,7 @@
                                                 ap-activity-end-time
                                                 ap-activity-published
                                                 ap-activity-summary
+                                                ap-activity-url
             get-activities-where
             <activityPub-actor>    ap-actor?    ap-actor-db-id
                                                 ap-actor-ap-id
@@ -70,6 +72,7 @@
                                                 ap-actor-end-time
                                                 ap-actor-published
                                                 ap-actor-summary
+                                                ap-actor-url
             get-actors-where
             <swanye-user>          swanye-user? swanye-user-db-id
                                                 swanye-user-ap-id
@@ -95,6 +98,7 @@
                                                 swanye-user-end-time
                                                 swanye-user-published
                                                 swanye-user-summary
+                                                swanye-user-url
             get-users-where
             get-only-user-where
             get-home-timeline

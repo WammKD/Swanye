@@ -98,6 +98,9 @@
       (insert-addressing  CC  "cc" objID)
       (insert-addressing BCC "bcc" objID)
 
+      (when ICONS  (insert-image-auto #t #t objID ICONS))
+      (when IMAGES (insert-image-auto #t #f objID IMAGES))
+
       obj)))
 
 (define (insert-object-auto onlyGetID object)

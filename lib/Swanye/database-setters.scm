@@ -39,8 +39,8 @@
                                                          assoc-ref) actor "id")))))
       actors))
 
-  (let* ([apID    (if (uri? AP_ID) (uri->string AP_ID) AP_ID)]
-         [apIDrev                       (string-reverse apID)])
+  (let* ([apID    (if (uri? AP_ID) (uri->string AP_ID) (return-if AP_ID ""))]
+         [apIDrev                                      (string-reverse apID)])
     ($OBJECTS 'set #:AP_ID         apIDrev
                    #:OBJECT_TYPE   OBJECT_TYPE
                    #:ATTRIBUTED_TO (case-pred ATTRIBUTED_TO

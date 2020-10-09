@@ -105,7 +105,7 @@
 ;;;;;;;;;;;;;;;;;;;;;
 (define-record-type <activityPub-object>
   (make-ap-object databaseID activityPubID type attributedTo content   name
-                  startTime  endTime       icon image        published summary)
+                  startTime  endTime       icon image        published summary url)
   ap-object?
   (databaseID    ap-object-db-id         ap-object-db-id-set!)
   (activityPubID ap-object-ap-id         ap-object-ap-id-set!)
@@ -118,7 +118,8 @@
   (icon          ap-object-icon          ap-object-icon-set!)
   (image         ap-object-image         ap-object-image-set!)
   (published     ap-object-published     ap-object-published-set!)
-  (summary       ap-object-summary       ap-object-summary-set!))
+  (summary       ap-object-summary       ap-object-summary-set!)
+  (url           ap-object-url           ap-object-url-set!))
 
 (define (get-objects-where column values)
   (if (null? values)
@@ -139,7 +140,8 @@
           ["IMAGE"         (const #t) (const (get-images-where
                                                #:OBJECT_ID (assoc-ref object "OBJECT_ID")))]
           ["PUBLISHED"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
-          ["SUMMARY"       identity]))
+          ["SUMMARY"       identity]
+          ["URL"           identity   (compose string->uri string-reverse)]))
       ($OBJECTS 'get #:columns '(*) #:condition (where column values)))))
 
 (define (get-object-dbID-by-apID activityPubID)
@@ -162,7 +164,7 @@
 (define-record-type <activityPub-image>
   (make-ap-image databaseID activityPubID type    isIcon    width
                  height     attributedTo  content name      startTime
-                 endTime    icon          image   published summary)
+                 endTime    icon          image   published summary   url)
   ap-image?
   (databaseID    ap-image-db-id         ap-image-db-id-set!)
   (activityPubID ap-image-ap-id         ap-image-ap-id-set!)
@@ -178,7 +180,8 @@
   (icon          ap-image-icon          ap-image-icon-set!)
   (image         ap-image-image         ap-image-image-set!)
   (published     ap-image-published     ap-image-published-set!)
-  (summary       ap-image-summary       ap-image-summary-set!))
+  (summary       ap-image-summary       ap-image-summary-set!)
+  (url           ap-image-url           ap-image-url-set!))
 
 (define (get-images-where column values)
   (get-IMAGES-where column values #f))
@@ -229,7 +232,8 @@
                                                                                    otherENTITY))
                                                                    "OBJECT_ID")))]
                 ["PUBLISHED"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
-                ["SUMMARY"       identity])))
+                ["SUMMARY"       identity]
+                ["URL"           identity   (compose string->uri string-reverse)])))
           ((if isIMAGE $IMAGES $OBJECTS) 'get #:columns   '(*)
                                               #:condition (where column values)))))))
 
@@ -238,7 +242,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define-record-type <activityPub-activity>
   (make-ap-activity databaseID   activityPubID type      actors  object    name
-                    attributedTo content       startTime endTime published summary)
+                    attributedTo content       startTime endTime published summary url)
   ap-activity?
   (databaseID    ap-activity-db-id         ap-activity-db-id-set!)
   (activityPubID ap-activity-ap-id         ap-activity-ap-id-set!)
@@ -251,7 +255,8 @@
   (startTime     ap-activity-start-time    ap-activity-start-time-set!)
   (endTime       ap-activity-end-time      ap-activity-end-time-set!)
   (published     ap-activity-published     ap-activity-published-set!)
-  (summary       ap-activity-summary       ap-activity-summary-set!))
+  (summary       ap-activity-summary       ap-activity-summary-set!)
+  (url           ap-activity-url           ap-activity-url-set!))
 
 (define (get-activities-where column values)
   (if (null? values)
@@ -301,7 +306,8 @@
                   ["STARTTIME"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
                   [  "ENDTIME"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
                   ["PUBLISHED"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
-                  ["SUMMARY"       identity]))))
+                  ["SUMMARY"       identity]
+                  ["URL"           identity   (compose string->uri string-reverse)]))))
           (if (eq? type 'actor)
               ($ACTIVITIES
                 'get
@@ -324,7 +330,7 @@
   (make-ap-actor databaseID activityPubID type              inbox
                  outbox     following     followers         liked
                  featured   name          preferredUsername attributedTo
-                 content    startTime     endTime           published    summary)
+                 content    startTime     endTime           published    summary url)
   ap-actor?
   (databaseID        ap-actor-db-id              ap-actor-db-id-set!)
   (activityPubID     ap-actor-ap-id              ap-actor-ap-id-set!)
@@ -342,7 +348,8 @@
   (startTime         ap-actor-start-time         ap-actor-start-time-set!)
   (endTime           ap-actor-end-time           ap-actor-end-time-set!)
   (published         ap-actor-published          ap-actor-published-set!)
-  (summary           ap-actor-summary            ap-actor-summary-set!))
+  (summary           ap-actor-summary            ap-actor-summary-set!)
+  (url               ap-actor-url                ap-actor-url-set!))
 
 (define* (get-actors-where column values #:optional [returnObjectIfPresent #f])
   (if (null? values)
@@ -381,7 +388,8 @@
                 ["STARTTIME"          positive?             (compose time-utc->date (cut make-time time-utc 0 <>))]
                 [  "ENDTIME"          positive?             (compose time-utc->date (cut make-time time-utc 0 <>))]
                 ["PUBLISHED"          positive?             (compose time-utc->date (cut make-time time-utc 0 <>))]
-                ["SUMMARY"            identity])))
+                ["SUMMARY"            identity]
+                ["URL"                identity              (compose string->uri string-reverse)])))
           ((if isACTOR $ACTORS $OBJECTS) 'get #:columns   '(*)
                                               #:condition (where
                                                             (cond
@@ -426,7 +434,8 @@
   (startTime         swanye-user-start-time         swanye-user-start-time-set!)
   (endTime           swanye-user-end-time           swanye-user-end-time-set!)
   (published         swanye-user-published          swanye-user-published-set!)
-  (summary           swanye-user-summary            swanye-user-summary-set!))
+  (summary           swanye-user-summary            swanye-user-summary-set!)
+  (url               swanye-user-url                swanye-user-url-set!))
 
 (define (get-users-where column values)
   (if (null? values)
@@ -495,7 +504,8 @@
                 ["STARTTIME"          positive?             (compose time-utc->date (cut make-time time-utc 0 <>))]
                 [  "ENDTIME"          positive?             (compose time-utc->date (cut make-time time-utc 0 <>))]
                 ["PUBLISHED"          positive?             (compose time-utc->date (cut make-time time-utc 0 <>))]
-                ["SUMMARY"            identity])))
+                ["SUMMARY"            identity]
+                ["URL"                identity              (compose string->uri string-reverse)])))
           ($ENTITY 'get #:columns   '(*)
                         #:condition (where (if (memq column '(#:OBJECT_ID #:ACTOR_ID))
                                                #:USER_ID
@@ -530,7 +540,8 @@
           ["STARTTIME"          positive?             (compose time-utc->date (cut make-time time-utc 0 <>))]
           [  "ENDTIME"          positive?             (compose time-utc->date (cut make-time time-utc 0 <>))]
           ["PUBLISHED"          positive?             (compose time-utc->date (cut make-time time-utc 0 <>))]
-          ["SUMMARY"            identity]))
+          ["SUMMARY"            identity]
+          ["URL"                identity              (compose string->uri string-reverse)]))
       ($USERS 'get #:columns '(*) #:condition (where column values)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;

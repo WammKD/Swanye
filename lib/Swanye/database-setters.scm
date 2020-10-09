@@ -25,8 +25,8 @@
 (define* (insert-object onlyGetID   AP_ID
                         OBJECT_TYPE TO
                         BTO         CC
-                        BCC         JSON  #:key ATTRIBUTED_TO CONTENT NAME
-                                                STARTTIME     ENDTIME PUBLISHED)
+                        BCC         JSON  #:key ATTRIBUTED_TO CONTENT NAME   STARTTIME
+                                                ENDTIME       ICONS   IMAGES PUBLISHED URL)
   (define (insert-addressing actors type objectID)
     (for-each
       (lambda (actor)
@@ -85,6 +85,9 @@
                                      [date?   (time-second
                                                 (date->time-utc PUBLISHED))]
                                      [time?   (time-second       PUBLISHED)])
+                   #:URL           (string-reverse (if (uri? AP_ID)
+                                                       (uri->string AP_ID)
+                                                     (return-if AP_ID "")))
                    #:JSON          (gsub "'" "''" (if (hash-table? JSON)
                                                       (scm->json-string JSON)
                                                     JSON)))
@@ -176,8 +179,9 @@
 
 (define* (insert-activity onlyGetID userID
                           AP_ID     OBJECT_TYPE
-                          ACTORS    OBJECT      JSON #:key  TO  CC ATTRIBUTED_TO CONTENT NAME
-                                                           BTO BCC STARTTIME     ENDTIME PUBLISHED)
+                          ACTORS    OBJECT      JSON #:key  TO      CC   ATTRIBUTED_TO CONTENT
+                                                           BTO     BCC   NAME          STARTTIME
+                                                           ENDTIME ICONS IMAGES        PUBLISHED URL)
   (let ([objID (insert-object #t AP_ID
                                  OBJECT_TYPE
                                  (return-if  TO '())
@@ -190,7 +194,10 @@
                                  #:NAME          NAME
                                  #:STARTTIME     STARTTIME
                                  #:ENDTIME       ENDTIME
-                                 #:PUBLISHED     PUBLISHED)])
+                                 #:ICONS         ICONS
+                                 #:IMAGES        IMAGES
+                                 #:PUBLISHED     PUBLISHED
+                                 #:URL           URL)])
     (for-each
       (lambda (actor)
         ($ACTIVITIES_BY_ACTORS
@@ -230,7 +237,10 @@
                      #:NAME                 (ref activity "name")
                      #:STARTTIME            (ref activity "starttime")
                      #:ENDTIME              (ref activity "endtime")
-                     #:PUBLISHED            (ref activity "published"))))
+                     #:ICONS                (ref activity "icon")
+                     #:IMAGES               (ref activity "image")
+                     #:PUBLISHED            (ref activity "published")
+                     #:URL                  (ref activity "url"))))
 
 
 
@@ -240,7 +250,9 @@
                                                                       BTO                  BCC
                                                                       ATTRIBUTED_TO        CONTENT
                                                                       NAME                 STARTTIME
-                                                                      ENDTIME              PUBLISHED
+                                                                      ENDTIME              ICONS
+                                                                      IMAGES               PUBLISHED
+                                                                      SUMMARY              URL
                                                                       FOLLOWING            FOLLOWERS
                                                                       LIKED                FEATURED
                                                                       PROXY_URL            OAUTH_AUTHORIZATION_ENDPOINT
@@ -262,7 +274,8 @@
                                              #:NAME          NAME
                                              #:STARTTIME     STARTTIME
                                              #:ENDTIME       ENDTIME
-                                             #:PUBLISHED     PUBLISHED)])
+                                             #:PUBLISHED     PUBLISHED
+                                             #:URL           URL)])
     ($ACTORS 'set #:ACTOR_ID           objID
                   #:INBOX              (if (uri? INBOX)  (uri->string INBOX)   INBOX)
                   #:OUTBOX             (if (uri? OUTBOX) (uri->string OUTBOX) OUTBOX)
@@ -299,7 +312,11 @@
       #:NAME                          (ref actor "name")
       #:STARTTIME                     (ref actor "startTime")
       #:ENDTIME                       (ref actor   "endTime")
+      #:ICONS                         (ref actor "icon")
+      #:IMAGES                        (ref actor "image")
       #:PUBLISHED                     (ref actor "published")
+      #:SUMMARY                       (ref actor "summary")
+      #:URL                           (ref actor "url")
       #:FOLLOWING                     (ref actor "following")
       #:FOLLOWERS                     (ref actor "followers")
       #:LIKED                         (ref actor "liked")

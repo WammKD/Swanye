@@ -144,10 +144,7 @@
                             [hash-table? ( hash-ref actor "id")]))))
       (if (list? ACTORS) ACTORS (list ACTORS)))
 
-    (let ([activityObjectID (if-let ([actObjID (get-object-dbID-by-apID
-                                                 ((if (hash-table? OBJECT)
-                                                      hash-ref
-                                                    assoc-ref) OBJECT "id"))])
+    (let ([activityObjectID (if-let ([actObjID (get-object-dbID-by-apID OBJECT)])
                                 actObjID
                               (insert-object-auto #t OBJECT))])
       ($ACTIVITIES 'set #:ACTIVITY_ID objID #:OBJECT_ID activityObjectID)

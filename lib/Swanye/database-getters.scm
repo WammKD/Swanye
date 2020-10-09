@@ -145,14 +145,37 @@
       ($OBJECTS 'get #:columns '(*) #:condition (where column values)))))
 
 (define (get-object-dbID-by-apID activityPubID)
-  (if-let* ([convert       (lambda (str)
-                             (string-reverse (if (uri? str) (uri->string str) str)))]
-            [possObj null? ($OBJECTS 'get #:columns   '(OBJECT_ID)
-                                          #:condition (where
-                                                        #:AP_ID
-                                                        (if (list? activityPubID)
-                                                            (map convert activityPubID)
-                                                          (convert activityPubID))))])
+  (define (gather-id obj)
+    (define (check-ap-id-and-url apID url)
+      (let ([id (and=> apID uri->string)])
+        (if (or (not id) (string-null? id))
+            (let ([u (and=> url uri->string)])
+              (if (or (not u) (string-null? u))
+                  (cons #t 'null)
+                (cons #f (string-reverse u))))
+          (cons #t (string-reverse id)))))
+
+    (case-pred obj
+      [not                                                           (cons #t 'null)]
+      [list?       (check-ap-id-and-url  (assoc-ref obj "id") (assoc-ref obj "url"))]
+      [string?                                        (cons #t (string-reverse obj))]
+      [ab-object?  (check-ap-id-and-url (ap-object-ap-id obj)   (ap-object-url obj))]
+      [hash-table? (check-ap-id-and-url  (hash-ref  obj "id") (hash-ref  obj "url"))]))
+  (define (filter-for activityPub objects)
+    (map cdr (filter
+               (lambda (elem)
+                 (eq? activityPub (car elem)))
+               objects)))
+
+  (if-let* ([objs          (map gather-id (if (list? activityPubID)
+                                              activityPubID
+                                            (list activityPubID)))]
+            [possObj null? ($OBJECTS
+                             'get
+                             #:columns   '(OBJECT_ID)
+                             #:condition (where (/or
+                                                  #:AP_ID (filter-for #t objs)
+                                                  #:URL   (filter-for #f objs))))])
       #f
     (if (list? activityPubID)
         (map (cut assoc-ref <> "OBJECT_ID") possObj)

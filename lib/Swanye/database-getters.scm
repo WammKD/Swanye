@@ -166,10 +166,7 @@
       [ap-object?  (check-ap-id-and-url (ap-object-ap-id obj)   (ap-object-url obj))]
       [hash-table? (check-ap-id-and-url  (hash-ref  obj "id") (hash-ref  obj "url"))]))
   (define (filter-for activityPub objects)
-    (map cdr (filter
-               (lambda (elem)
-                 (eq? activityPub (car elem)))
-               objects)))
+    (map cdr (filter (lambda (elem) (eq? activityPub (car elem))) objects)))
 
   (if-let* ([objs          (map gather-id (if (list? activityPubID)
                                               activityPubID

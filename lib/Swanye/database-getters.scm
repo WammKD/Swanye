@@ -433,7 +433,7 @@
                     publicKey  privateKey        inbox        outbox
                     following  followers         liked        featured
                     name       preferredUsername attributedTo content
-                    startTime  endTime           published    summary)
+                    startTime  endTime           published    summary           url)
   swanye-user?
   (databaseID        swanye-user-db-id              swanye-user-db-id-set!)
   (activityPubID     swanye-user-ap-id              swanye-user-ap-id-set!)

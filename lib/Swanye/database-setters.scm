@@ -17,8 +17,10 @@
   #:use-module (app     models                ADDRESSING)
   #:use-module (app     models                   OBJECTS)
   #:use-module (app     models                 TIMELINES)
-  #:export (insert-object      insert-activity      insert-actor      insert-user
-            insert-object-auto insert-activity-auto insert-actor-auto get-actor-dbID-by-apID))
+  #:export (insert-object      insert-image           insert-activity
+            insert-object-auto insert-image-auto      insert-activity-auto
+             insert-actor      insert-user
+             insert-actor-auto get-actor-dbID-by-apID))
 
 (define* (insert-object onlyGetID   AP_ID
                         OBJECT_TYPE TO
@@ -112,6 +114,60 @@
                              #:IMAGES          (ref object "image")
                              #:PUBLISHED       (ref object "published")
                              #:URL             (ref object "url"))))
+
+
+
+(define* (insert-image onlyGetID   isIcon    AP_ID
+                       OBJECT_TYPE OBJECT_ID JSON  #:key WIDTH         HEIGHT
+                                                          TO            CC
+                                                         BTO           BCC
+                                                         ATTRIBUTED_TO CONTENT
+                                                         STARTTIME     NAME
+                                                           ENDTIME     PUBLISHED
+                                                         ICONS         IMAGES    URL)
+  (let ([objID (insert-object #t AP_ID
+                                 OBJECT_TYPE
+                                 (return-if  TO '())
+                                 (return-if BTO '())
+                                 (return-if  CC '())
+                                 (return-if BCC '())
+                                 JSON
+                                 #:ATTRIBUTED_TO ATTRIBUTED_TO
+                                 #:CONTENT       CONTENT
+                                 #:NAME          NAME
+                                 #:STARTTIME     STARTTIME
+                                 #:ENDTIME       ENDTIME
+                                 #:ICONS         ICONS
+                                 #:IMAGES        IMAGES
+                                 #:PUBLISHED     PUBLISHED
+                                 #:URL           URL)])
+    ($IMAGES 'set #:IMAGE_ID objID #:OBJECT_ID OBJECT_ID
+                  #:WIDTH    WIDTH #:HEIGHT    HEIGHT    #:IS_ICON (if isIcon 0 1))
+
+    (if onlyGetID
+        objID
+      (car ((if isIcon get-icons-where get-images-where) #:IMAGE_ID objID)))))
+
+(define (insert-image-auto onlyGetID isIcon objectID image)
+  (let ([ref (if (hash-table? image) hash-ref assoc-ref)])
+    (insert-image onlyGetID        isIcon
+                  (ref image "id") (ref image "type")
+                  objectID         image
+                  #:WIDTH          (ref image "width")
+                  #:HEIGHT         (ref image "height")
+                  #:TO             (ref image  "to")
+                  #:BTO            (ref image "bto")
+                  #:CC             (ref image  "cc")
+                  #:BCC            (ref image "bcc")
+                  #:ATTRIBUTED_TO  (ref image "attributedTo")
+                  #:CONTENT        (ref image "content")
+                  #:NAME           (ref image "name")
+                  #:STARTTIME      (ref image "starttime")
+                  #:ENDTIME        (ref image "endtime")
+                  #:ICONS          (ref image "icon")
+                  #:IMAGES         (ref image "image")
+                  #:PUBLISHED      (ref image "published")
+                  #:URL            (ref image "url"))))
 
 
 

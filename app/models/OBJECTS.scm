@@ -37,7 +37,7 @@
   (SUMMARY       char-field  (#:maxlen 704))
   ;; (TAG           )
   ;; (UPDATED       )
-  ;; (URL           )
+  (URL           text)
   ;; (MEDIA_TYPE    )
   ;; (DURATION      )
   (JSON          text        (#:not-null)))

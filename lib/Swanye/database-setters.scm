@@ -19,8 +19,8 @@
   #:use-module (app     models                 TIMELINES)
   #:export (insert-object      insert-image           insert-activity
             insert-object-auto insert-image-auto      insert-activity-auto
-             insert-actor      insert-user
-             insert-actor-auto get-actor-dbID-by-apID))
+            insert-actor       insert-user
+            insert-actor-auto  get-actor-dbID-by-apID))
 
 (define* (insert-object onlyGetID   AP_ID
                         OBJECT_TYPE TO

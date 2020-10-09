@@ -163,7 +163,7 @@
       [not                                                           (cons #t 'null)]
       [list?       (check-ap-id-and-url  (assoc-ref obj "id") (assoc-ref obj "url"))]
       [string?                                        (cons #t (string-reverse obj))]
-      [ab-object?  (check-ap-id-and-url (ap-object-ap-id obj)   (ap-object-url obj))]
+      [ap-object?  (check-ap-id-and-url (ap-object-ap-id obj)   (ap-object-url obj))]
       [hash-table? (check-ap-id-and-url  (hash-ref  obj "id") (hash-ref  obj "url"))]))
   (define (filter-for activityPub objects)
     (map cdr (filter

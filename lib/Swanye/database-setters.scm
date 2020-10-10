@@ -96,7 +96,10 @@
 
     (let* ([obj      (if onlyGetID
                          (get-object-dbID-by-apID apID)
-                       (car (get-objects-where #:AP_ID apIDrev)))]
+                       (car (if (string-null? apIDrev)
+                                (get-objects-where #:URL (string-reverse
+                                                           (return-if URL "")))
+                              (get-objects-where #:AP_ID apIDrev))))]
            [objID (if (ap-object? obj) (ap-object-db-id obj) obj)])
       (insert-addressing  TO  "to" objID)
       (insert-addressing BTO "bto" objID)

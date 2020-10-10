@@ -98,7 +98,8 @@
                                                     JSON)))
 
     (let* ([obj      (if onlyGetID
-                         (get-object-dbID-by-apID apID)
+                         (get-object-dbID-by-apID
+                           (if (string-null? apID) (return-if URL "") apID))
                        (car (if (string-null? apIDrev)
                                 (get-objects-where #:URL (string-reverse
                                                            (return-if URL "")))

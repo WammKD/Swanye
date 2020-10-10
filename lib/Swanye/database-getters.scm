@@ -178,8 +178,8 @@
                              'get
                              #:columns   '(OBJECT_ID)
                              #:condition (where (/or
-                                                  #:AP_ID (filter-for #t objs)
-                                                  #:URL   (filter-for #f objs))))])
+                                                  (/or #:AP_ID (filter-for #t objs))
+                                                  (/or #:URL   (filter-for #f objs)))))])
       #f
     (if (list? activityPubID)
         (map (cut assoc-ref <> "OBJECT_ID") possObj)

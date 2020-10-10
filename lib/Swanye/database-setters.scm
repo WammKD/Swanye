@@ -153,7 +153,7 @@
                   #:OBJECT_ID OBJECT_ID
                   #:WIDTH     (return-if WIDTH  'null)
                   #:HEIGHT    (return-if HEIGHT 'null)
-                  #:IS_ICON   (if isIcon 0 1))
+                  #:IS_ICON   (if isIcon 1 0))
 
     (if onlyGetID
         objID

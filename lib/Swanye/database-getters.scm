@@ -174,12 +174,23 @@
   (if-let* ([objs          (map gather-id (if (list? activityPubID)
                                               activityPubID
                                             (list activityPubID)))]
-            [possObj null? ($OBJECTS
-                             'get
-                             #:columns   '(OBJECT_ID)
-                             #:condition (where (/or
-                                                  (/or #:AP_ID (filter-for #t objs))
-                                                  (/or #:URL   (filter-for #f objs)))))])
+            [possObj null? (let ([apIDs (filter-for #t objs)]
+                                 [urls  (filter-for #f objs)])
+                             (if (or (not (null? apIDS)) (not (null? urls)))
+                                 ($OBJECTS
+                                   'get
+                                   #:columns   '(OBJECT_ID)
+                                   #:condition (where (cond
+                                                       [(and
+                                                          (not (null? apIDS))
+                                                          (not (null?  urls)))
+                                                             (/or
+                                                               (/or #:AP_ID apIDs)
+                                                               (/or #:URL   urls))]
+                                                       [(not (null? apIDS))
+                                                             (/or #:AP_ID apIDs)]
+                                                       [else (/or #:URL   urls)])))
+                               '()))])
       #f
     (if (list? activityPubID)
         (map (cut assoc-ref <> "OBJECT_ID") possObj)

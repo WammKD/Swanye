@@ -274,7 +274,10 @@
                                              #:NAME          NAME
                                              #:STARTTIME     STARTTIME
                                              #:ENDTIME       ENDTIME
+                                             #:ICONS         ICONS
+                                             #:IMAGES        IMAGES
                                              #:PUBLISHED     PUBLISHED
+                                             #:SUMMARY       SUMMARY
                                              #:URL           URL)])
     ($ACTORS 'set #:ACTOR_ID           objID
                   #:INBOX              (if (uri? INBOX)  (uri->string INBOX)   INBOX)

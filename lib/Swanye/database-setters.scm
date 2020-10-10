@@ -87,9 +87,9 @@
                                                 (date->time-utc PUBLISHED))]
                                      [time?   (time-second       PUBLISHED)])
                    #:SUMMARY       (if SUMMARY (gsub "'" "''" SUMMARY) 'null)
-                   #:URL           (string-reverse (if (uri? AP_ID)
-                                                       (uri->string AP_ID)
-                                                     (return-if AP_ID "")))
+                   #:URL           (string-reverse (if (uri? URL)
+                                                       (uri->string URL)
+                                                     (return-if URL "")))
                    #:JSON          (gsub "'" "''" (if (hash-table? JSON)
                                                       (scm->json-string JSON)
                                                     JSON)))

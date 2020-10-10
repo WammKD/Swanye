@@ -112,7 +112,7 @@
       (when ICONS  (insert-image-auto #t #t objID ICONS))
       (when IMAGES (insert-image-auto #t #f objID IMAGES))
 
-      obj)))
+      (if onlyGetID objID obj))))
 
 (define (insert-object-auto onlyGetID object)
   (let ([ref (if (hash-table? object) hash-ref assoc-ref)])

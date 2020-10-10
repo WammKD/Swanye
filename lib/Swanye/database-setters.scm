@@ -3,6 +3,7 @@
 ;;;; <YOUR LICENSE HERE>
 
 (define-module (Swanye database-setters)
+  #:use-module (ice-9         hash-table)
   #:use-module (srfi             srfi-19)
   #:use-module (web                  uri)
   #:use-module (Swanye  database-getters)
@@ -98,7 +99,8 @@
                                                     JSON)))
 
     (let* ([obj      (if onlyGetID
-                         (get-object-dbID-by-apID `((("id" . ,apID) ("url" . ,URL))))
+                         (get-object-dbID-by-apID
+                           (alist->hash-table `(("id" . ,apID) ("url" . ,URL))))
                        (car (if (string-null? apIDrev)
                                 (get-objects-where #:URL (string-reverse
                                                            (return-if URL "")))

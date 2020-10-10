@@ -176,7 +176,7 @@
                                             (list activityPubID)))]
             [possObj null? (let ([apIDs (filter-for #t objs)]
                                  [urls  (filter-for #f objs)])
-                             (if (or (not (null? apIDS)) (not (null? urls)))
+                             (if (or (not (null? apIDs)) (not (null? urls)))
                                  ($OBJECTS
                                    'get
                                    #:columns   '(OBJECT_ID)

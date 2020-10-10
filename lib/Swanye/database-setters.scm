@@ -24,10 +24,13 @@
             insert-actor-auto  get-actor-dbID-by-apID))
 
 (define* (insert-object onlyGetID   AP_ID
-                        OBJECT_TYPE TO
-                        BTO         CC
-                        BCC         JSON  #:key ATTRIBUTED_TO CONTENT NAME      STARTTIME ENDTIME
-                                                ICONS         IMAGES  PUBLISHED SUMMARY   URL)
+                        OBJECT_TYPE JSON  #:key  TO            CC
+                                                BTO           BCC
+                                                ATTRIBUTED_TO CONTENT
+                                                NAME          STARTTIME
+                                                ENDTIME       ICONS
+                                                IMAGES        PUBLISHED
+                                                SUMMARY       URL)
   (define (insert-addressing actors type objectID)
     (for-each
       (lambda (actor)
@@ -113,9 +116,11 @@
 
 (define (insert-object-auto onlyGetID object)
   (let ([ref (if (hash-table? object) hash-ref assoc-ref)])
-    (insert-object onlyGetID (ref object "id") (ref object "type")
-                             (ref object "to") (ref object "bto")
-                             (ref object "cc") (ref object "bcc")          object
+    (insert-object onlyGetID (ref object "id") (ref object "type")         object
+                             #:TO              (ref object  "to")
+                             #:BTO             (ref object "bto")
+                             #:CC              (ref object  "cc")
+                             #:BTO             (ref object "bcc")
                              #:ATTRIBUTED_TO   (ref object "attributedTo")
                              #:CONTENT         (ref object "content")
                              #:NAME            (ref object "name")
@@ -136,13 +141,11 @@
                                                          STARTTIME     NAME
                                                            ENDTIME     PUBLISHED
                                                          ICONS         IMAGES    URL)
-  (let ([objID (insert-object #t AP_ID
-                                 OBJECT_TYPE
-                                 (return-if  TO '())
-                                 (return-if BTO '())
-                                 (return-if  CC '())
-                                 (return-if BCC '())
-                                 JSON
+  (let ([objID (insert-object #t AP_ID           OBJECT_TYPE   JSON
+                                 #:TO             TO
+                                 #:BTO           BTO
+                                 #:CC             CC
+                                 #:BCC           BCC
                                  #:ATTRIBUTED_TO ATTRIBUTED_TO
                                  #:CONTENT       CONTENT
                                  #:NAME          NAME
@@ -190,13 +193,11 @@
                           ACTORS    OBJECT      JSON #:key  TO      CC   ATTRIBUTED_TO CONTENT
                                                            BTO     BCC   NAME          STARTTIME
                                                            ENDTIME ICONS IMAGES        PUBLISHED URL)
-  (let ([objID (insert-object #t AP_ID
-                                 OBJECT_TYPE
-                                 (return-if  TO '())
-                                 (return-if BTO '())
-                                 (return-if  CC '())
-                                 (return-if BCC '())
-                                 JSON
+  (let ([objID (insert-object #t AP_ID           OBJECT_TYPE   JSON
+                                 #:TO             TO
+                                 #:BTO           BTO
+                                 #:CC             CC
+                                 #:BCC           BCC
                                  #:ATTRIBUTED_TO ATTRIBUTED_TO
                                  #:CONTENT       CONTENT
                                  #:NAME          NAME
@@ -270,13 +271,11 @@
                              (if (not elem) 'null (if (uri? elem)
                                                       (uri->string elem)
                                                     elem)))]
-        [objID             (insert-object #t AP_ID
-                                             OBJECT_TYPE
-                                             (return-if  TO '())
-                                             (return-if BTO '())
-                                             (return-if  CC '())
-                                             (return-if BCC '())
-                                             JSON
+        [objID             (insert-object #t AP_ID           OBJECT_TYPE   JSON
+                                             #:TO             TO
+                                             #:BTO           BTO
+                                             #:CC             CC
+                                             #:BCC           BCC
                                              #:ATTRIBUTED_TO ATTRIBUTED_TO
                                              #:CONTENT       CONTENT
                                              #:NAME          NAME

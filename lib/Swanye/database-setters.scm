@@ -15,6 +15,7 @@
   #:use-module (app     models                ACTIVITIES)
   #:use-module (app     models      ACTIVITIES_BY_ACTORS)
   #:use-module (app     models                ADDRESSING)
+  #:use-module (app     models                    IMAGES)
   #:use-module (app     models                   OBJECTS)
   #:use-module (app     models                 TIMELINES)
   #:export (insert-object      insert-image           insert-activity

@@ -182,12 +182,12 @@
                                    #:columns   '(OBJECT_ID)
                                    #:condition (where (cond
                                                        [(and
-                                                          (not (null? apIDS))
+                                                          (not (null? apIDs))
                                                           (not (null?  urls)))
                                                              (/or
                                                                (/or #:AP_ID apIDs)
                                                                (/or #:URL   urls))]
-                                                       [(not (null? apIDS))
+                                                       [(not (null? apIDs))
                                                              (/or #:AP_ID apIDs)]
                                                        [else (/or #:URL   urls)])))
                                '()))])

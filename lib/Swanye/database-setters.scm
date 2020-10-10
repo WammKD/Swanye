@@ -149,8 +149,11 @@
                                  #:IMAGES        IMAGES
                                  #:PUBLISHED     PUBLISHED
                                  #:URL           URL)])
-    ($IMAGES 'set #:IMAGE_ID objID #:OBJECT_ID OBJECT_ID
-                  #:WIDTH    WIDTH #:HEIGHT    HEIGHT    #:IS_ICON (if isIcon 0 1))
+    ($IMAGES 'set #:IMAGE_ID  objID
+                  #:OBJECT_ID OBJECT_ID
+                  #:WIDTH     (return-if WIDTH  'null)
+                  #:HEIGHT    (return-if HEIGHT 'null)
+                  #:IS_ICON   (if isIcon 0 1))
 
     (if onlyGetID
         objID

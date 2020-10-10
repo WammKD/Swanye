@@ -25,8 +25,8 @@
 (define* (insert-object onlyGetID   AP_ID
                         OBJECT_TYPE TO
                         BTO         CC
-                        BCC         JSON  #:key ATTRIBUTED_TO CONTENT NAME   STARTTIME
-                                                ENDTIME       ICONS   IMAGES PUBLISHED URL)
+                        BCC         JSON  #:key ATTRIBUTED_TO CONTENT NAME      STARTTIME ENDTIME
+                                                ICONS         IMAGES  PUBLISHED SUMMARY   URL)
   (define (insert-addressing actors type objectID)
     (for-each
       (lambda (actor)
@@ -85,6 +85,7 @@
                                      [date?   (time-second
                                                 (date->time-utc PUBLISHED))]
                                      [time?   (time-second       PUBLISHED)])
+                   #:SUMMARY       (if SUMMARY (gsub "'" "''" SUMMARY) 'null)
                    #:URL           (string-reverse (if (uri? AP_ID)
                                                        (uri->string AP_ID)
                                                      (return-if AP_ID "")))

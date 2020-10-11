@@ -213,7 +213,7 @@
 
 
 (insert-entity image objID [(if isIcon get-icons-where get-images-where) #:IMAGE_ID]
-                           [isIcon] [OBJECT_ID] #:keys [WIDTH HEIGHT]
+                           [isIcon] [(OBJECT_ID #t)] #:keys [WIDTH HEIGHT]
   ($IMAGES 'set #:IMAGE_ID  objID
                 #:OBJECT_ID OBJECT_ID
                 #:WIDTH     (return-if WIDTH  'null)
@@ -244,7 +244,7 @@
 
 
 (insert-entity activity objID [get-activities-where #:ACTIVITY_ID]
-                              [userID] [ACTORS OBJECT] #:keys []
+                              [userID] [(ACTOR #f) (OBJECT #f)] #:keys []
   (for-each
     (lambda (actor)
       ($ACTIVITIES_BY_ACTORS
@@ -255,7 +255,7 @@
                           [      list? (assoc-ref actor "id")]
                           [    string?                  actor]
                           [hash-table? ( hash-ref actor "id")]))))
-    (if (list? ACTORS) ACTORS (list ACTORS)))
+    (if (list? ACTOR) ACTOR (list ACTOR)))
 
   (let ([activityObjectID (if-let ([actObjID (get-object-dbID-by-apID OBJECT)])
                               actObjID
@@ -288,18 +288,19 @@
 
 
 (insert-entity actor objID [get-actors-where #:ACTOR_ID]
-                           [] [ INBOX
-                               OUTBOX
-                               PREFERRED_USERNAME] #:keys [FOLLOWING
-                                                           FOLLOWERS
-                                                           LIKED
-                                                           FEATURED
-                                                           PROXY_URL
-                                                           OAUTH_AUTHORIZATION_ENDPOINT
-                                                                   OAUTH_TOKEN_ENDPOINT
-                                                           PROVIDE_CLIENT_KEY
-                                                              SIGN_CLIENT_KEY
-                                                           SHARED_INBOX]
+                           [] [( INBOX             #f)
+                               (OUTBOX             #f)
+                               (PREFERRED_USERNAME #f)] #:keys [FOLLOWING
+                                                                FOLLOWERS
+                                                                LIKED
+                                                                FEATURED
+                                                                ENDPOINTS
+                                                                PROXY_URL
+                                                                OAUTH_AUTHORIZATION_ENDPOINT
+                                                                        OAUTH_TOKEN_ENDPOINT
+                                                                PROVIDE_CLIENT_KEY
+                                                                   SIGN_CLIENT_KEY
+                                                                SHARED_INBOX]
   (define (check-and-convert elem)
     (if (not elem) 'null (if (uri? elem) (uri->string elem) elem)))
 

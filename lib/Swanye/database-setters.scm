@@ -164,37 +164,13 @@
 
 
 
-(define* (insert-image onlyGetID   isIcon    AP_ID
-                       OBJECT_TYPE OBJECT_ID JSON  #:key WIDTH         HEIGHT
-                                                          TO            CC
-                                                         BTO           BCC
-                                                         ATTRIBUTED_TO CONTENT
-                                                         STARTTIME     NAME
-                                                           ENDTIME     PUBLISHED
-                                                         ICONS         IMAGES    URL)
-  (let ([objID (insert-object #t AP_ID           OBJECT_TYPE   JSON
-                                 #:TO             TO
-                                 #:BTO           BTO
-                                 #:CC             CC
-                                 #:BCC           BCC
-                                 #:ATTRIBUTED_TO ATTRIBUTED_TO
-                                 #:CONTENT       CONTENT
-                                 #:NAME          NAME
-                                 #:STARTTIME     STARTTIME
-                                 #:ENDTIME       ENDTIME
-                                 #:ICONS         ICONS
-                                 #:IMAGES        IMAGES
-                                 #:PUBLISHED     PUBLISHED
-                                 #:URL           URL)])
-    ($IMAGES 'set #:IMAGE_ID  objID
-                  #:OBJECT_ID OBJECT_ID
-                  #:WIDTH     (return-if WIDTH  'null)
-                  #:HEIGHT    (return-if HEIGHT 'null)
-                  #:IS_ICON   (if isIcon 1 0))
-
-    (if onlyGetID
-        objID
-      (car ((if isIcon get-icons-where get-images-where) #:IMAGE_ID objID)))))
+(insert-entity image objID [(if isIcon get-icons-where get-images-where) #:IMAGE_ID]
+                           [isIcon] [OBJECT_ID] #:keys [WIDTH HEIGHT]
+  ($IMAGES 'set #:IMAGE_ID  objID
+                #:OBJECT_ID OBJECT_ID
+                #:WIDTH     (return-if WIDTH  'null)
+                #:HEIGHT    (return-if HEIGHT 'null)
+                #:IS_ICON   (if isIcon 1 0)))
 
 (define (insert-image-auto onlyGetID isIcon objectID image)
   (let ([ref (if (hash-table? image) hash-ref assoc-ref)])

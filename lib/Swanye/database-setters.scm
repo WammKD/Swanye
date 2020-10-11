@@ -220,27 +220,6 @@
                 #:HEIGHT    (return-if HEIGHT 'null)
                 #:IS_ICON   (if isIcon 1 0)))
 
-(define (insert-image-auto onlyGetID isIcon objectID image)
-  (let ([ref (if (hash-table? image) hash-ref assoc-ref)])
-    (insert-image onlyGetID        isIcon
-                  (ref image "id") (ref image "type")
-                  objectID         image
-                  #:WIDTH          (ref image "width")
-                  #:HEIGHT         (ref image "height")
-                  #:TO             (ref image  "to")
-                  #:BTO            (ref image "bto")
-                  #:CC             (ref image  "cc")
-                  #:BCC            (ref image "bcc")
-                  #:ATTRIBUTED_TO  (ref image "attributedTo")
-                  #:CONTENT        (ref image "content")
-                  #:NAME           (ref image "name")
-                  #:STARTTIME      (ref image "starttime")
-                  #:ENDTIME        (ref image "endtime")
-                  #:ICONS          (ref image "icon")
-                  #:IMAGES         (ref image "image")
-                  #:PUBLISHED      (ref image "published")
-                  #:URL            (ref image "url"))))
-
 
 
 (insert-entity activity objID [get-activities-where #:ACTIVITY_ID]
@@ -265,25 +244,6 @@
     (cond
      [(string=? OBJECT_TYPE "Create")
            ($TIMELINES 'set #:USER_ID userID #:OBJECT_ID activityObjectID)])))
-
-(define (insert-activity-auto onlyGetID userID activity)
-  (let ([ref (if (hash-table? activity) hash-ref assoc-ref)])
-    (insert-activity onlyGetID              userID
-                     (ref activity "id")    (ref activity "type")
-                     (ref activity "actor") (ref activity "object")       activity
-                     #:TO                   (ref activity  "to")
-                     #:BTO                  (ref activity "bto")
-                     #:CC                   (ref activity  "cc")
-                     #:BCC                  (ref activity "bcc")
-                     #:ATTRIBUTED_TO        (ref activity "attributedTo")
-                     #:CONTENT              (ref activity "content")
-                     #:NAME                 (ref activity "name")
-                     #:STARTTIME            (ref activity "starttime")
-                     #:ENDTIME              (ref activity "endtime")
-                     #:ICONS                (ref activity "icon")
-                     #:IMAGES               (ref activity "image")
-                     #:PUBLISHED            (ref activity "published")
-                     #:URL                  (ref activity "url"))))
 
 
 
@@ -322,35 +282,6 @@
                      #:PROVIDE_CLIENT_KEY           (check-and-convert PROVIDE_CLIENT_KEY)
                      #:SIGN_CLIENT_KEY              (check-and-convert SIGN_CLIENT_KEY)
                      #:SHARED_INBOX                 (check-and-convert SHARED_INBOX))))
-
-(define (insert-actor-auto onlyGetID actor)
-  (let* ([ref       (if (hash-table? actor) hash-ref assoc-ref)]
-         [endpoints                     (ref actor "endpoints")])
-    (insert-actor
-      onlyGetID
-      (ref actor "id")                (ref actor "type")
-      (ref actor "inbox")             (ref actor "outbox")
-      (ref actor "preferredUsername") actor
-      #:ATTRIBUTED_TO                 (ref actor "attributedTo")
-      #:CONTENT                       (ref actor "content")
-      #:NAME                          (ref actor "name")
-      #:STARTTIME                     (ref actor "startTime")
-      #:ENDTIME                       (ref actor   "endTime")
-      #:ICONS                         (ref actor "icon")
-      #:IMAGES                        (ref actor "image")
-      #:PUBLISHED                     (ref actor "published")
-      #:SUMMARY                       (ref actor "summary")
-      #:URL                           (ref actor "url")
-      #:FOLLOWING                     (ref actor "following")
-      #:FOLLOWERS                     (ref actor "followers")
-      #:LIKED                         (ref actor "liked")
-      #:FEATURED                      (ref actor "featured")
-      #:PROXY_URL                     (if endpoints (ref endpoints "proxyUrl")                   #f)
-      #:OAUTH_AUTHORIZATION_ENDPOINT  (if endpoints (ref endpoints "oauthAuthorizationEndpoint") #f)
-      #:OAUTH_TOKEN_ENDPOINT          (if endpoints (ref endpoints "oauthTokenEndpoint")         #f)
-      #:PROVIDE_CLIENT_KEY            (if endpoints (ref endpoints "provideClientKey")           #f)
-      #:SIGN_CLIENT_KEY               (if endpoints (ref endpoints "signClientKey")              #f)
-      #:SHARED_INBOX                  (if endpoints (ref endpoints "sharedInbox")                #f))))
 
 (define (get-actor-dbID-by-apID activityPubID)
   (if-let* ([convert                (lambda (str)

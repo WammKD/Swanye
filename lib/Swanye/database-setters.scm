@@ -239,61 +239,40 @@
 
 
 
-(define* (insert-actor onlyGetID AP_ID              OBJECT_TYPE
-                                 INBOX              OUTBOX
-                                 PREFERRED_USERNAME JSON        #:key  TO                   CC
-                                                                      BTO                  BCC
-                                                                      ATTRIBUTED_TO        CONTENT
-                                                                      NAME                 STARTTIME
-                                                                      ENDTIME              ICONS
-                                                                      IMAGES               PUBLISHED
-                                                                      SUMMARY              URL
-                                                                      FOLLOWING            FOLLOWERS
-                                                                      LIKED                FEATURED
-                                                                      PROXY_URL            OAUTH_AUTHORIZATION_ENDPOINT
-                                                                      OAUTH_TOKEN_ENDPOINT PROVIDE_CLIENT_KEY
-                                                                      SIGN_CLIENT_KEY      SHARED_INBOX)
-  (let ([check-and-convert (lambda (elem)
-                             (if (not elem) 'null (if (uri? elem)
-                                                      (uri->string elem)
-                                                    elem)))]
-        [objID             (insert-object #t AP_ID           OBJECT_TYPE   JSON
-                                             #:TO             TO
-                                             #:BTO           BTO
-                                             #:CC             CC
-                                             #:BCC           BCC
-                                             #:ATTRIBUTED_TO ATTRIBUTED_TO
-                                             #:CONTENT       CONTENT
-                                             #:NAME          NAME
-                                             #:STARTTIME     STARTTIME
-                                             #:ENDTIME       ENDTIME
-                                             #:ICONS         ICONS
-                                             #:IMAGES        IMAGES
-                                             #:PUBLISHED     PUBLISHED
-                                             #:SUMMARY       SUMMARY
-                                             #:URL           URL)])
-    ($ACTORS 'set #:ACTOR_ID           objID
-                  #:INBOX              (if (uri? INBOX)  (uri->string INBOX)   INBOX)
-                  #:OUTBOX             (if (uri? OUTBOX) (uri->string OUTBOX) OUTBOX)
-                  #:FOLLOWING          (check-and-convert FOLLOWING)
-                  #:FOLLOWERS          (check-and-convert FOLLOWERS)
-                  #:LIKED              (check-and-convert LIKED)
-                  #:FEATURED           (check-and-convert FEATURED)
-                  #:PREFERRED_USERNAME PREFERRED_USERNAME)
+(insert-entity actor objID [get-actors-where #:ACTOR_ID]
+                           [] [ INBOX
+                               OUTBOX
+                               PREFERRED_USERNAME] #:keys [FOLLOWING
+                                                           FOLLOWERS
+                                                           LIKED
+                                                           FEATURED
+                                                           PROXY_URL
+                                                           OAUTH_AUTHORIZATION_ENDPOINT
+                                                                   OAUTH_TOKEN_ENDPOINT
+                                                           PROVIDE_CLIENT_KEY
+                                                              SIGN_CLIENT_KEY
+                                                           SHARED_INBOX]
+  (define (check-and-convert elem)
+    (if (not elem) 'null (if (uri? elem) (uri->string elem) elem)))
 
-    (when (or PROXY_URL           OAUTH_AUTHORIZATION_ENDPOINT  OAUTH_TOKEN_ENDPOINT
-              PROVIDE_CLIENT_KEY  SIGN_CLIENT_KEY               SHARED_INBOX)
-      ($ENDPOINTS 'set #:ACTOR_ID                     objID
-                       #:PROXY_URL                    (check-and-convert PROXY_URL)
-                       #:OAUTH_AUTHORIZATION_ENDPOINT (check-and-convert OAUTH_AUTHORIZATION_ENDPOINT)
-                       #:OAUTH_TOKEN_ENDPOINT         (check-and-convert OAUTH_TOKEN_ENDPOINT)
-                       #:PROVIDE_CLIENT_KEY           (check-and-convert PROVIDE_CLIENT_KEY)
-                       #:SIGN_CLIENT_KEY              (check-and-convert SIGN_CLIENT_KEY)
-                       #:SHARED_INBOX                 (check-and-convert SHARED_INBOX)))
+  ($ACTORS 'set #:ACTOR_ID           objID
+                #:INBOX              (if (uri? INBOX)  (uri->string INBOX)   INBOX)
+                #:OUTBOX             (if (uri? OUTBOX) (uri->string OUTBOX) OUTBOX)
+                #:FOLLOWING          (check-and-convert FOLLOWING)
+                #:FOLLOWERS          (check-and-convert FOLLOWERS)
+                #:LIKED              (check-and-convert LIKED)
+                #:FEATURED           (check-and-convert FEATURED)
+                #:PREFERRED_USERNAME PREFERRED_USERNAME)
 
-    (if onlyGetID
-        objID
-      (car (get-actors-where #:ACTOR_ID objID)))))
+  (when (or PROXY_URL           OAUTH_AUTHORIZATION_ENDPOINT  OAUTH_TOKEN_ENDPOINT
+            PROVIDE_CLIENT_KEY  SIGN_CLIENT_KEY               SHARED_INBOX)
+    ($ENDPOINTS 'set #:ACTOR_ID                     objID
+                     #:PROXY_URL                    (check-and-convert PROXY_URL)
+                     #:OAUTH_AUTHORIZATION_ENDPOINT (check-and-convert OAUTH_AUTHORIZATION_ENDPOINT)
+                     #:OAUTH_TOKEN_ENDPOINT         (check-and-convert OAUTH_TOKEN_ENDPOINT)
+                     #:PROVIDE_CLIENT_KEY           (check-and-convert PROVIDE_CLIENT_KEY)
+                     #:SIGN_CLIENT_KEY              (check-and-convert SIGN_CLIENT_KEY)
+                     #:SHARED_INBOX                 (check-and-convert SHARED_INBOX))))
 
 (define (insert-actor-auto onlyGetID actor)
   (let* ([ref       (if (hash-table? actor) hash-ref assoc-ref)]

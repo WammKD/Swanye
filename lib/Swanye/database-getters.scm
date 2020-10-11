@@ -170,22 +170,7 @@
       '()
     (map
       (lambda (object)
-        (create-database-entity make-ap-object object
-          ["OBJECT_ID"     identity]
-          [    "AP_ID"     identity   (compose string->uri string-reverse)]
-          ["OBJECT_TYPE"   identity]
-          ["ATTRIBUTED_TO" positive?  (cut get-actors-where #:ACTOR_ID <> #t)]
-          ["CONTENT"       identity]
-          ["NAME"          identity]
-          ["STARTTIME"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
-          [  "ENDTIME"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
-          ["ICON"          (const #t) (const (get-icons-where
-                                               #:OBJECT_ID (assoc-ref object "OBJECT_ID")))]
-          ["IMAGE"         (const #t) (const (get-images-where
-                                               #:OBJECT_ID (assoc-ref object "OBJECT_ID")))]
-          ["PUBLISHED"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
-          ["SUMMARY"       identity]
-          ["URL"           identity   (compose string->uri string-reverse)]))
+        (create-database-entity-from-object make-ap-object object))
       ($OBJECTS 'get #:columns '(*) #:condition (where column values)))))
 
 (define (get-object-dbID-by-apID activityPubID)

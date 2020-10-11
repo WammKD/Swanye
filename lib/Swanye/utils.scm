@@ -77,7 +77,6 @@
         ([key check? transform-funct] . rest)) (create-database-entity-helper creation-funct alist
                                                                               (args ... (let ([value (assoc-ref alist key)])
                                                                                           (if (and
-                                                                                                value
                                                                                                 (check? value)
                                                                                                 (not (eq? value 'null)))
                                                                                               (transform-funct value)
@@ -88,7 +87,6 @@
         ([key check?]                 . rest)) (create-database-entity-helper creation-funct alist
                                                                               (args ... (let ([value (assoc-ref alist key)])
                                                                                           (if (and
-                                                                                                value
                                                                                                 (check? value)
                                                                                                 (not (eq? value 'null))) value #f)))
                                                                               rest)]))

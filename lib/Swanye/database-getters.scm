@@ -255,27 +255,10 @@
 ;;;;;;;;;;;;;;;;;;;
 ;;  I M A G E S  ;;
 ;;;;;;;;;;;;;;;;;;;
-(define-record-type <activityPub-image>
-  (make-ap-image databaseID activityPubID type    isIcon    width
-                 height     attributedTo  content name      startTime
-                 endTime    icon          image   published summary   url)
-  ap-image?
-  (databaseID    ap-image-db-id         ap-image-db-id-set!)
-  (activityPubID ap-image-ap-id         ap-image-ap-id-set!)
-  (type          ap-image-type          ap-image-type-set!)
-  (isIcon        ap-image-is-icon?      ap-image-is-icon-set!)
-  (width         ap-image-width         ap-image-width-set!)
-  (height        ap-image-height        ap-image-height-set!)
-  (attributedTo  ap-image-attributed-to ap-image-attributed-to-set!)
-  (content       ap-image-content       ap-image-content-set!)
-  (name          ap-image-name          ap-image-name-set!)
-  (startTime     ap-image-start-time    ap-image-start-time-set!)
-  (endTime       ap-image-end-time      ap-image-end-time-set!)
-  (icon          ap-image-icon          ap-image-icon-set!)
-  (image         ap-image-image         ap-image-image-set!)
-  (published     ap-image-published     ap-image-published-set!)
-  (summary       ap-image-summary       ap-image-summary-set!)
-  (url           ap-image-url           ap-image-url-set!))
+(define-record-from-object #f image
+  [isIcon is-icon?]
+  [width     width]
+  [height   height])
 
 (define (get-images-where column values)
   (get-IMAGES-where column values #f))
@@ -420,30 +403,14 @@
 ;;;;;;;;;;;;;;;;;;;
 ;;  A C T O R S  ;;
 ;;;;;;;;;;;;;;;;;;;
-(define-record-type <activityPub-actor>
-  (make-ap-actor databaseID activityPubID type              inbox
-                 outbox     following     followers         liked
-                 featured   name          preferredUsername attributedTo
-                 content    startTime     endTime           published    summary url)
-  ap-actor?
-  (databaseID        ap-actor-db-id              ap-actor-db-id-set!)
-  (activityPubID     ap-actor-ap-id              ap-actor-ap-id-set!)
-  (type              ap-actor-type               ap-actor-type-set!)
-  (inbox             ap-actor-inbox              ap-actor-inbox-set!)
-  (outbox            ap-actor-outbox             ap-actor-outbox-set!)
-  (following         ap-actor-following          ap-actor-following-set!)
-  (followers         ap-actor-followers          ap-actor-followers-set!)
-  (liked             ap-actor-liked              ap-actor-liked-set!)
-  (featured          ap-actor-featured           ap-actor-featured-set!)
-  (name              ap-actor-name               ap-actor-name-set!)
-  (preferredUsername ap-actor-preferred-username ap-actor-preferred-username-set!)
-  (attributedTo      ap-actor-attributed-to      ap-actor-attributed-to-set!)
-  (content           ap-actor-content            ap-actor-content-set!)
-  (startTime         ap-actor-start-time         ap-actor-start-time-set!)
-  (endTime           ap-actor-end-time           ap-actor-end-time-set!)
-  (published         ap-actor-published          ap-actor-published-set!)
-  (summary           ap-actor-summary            ap-actor-summary-set!)
-  (url               ap-actor-url                ap-actor-url-set!))
+(define-record-from-object #f actor
+  [ inbox                         inbox]
+  [outbox                        outbox]
+  [following                  following]
+  [followers                  followers]
+  [liked                          liked]
+  [featured                    featured]
+  [preferredUsername preferred-username])
 
 (define* (get-actors-where column values #:optional [returnObjectIfPresent #f])
   (if (null? values)

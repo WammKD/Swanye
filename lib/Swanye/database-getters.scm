@@ -163,23 +163,7 @@
 ;;;;;;;;;;;;;;;;;;;;;
 ;;  O B J E C T S  ;;
 ;;;;;;;;;;;;;;;;;;;;;
-(define-record-type <activityPub-object>
-  (make-ap-object databaseID activityPubID type attributedTo content   name
-                  startTime  endTime       icon image        published summary url)
-  ap-object?
-  (databaseID    ap-object-db-id         ap-object-db-id-set!)
-  (activityPubID ap-object-ap-id         ap-object-ap-id-set!)
-  (type          ap-object-type          ap-object-type-set!)
-  (attributedTo  ap-object-attributed-to ap-object-attributed-to-set!)
-  (content       ap-object-content       ap-object-content-set!)
-  (name          ap-object-name          ap-object-name-set!)
-  (startTime     ap-object-start-time    ap-object-start-time-set!)
-  (endTime       ap-object-end-time      ap-object-end-time-set!)
-  (icon          ap-object-icon          ap-object-icon-set!)
-  (image         ap-object-image         ap-object-image-set!)
-  (published     ap-object-published     ap-object-published-set!)
-  (summary       ap-object-summary       ap-object-summary-set!)
-  (url           ap-object-url           ap-object-url-set!))
+(define-record-from-object #f object)
 
 (define (get-objects-where column values)
   (if (null? values)

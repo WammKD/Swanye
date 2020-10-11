@@ -219,49 +219,28 @@
 
 
 
-(define* (insert-activity onlyGetID userID
-                          AP_ID     OBJECT_TYPE
-                          ACTORS    OBJECT      JSON #:key  TO      CC   ATTRIBUTED_TO CONTENT
-                                                           BTO     BCC   NAME          STARTTIME
-                                                           ENDTIME ICONS IMAGES        PUBLISHED URL)
-  (let ([objID (insert-object #t AP_ID           OBJECT_TYPE   JSON
-                                 #:TO             TO
-                                 #:BTO           BTO
-                                 #:CC             CC
-                                 #:BCC           BCC
-                                 #:ATTRIBUTED_TO ATTRIBUTED_TO
-                                 #:CONTENT       CONTENT
-                                 #:NAME          NAME
-                                 #:STARTTIME     STARTTIME
-                                 #:ENDTIME       ENDTIME
-                                 #:ICONS         ICONS
-                                 #:IMAGES        IMAGES
-                                 #:PUBLISHED     PUBLISHED
-                                 #:URL           URL)])
-    (for-each
-      (lambda (actor)
-        ($ACTIVITIES_BY_ACTORS
-          'set  ;; check is 'set can handle multiple #:ACTOR_IDs, later
-          #:ACTIVITY_ID objID
-          #:ACTOR_ID    (get-actor-dbID-by-apID  ;; maybe adjust to use the object
-                          (case-pred actor       ;; rather than make another HTTP call
-                            [      list? (assoc-ref actor "id")]
-                            [    string?                  actor]
-                            [hash-table? ( hash-ref actor "id")]))))
-      (if (list? ACTORS) ACTORS (list ACTORS)))
+(insert-entity activity objID [get-activities-where #:ACTIVITY_ID]
+                              [userID] [ACTORS OBJECT] #:keys []
+  (for-each
+    (lambda (actor)
+      ($ACTIVITIES_BY_ACTORS
+        'set  ;; check is 'set can handle multiple #:ACTOR_IDs, later
+        #:ACTIVITY_ID objID
+        #:ACTOR_ID    (get-actor-dbID-by-apID  ;; maybe adjust to use the object
+                        (case-pred actor       ;; rather than make another HTTP call
+                          [      list? (assoc-ref actor "id")]
+                          [    string?                  actor]
+                          [hash-table? ( hash-ref actor "id")]))))
+    (if (list? ACTORS) ACTORS (list ACTORS)))
 
-    (let ([activityObjectID (if-let ([actObjID (get-object-dbID-by-apID OBJECT)])
-                                actObjID
-                              (insert-object-auto #t OBJECT))])
-      ($ACTIVITIES 'set #:ACTIVITY_ID objID #:OBJECT_ID activityObjectID)
+  (let ([activityObjectID (if-let ([actObjID (get-object-dbID-by-apID OBJECT)])
+                              actObjID
+                            (insert-object-auto #t OBJECT))])
+    ($ACTIVITIES 'set #:ACTIVITY_ID objID #:OBJECT_ID activityObjectID)
 
-      (cond
-       [(string=? OBJECT_TYPE "Create")
-             ($TIMELINES 'set #:USER_ID userID #:OBJECT_ID activityObjectID)]))
-
-    (if onlyGetID
-        objID
-      (car (get-activities-where #:ACTIVITY_ID objID)))))
+    (cond
+     [(string=? OBJECT_TYPE "Create")
+           ($TIMELINES 'set #:USER_ID userID #:OBJECT_ID activityObjectID)])))
 
 (define (insert-activity-auto onlyGetID userID activity)
   (let ([ref (if (hash-table? activity) hash-ref assoc-ref)])

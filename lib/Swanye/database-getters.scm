@@ -104,6 +104,43 @@
             get-home-timeline
             get-followers-of))
 
+(define-macro (define-record-from-object isUser name . properties)
+  (let* ([prefix   (string-append (if (eq? isUser '#t)
+                                      "swanye-"
+                                    "ap-") (symbol->string name))]
+         [preHyph                      (string-append prefix "-")]
+         [convert (lambda (str)
+                    (string->symbol (string-append preHyph str)))])
+    `(define-record-type ,(string->symbol (string-append
+                                            "<"
+                                            (if (eq? isUser '#t)
+                                                "swanye-"
+                                              "activityPub-")
+                                            (symbol->string name)
+                                            ">"))
+       (,(string->symbol (string-append "make-" prefix))
+         databaseID activityPubID type ,@(map car properties) attributedTo content name
+         startTime  endTime       icon image                  published    summary url)
+       ,(string->symbol (string-append prefix "?"))
+       (databaseID    ,(convert "db-id")         ,(convert "db-id-set!"))
+       (activityPubID ,(convert "ap-id")         ,(convert "ap-id-set!"))
+       (type          ,(convert "type")          ,(convert "type-set!"))
+       ,@(map
+           (lambda (prop)
+             (let ([functName (string-append preHyph (symbol->string (cadr prop)))])
+               `(,(car prop) ,(string->symbol functName) ,(string->symbol (string-append functName "-set!")))))
+           properties)
+       (attributedTo  ,(convert "attributed-to") ,(convert "attributed-to-set!"))
+       (content       ,(convert "content")       ,(convert "content-set!"))
+       (name          ,(convert "name")          ,(convert "name-set!"))
+       (startTime     ,(convert "start-time")    ,(convert "start-time-set!"))
+       (endTime       ,(convert "end-time")      ,(convert "end-time-set!"))
+       (icon          ,(convert "icon")          ,(convert "icon-set!"))
+       (image         ,(convert "image")         ,(convert "image-set!"))
+       (published     ,(convert "published")     ,(convert "published-set!"))
+       (summary       ,(convert "summary")       ,(convert "summary-set!"))
+       (url           ,(convert "url")           ,(convert "url-set!")))))
+
 ;;;;;;;;;;;;;;;;;;;;;
 ;;  O B J E C T S  ;;
 ;;;;;;;;;;;;;;;;;;;;;

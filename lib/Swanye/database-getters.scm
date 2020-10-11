@@ -236,6 +236,11 @@
   (get-IMAGES-where column values #t))
 
 (define (get-IMAGES-where column values findIcons)
+  (define (remove-parent-object-id image)
+    (if (assoc-ref image "IMAGE_ID")
+        (delete (assoc "OBJECT_ID" image) image)
+      image))
+
   (if (null? values)
       '()
     (let ([isIMAGE (memq column '(#:IMAGE_ID #:WIDTH #:OBJECT_ID #:HEIGHT))])
@@ -244,21 +249,25 @@
           (and (((if findIcons identity negate) ap-image-is-icon?) elem) elem))
         (map
           (lambda (dbENTITY)
-            (if-let ([otherENTITY null? ((if isIMAGE $OBJECTS $IMAGES)
-                                          'get
-                                          #:columns   '(*)
-                                          #:condition (where
-                                                        (if isIMAGE #:OBJECT_ID #:IMAGE_ID)
-                                                        (assoc-ref
-                                                          dbENTITY
-                                                          (if isIMAGE "IMAGE_ID" "OBJECT_ID"))))])
+            (if-let ([otherENTITY null? (map
+                                          remove-parent-object-id
+                                          ((if isIMAGE $OBJECTS $IMAGES)
+                                            'get
+                                            #:columns   '(*)
+                                            #:condition (where
+                                                          (if isIMAGE #:OBJECT_ID #:IMAGE_ID)
+                                                          (assoc-ref
+                                                            dbENTITY
+                                                            (if isIMAGE "IMAGE_ID" "OBJECT_ID")))))])
                 #f
-          ((if isIMAGE $IMAGES $OBJECTS) 'get #:columns   '(*)
-                                              #:condition (where column values)))))))
               (create-database-entity-from-object make-ap-image (apply append (cons dbENTITY otherENTITY))
                 ["IS_ICON"       positive? (const #t)]
                 ["WIDTH"         positive?]
                 ["HEIGHT"        positive?])))
+          (map
+            remove-parent-object-id
+            ((if isIMAGE $IMAGES $OBJECTS) 'get #:columns   '(*)
+                                                #:condition (where column values))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  A C T I V I T I E S  ;;

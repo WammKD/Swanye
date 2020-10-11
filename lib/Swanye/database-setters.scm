@@ -321,7 +321,7 @@
       (map
         (lambda (apID)
           (let ([actorFilename (string-append/shared
-                                 "actor_"
+                                 "/tmp/actor_"
                                  (number->string (time-second (current-time)))
                                  (get-random-from-dev #:length 64))])
             (system (string-append/shared

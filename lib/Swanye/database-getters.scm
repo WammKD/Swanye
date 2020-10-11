@@ -141,6 +141,25 @@
        (summary       ,(convert "summary")       ,(convert "summary-set!"))
        (url           ,(convert "url")           ,(convert "url-set!")))))
 
+(define-macro (create-database-entity-from-object make-funct entity . properties)
+  `(create-database-entity ,make-funct ,entity
+     ["OBJECT_ID"     identity]
+     [    "AP_ID"     identity   (compose string->uri string-reverse)]
+     ["OBJECT_TYPE"   identity]
+     ,@properties
+     ["ATTRIBUTED_TO" positive?  (cut get-actors-where #:ACTOR_ID <> #t)]
+     ["CONTENT"       identity]
+     ["NAME"          identity]
+     ["STARTTIME"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
+     [  "ENDTIME"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
+     ["ICON"          (const #t) (const (get-icons-where
+                                          #:OBJECT_ID (assoc-ref object "OBJECT_ID")))]
+     ["IMAGE"         (const #t) (const (get-images-where
+                                          #:OBJECT_ID (assoc-ref object "OBJECT_ID")))]
+     ["PUBLISHED"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
+     ["SUMMARY"       identity]
+     ["URL"           identity   (compose string->uri string-reverse)]))
+
 ;;;;;;;;;;;;;;;;;;;;;
 ;;  O B J E C T S  ;;
 ;;;;;;;;;;;;;;;;;;;;;

@@ -119,31 +119,79 @@
 (define-macro (insert-entity name objectID retrievalElements
                                            beforeRequiredArgs
                                            afterRequiredArgs _ keyArgs . body)
-  `(define* (,(string->symbol (string-append "insert-" (symbol->string name)))
-              ,@(append '(onlyGetID)         beforeRequiredArgs
-                        '(AP_ID OBJECT_TYPE) afterRequiredArgs
-                        '(JSON #:key)        keyArgs
-                        '( TO  CC ATTRIBUTED_TO CONTENT NAME      STARTTIME ENDTIME
-                          BTO BCC ICONS         IMAGES  PUBLISHED SUMMARY   URL)))
-     (let ([,objectID (insert-object #t AP_ID           OBJECT_TYPE   JSON
-                                        #:TO             TO
-                                        #:BTO           BTO
-                                        #:CC             CC
-                                        #:BCC           BCC
-                                        #:ATTRIBUTED_TO ATTRIBUTED_TO
-                                        #:CONTENT       CONTENT
-                                        #:NAME          NAME
-                                        #:STARTTIME     STARTTIME
-                                        #:ENDTIME       ENDTIME
-                                        #:ICONS         ICONS
-                                        #:IMAGES        IMAGES
-                                        #:PUBLISHED     PUBLISHED
-                                        #:URL           URL)])
-       ,@body
+  (let ([insertName           (string->symbol
+                                (string-append "insert-" (symbol->string name)))]
+        [afterRequiredAll                            (map car afterRequiredArgs)]
+        [afterRequiredForAuto          (map car (filter cadr afterRequiredArgs))])
+    `(begin
+       (define* (,insertName
+                  ,@(append '(onlyGetID)         beforeRequiredArgs
+                            '(AP_ID OBJECT_TYPE) afterRequiredAll
+                            '(JSON #:key)        keyArgs
+                            '( TO  CC ATTRIBUTED_TO CONTENT NAME      STARTTIME ENDTIME
+                              BTO BCC ICONS         IMAGES  PUBLISHED SUMMARY   URL)))
+         (let ([,objectID (insert-object #t AP_ID           OBJECT_TYPE   JSON
+                                            #:TO             TO
+                                            #:BTO           BTO
+                                            #:CC             CC
+                                            #:BCC           BCC
+                                            #:ATTRIBUTED_TO ATTRIBUTED_TO
+                                            #:CONTENT       CONTENT
+                                            #:NAME          NAME
+                                            #:STARTTIME     STARTTIME
+                                            #:ENDTIME       ENDTIME
+                                            #:ICONS         ICONS
+                                            #:IMAGES        IMAGES
+                                            #:PUBLISHED     PUBLISHED
+                                            #:URL           URL)])
+           ,@body
 
-       (if onlyGetID ,objectID (car (,(car retrievalElements)
-                                      ,(cadr retrievalElements)
-                                      ,objectID))))))
+           (if onlyGetID ,objectID (car (,(car retrievalElements)
+                                          ,(cadr retrievalElements)
+                                          ,objectID)))))
+
+       (define (,(string->symbol (string-append (symbol->string insertName) "-auto"))
+                 onlyGetID ,@beforeRequiredArgs ,@afterRequiredForAuto ,name)
+         (let ([ref (if (hash-table? ,name) hash-ref assoc-ref)])
+           (,insertName
+             onlyGetID
+             ,@beforeRequiredArgs
+             (ref ,name "id")
+             (ref ,name "type")
+             ,@(map
+                 (lambda (elem)
+                   (if (cadr elem)
+                       (car elem)
+                     `(ref ,name ,(let ([temp (string-split (symbol->string (car elem)) #\_)])
+                                    (apply string-append (cons
+                                                           (string-downcase (car temp))
+                                                           (map string-capitalize (cdr temp))))))))
+                 afterRequiredArgs)
+             ,name
+             ,@(apply append (map
+                               (lambda (elem)
+                                 (list
+                                   (symbol->keyword elem)
+                                   (let ([temp (string-split (symbol->string elem) #\_)])
+                                     `(ref
+                                        ,name
+                                        ,(apply string-append (cons
+                                                                (string-downcase (car temp))
+                                                                (map string-capitalize (cdr temp))))))))
+                               keyArgs))
+             #:TO            (ref ,name  "to")
+             #:BTO           (ref ,name "bto")
+             #:CC            (ref ,name  "cc")
+             #:BCC           (ref ,name "bcc")
+             #:ATTRIBUTED_TO (ref ,name "attributedTo")
+             #:CONTENT       (ref ,name "content")
+             #:NAME          (ref ,name "name")
+             #:STARTTIME     (ref ,name "starttime")
+             #:ENDTIME       (ref ,name "endtime")
+             #:ICONS         (ref ,name "icon")
+             #:IMAGES        (ref ,name "image")
+             #:PUBLISHED     (ref ,name "published")
+             #:URL           (ref ,name "url")))))))
 
 (define (insert-object-auto onlyGetID object)
   (let ([ref (if (hash-table? object) hash-ref assoc-ref)])

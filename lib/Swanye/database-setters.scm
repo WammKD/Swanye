@@ -263,6 +263,15 @@
                                                                 SHARED_INBOX]
   (define (check-and-convert elem)
     (if (not elem) 'null (if (uri? elem) (uri->string elem) elem)))
+  (define (extract-endpoint elemProp)
+    (if ENDPOINTS
+        ((if (hash-table? ENDPOINTS) hash-ref assoc-ref)
+          ENDPOINTS
+          (let ([temp (string-split (symbol->string elemProp) #\_)])
+            (apply string-append (cons
+                                   (string-downcase (car temp))
+                                   (map string-capitalize (cdr temp))))))
+      (eval elemProp (interaction-environment))))
 
   ($ACTORS 'set #:ACTOR_ID           objID
                 #:INBOX              (if (uri? INBOX)  (uri->string INBOX)   INBOX)
@@ -273,15 +282,21 @@
                 #:FEATURED           (check-and-convert FEATURED)
                 #:PREFERRED_USERNAME PREFERRED_USERNAME)
 
-  (when (or PROXY_URL           OAUTH_AUTHORIZATION_ENDPOINT  OAUTH_TOKEN_ENDPOINT
-            PROVIDE_CLIENT_KEY  SIGN_CLIENT_KEY               SHARED_INBOX)
-    ($ENDPOINTS 'set #:ACTOR_ID                     objID
-                     #:PROXY_URL                    (check-and-convert PROXY_URL)
-                     #:OAUTH_AUTHORIZATION_ENDPOINT (check-and-convert OAUTH_AUTHORIZATION_ENDPOINT)
-                     #:OAUTH_TOKEN_ENDPOINT         (check-and-convert OAUTH_TOKEN_ENDPOINT)
-                     #:PROVIDE_CLIENT_KEY           (check-and-convert PROVIDE_CLIENT_KEY)
-                     #:SIGN_CLIENT_KEY              (check-and-convert SIGN_CLIENT_KEY)
-                     #:SHARED_INBOX                 (check-and-convert SHARED_INBOX))))
+  (let ([proxyURL                   (extract-endpoint                    'PROXY_URL)]
+        [oauthAuthorizationEndpoint (extract-endpoint 'OAUTH_AUTHORIZATION_ENDPOINT)]
+        [        oauthTokenEndpoint (extract-endpoint         'OAUTH_TOKEN_ENDPOINT)]
+        [provideClientKey           (extract-endpoint           'PROVIDE_CLIENT_KEY)]
+        [   signClientKey           (extract-endpoint              'SIGN_CLIENT_KEY)]
+        [sharedInbox                (extract-endpoint                 'SHARED_INBOX)])
+    (when (or proxyURL         oauthAuthorizationEndpoint oauthTokenEndpoint
+              provideClientKey signClientKey              sharedInbox)
+      ($ENDPOINTS 'set #:ACTOR_ID                     objID
+                       #:PROXY_URL                    (check-and-convert                   proxyURL)
+                       #:OAUTH_AUTHORIZATION_ENDPOINT (check-and-convert oauthAuthorizationEndpoint)
+                       #:OAUTH_TOKEN_ENDPOINT         (check-and-convert         oauthTokenEndpoint)
+                       #:PROVIDE_CLIENT_KEY           (check-and-convert           provideClientKey)
+                       #:SIGN_CLIENT_KEY              (check-and-convert              signClientKey)
+                       #:SHARED_INBOX                 (check-and-convert                sharedInbox)))))
 
 (define (get-actor-dbID-by-apID activityPubID)
   (if-let* ([convert                (lambda (str)

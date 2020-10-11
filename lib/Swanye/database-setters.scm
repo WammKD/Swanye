@@ -116,6 +116,35 @@
 
       (if onlyGetID objID obj))))
 
+(define-macro (insert-entity name objectID retrievalElements
+                                           beforeRequiredArgs
+                                           afterRequiredArgs _ keyArgs . body)
+  `(define* (,(string->symbol (string-append "insert-" (symbol->string name)))
+              ,@(append '(onlyGetID)         beforeRequiredArgs
+                        '(AP_ID OBJECT_TYPE) afterRequiredArgs
+                        '(JSON #:key)        keyArgs
+                        '( TO  CC ATTRIBUTED_TO CONTENT NAME      STARTTIME ENDTIME
+                          BTO BCC ICONS         IMAGES  PUBLISHED SUMMARY   URL)))
+     (let ([,objectID (insert-object #t AP_ID           OBJECT_TYPE   JSON
+                                        #:TO             TO
+                                        #:BTO           BTO
+                                        #:CC             CC
+                                        #:BCC           BCC
+                                        #:ATTRIBUTED_TO ATTRIBUTED_TO
+                                        #:CONTENT       CONTENT
+                                        #:NAME          NAME
+                                        #:STARTTIME     STARTTIME
+                                        #:ENDTIME       ENDTIME
+                                        #:ICONS         ICONS
+                                        #:IMAGES        IMAGES
+                                        #:PUBLISHED     PUBLISHED
+                                        #:URL           URL)])
+       ,@body
+
+       (if onlyGetID ,objectID (car (,(car retrievalElements)
+                                      ,(cadr retrievalElements)
+                                      ,objectID))))))
+
 (define (insert-object-auto onlyGetID object)
   (let ([ref (if (hash-table? object) hash-ref assoc-ref)])
     (insert-object onlyGetID (ref object "id") (ref object "type")         object

@@ -357,14 +357,7 @@
 ;;;;;;;;;;;;;;;;;;;
 ;;  A C T O R S  ;;
 ;;;;;;;;;;;;;;;;;;;
-(define-record-from-object #f actor
-  [ inbox                         inbox]
-  [outbox                        outbox]
-  [following                  following]
-  [followers                  followers]
-  [liked                          liked]
-  [featured                    featured]
-  [preferredUsername preferred-username])
+(define-record-from-actor #f actor)
 
 (define* (get-actors-where column values #:optional [returnObjectIfPresent #f])
   (if (null? values)
@@ -386,14 +379,9 @@
                                                           dbENTITY
                                                           (if isACTOR "ACTOR_ID" "OBJECT_ID"))))])
                 (if returnObjectIfPresent dbENTITY #f)
-              (create-database-entity-from-object make-ap-actor (apply append (cons dbENTITY otherENTITY))
-                [ "INBOX"             identity              string->uri]
-                ["OUTBOX"             identity              string->uri]
-                ["FOLLOWING"          (negate string-null?) string->uri]
-                ["FOLLOWERS"          (negate string-null?) string->uri]
-                ["LIKED"              (negate string-null?) string->uri]
-                ["FEATURED"           (negate string-null?) string->uri]
-                ["PREFERRED_USERNAME" identity])))
+              (create-database-entity-from-actor
+                make-ap-actor
+                (apply append (cons dbENTITY otherENTITY)))))
           ((if isACTOR $ACTORS $OBJECTS) 'get #:columns   '(*)
                                               #:condition (where
                                                             (cond

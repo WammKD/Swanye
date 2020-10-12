@@ -25,8 +25,8 @@
   #:export (<activityPub-object>   ap-object?   ap-object-attributed-to ap-object-db-id
                                                 ap-object-content       ap-object-ap-id
                                                 ap-object-start-time    ap-object-type
-                                                ap-object-end-time      ap-object-icon
-                                                ap-object-image         ap-object-name
+                                                ap-object-end-time      ap-object-icons
+                                                ap-object-images        ap-object-name
                                                 ap-object-published     ap-object-summary
                                                 ap-object-url
             get-objects-where
@@ -36,8 +36,8 @@
                                                 ap-image-width         ap-image-height
                                                 ap-image-attributed-to ap-image-content
                                                 ap-image-name          ap-image-start-time
-                                                ap-image-end-time      ap-image-icon
-                                                ap-image-image         ap-image-published
+                                                ap-image-end-time      ap-image-icons
+                                                ap-image-images        ap-image-published
                                                 ap-image-summary       ap-image-url
             get-icons-where
             get-images-where
@@ -51,6 +51,8 @@
                                                 ap-activity-content
                                                 ap-activity-start-time
                                                 ap-activity-end-time
+                                                ap-activity-icons
+                                                ap-activity-images
                                                 ap-activity-published
                                                 ap-activity-summary
                                                 ap-activity-url
@@ -70,6 +72,8 @@
                                                 ap-actor-content
                                                 ap-actor-start-time
                                                 ap-actor-end-time
+                                                ap-actor-icons
+                                                ap-actor-images
                                                 ap-actor-published
                                                 ap-actor-summary
                                                 ap-actor-url
@@ -96,6 +100,8 @@
                                                 swanye-user-content
                                                 swanye-user-start-time
                                                 swanye-user-end-time
+                                                swanye-user-icons
+                                                swanye-user-images
                                                 swanye-user-published
                                                 swanye-user-summary
                                                 swanye-user-url

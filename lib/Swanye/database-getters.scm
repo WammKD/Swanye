@@ -298,10 +298,7 @@
                                                             (if isACTIVITY "ACTIVITY_ID" "OBJECT_ID")))))])
                 #f
               (let ([finalENTITY (apply append (cons dbENTITY otherENTITY))])
-                (create-database-entity make-ap-activity finalENTITY
-                  ["ACTIVITY_ID"   identity]
-                  [      "AP_ID"   identity   (compose string->uri string-reverse)]
-                  [  "OBJECT_TYPE" identity]
+                (create-database-entity-from-object make-ap-activity finalENTITY
                   [   "ACTOR_ID"   (const #t) (const
                                                 (if (eq? type 'actor)
                                                     (get-actors-where #:ACTOR_ID values)
@@ -317,15 +314,7 @@
                                                                       (assoc-ref
                                                                         finalENTITY
                                                                         "ACTIVITY_ID")))))))]
-                  [  "OBJECT_ID"   identity   (compose car (cut get-objects-where #:OBJECT_ID <>))]
-                  ["NAME"          identity]
-                  ["ATTRIBUTED_TO" positive?  (cut get-actors-where #:ACTOR_ID <> #t)]
-                  ["CONTENT"       identity]
-                  ["STARTTIME"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
-                  [  "ENDTIME"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
-                  ["PUBLISHED"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
-                  ["SUMMARY"       identity]
-                  ["URL"           identity   (compose string->uri string-reverse)]))))
+                  [  "OBJECT_ID"   identity   (compose car (cut get-objects-where #:OBJECT_ID <>))]))))
           (if (eq? type 'actor)
               ($ACTIVITIES
                 'get
@@ -373,25 +362,14 @@
                                                           dbENTITY
                                                           (if isACTOR "ACTOR_ID" "OBJECT_ID"))))])
                 (if returnObjectIfPresent dbENTITY #f)
-              (create-database-entity make-ap-actor (apply append (cons dbENTITY otherENTITY))
-                ["OBJECT_ID"          identity]
-                [    "AP_ID"          identity              (compose string->uri string-reverse)]
-                ["OBJECT_TYPE"        identity]
+              (create-database-entity-from-object make-ap-actor (apply append (cons dbENTITY otherENTITY))
                 [ "INBOX"             identity              string->uri]
                 ["OUTBOX"             identity              string->uri]
                 ["FOLLOWING"          (negate string-null?) string->uri]
                 ["FOLLOWERS"          (negate string-null?) string->uri]
                 ["LIKED"              (negate string-null?) string->uri]
                 ["FEATURED"           (negate string-null?) string->uri]
-                ["NAME"               identity]
-                ["PREFERRED_USERNAME" identity]
-                ["ATTRIBUTED_TO"      positive?             (cut get-actors-where #:ACTOR_ID <> #t)]
-                ["CONTENT"            identity]
-                ["STARTTIME"          positive?             (compose time-utc->date (cut make-time time-utc 0 <>))]
-                [  "ENDTIME"          positive?             (compose time-utc->date (cut make-time time-utc 0 <>))]
-                ["PUBLISHED"          positive?             (compose time-utc->date (cut make-time time-utc 0 <>))]
-                ["SUMMARY"            identity]
-                ["URL"                identity              (compose string->uri string-reverse)])))
+                ["PREFERRED_USERNAME" identity])))
           ((if isACTOR $ACTORS $OBJECTS) 'get #:columns   '(*)
                                               #:condition (where
                                                             (cond

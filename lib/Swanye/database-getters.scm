@@ -119,8 +119,8 @@
                                             (symbol->string name)
                                             ">"))
        (,(string->symbol (string-append "make-" prefix))
-         databaseID activityPubID type ,@(map car properties) attributedTo content name
-         startTime  endTime       icon image                  published    summary url)
+         databaseID activityPubID type  ,@(map car properties) attributedTo content name
+         startTime  endTime       icons images                 published    summary url)
        ,(string->symbol (string-append prefix "?"))
        (databaseID    ,(convert "db-id")         ,(convert "db-id-set!"))
        (activityPubID ,(convert "ap-id")         ,(convert "ap-id-set!"))
@@ -135,8 +135,8 @@
        (name          ,(convert "name")          ,(convert "name-set!"))
        (startTime     ,(convert "start-time")    ,(convert "start-time-set!"))
        (endTime       ,(convert "end-time")      ,(convert "end-time-set!"))
-       (icon          ,(convert "icon")          ,(convert "icon-set!"))
-       (image         ,(convert "image")         ,(convert "image-set!"))
+       (icons         ,(convert "icons")         ,(convert "icons-set!"))
+       (images        ,(convert "images")        ,(convert "images-set!"))
        (published     ,(convert "published")     ,(convert "published-set!"))
        (summary       ,(convert "summary")       ,(convert "summary-set!"))
        (url           ,(convert "url")           ,(convert "url-set!")))))

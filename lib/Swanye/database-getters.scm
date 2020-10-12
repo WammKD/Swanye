@@ -395,39 +395,14 @@
 ;;;;;;;;;;;;;;;;;
 ;;  U S E R S  ;;
 ;;;;;;;;;;;;;;;;;
-(define-record-type <swanye-user>
-  (make-swanye-user databaseID activityPubID     type         email
-                    password   salt              createdAt    confirmationToken
-                    publicKey  privateKey        inbox        outbox
-                    following  followers         liked        featured
-                    name       preferredUsername attributedTo content
-                    startTime  endTime           published    summary           url)
-  swanye-user?
-  (databaseID        swanye-user-db-id              swanye-user-db-id-set!)
-  (activityPubID     swanye-user-ap-id              swanye-user-ap-id-set!)
-  (email             swanye-user-email              swanye-user-email-set!)
-  (password          swanye-user-password           swanye-user-password-set!)
-  (salt              swanye-user-salt               swanye-user-salt-set!)
-  (createdAt         swanye-user-created-at         swanye-user-created-at-set!)
-  (confirmationToken swanye-user-confirmation-token swanye-user-confirmation-token-set!)
-  (publicKey         swanye-user-public-key         swanye-user-public-key-set!)
-  (privateKey        swanye-user-private-key        swanye-user-private-key-set!)
-  (type              swanye-user-type               swanye-user-type-set!)
-  (inbox             swanye-user-inbox              swanye-user-inbox-set!)
-  (outbox            swanye-user-outbox             swanye-user-outbox-set!)
-  (following         swanye-user-following          swanye-user-following-set!)
-  (followers         swanye-user-followers          swanye-user-followers-set!)
-  (liked             swanye-user-liked              swanye-user-liked-set!)
-  (featured          swanye-user-featured           swanye-user-featured-set!)
-  (name              swanye-user-name               swanye-user-name-set!)
-  (preferredUsername swanye-user-preferred-username swanye-user-preferred-username-set!)
-  (attributedTo      swanye-user-attributed-to      swanye-user-attributed-to-set!)
-  (content           swanye-user-content            swanye-user-content-set!)
-  (startTime         swanye-user-start-time         swanye-user-start-time-set!)
-  (endTime           swanye-user-end-time           swanye-user-end-time-set!)
-  (published         swanye-user-published          swanye-user-published-set!)
-  (summary           swanye-user-summary            swanye-user-summary-set!)
-  (url               swanye-user-url                swanye-user-url-set!))
+(define-record-from-actor #t user
+  [email                          email]
+  [password                    password]
+  [salt                            salt]
+  [createdAt                 created-at]
+  [confirmationToken confirmation-token]
+  [publicKey                 public-key]
+  [privateKey               private-key])
 
 (define (get-users-where column values)
   (if (null? values)
@@ -472,32 +447,14 @@
                                                                                   ENTITY_ID))))))
                                                           (zip remainingIDs remaining$))])
                 #f
-              (create-database-entity make-swanye-user (apply append (cons dbENTITY (map car otherENTITIES)))
-                ["OBJECT_ID"          identity]
-                [    "AP_ID"          identity              (compose string->uri string-reverse)]
-                ["OBJECT_TYPE"        identity]
+              (create-database-entity-from-actor make-swanye-user (apply append (cons dbENTITY (map car otherENTITIES)))
                 ["E_MAIL"             identity]
                 ["PASSWORD"           identity]
                 ["SALT"               identity]
-                ["CREATED_AT"         positive?             (compose time-utc->date (cut make-time time-utc 0 <>))]
+                ["CREATED_AT"         positive? (compose time-utc->date (cut make-time time-utc 0 <>))]
                 ["CONFIRMATION_TOKEN" identity]
                 [ "PUBLIC_KEY"        identity]
-                ["PRIVATE_KEY"        identity]
-                [ "INBOX"             identity              string->uri]
-                ["OUTBOX"             identity              string->uri]
-                ["FOLLOWING"          (negate string-null?) string->uri]
-                ["FOLLOWERS"          (negate string-null?) string->uri]
-                ["LIKED"              (negate string-null?) string->uri]
-                ["FEATURED"           (negate string-null?) string->uri]
-                ["NAME"               identity]
-                ["PREFERRED_USERNAME" identity]
-                ["ATTRIBUTED_TO"      positive?             (cut get-actors-where #:ACTOR_ID <> #t)]
-                ["CONTENT"            identity]
-                ["STARTTIME"          positive?             (compose time-utc->date (cut make-time time-utc 0 <>))]
-                [  "ENDTIME"          positive?             (compose time-utc->date (cut make-time time-utc 0 <>))]
-                ["PUBLISHED"          positive?             (compose time-utc->date (cut make-time time-utc 0 <>))]
-                ["SUMMARY"            identity]
-                ["URL"                identity              (compose string->uri string-reverse)])))
+                ["PRIVATE_KEY"        identity])))
           ($ENTITY 'get #:columns   '(*)
                         #:condition (where (if (memq column '(#:OBJECT_ID #:ACTOR_ID))
                                                #:USER_ID

@@ -141,6 +141,19 @@
        (summary       ,(convert "summary")       ,(convert "summary-set!"))
        (url           ,(convert "url")           ,(convert "url-set!")))))
 
+(define-macro (define-record-from-actor isUser name . properties)
+  `(define-record-from-object ,isUser ,name
+     ,@properties
+     [ inbox                         inbox]
+     [outbox                        outbox]
+     [following                  following]
+     [followers                  followers]
+     [liked                          liked]
+     [featured                    featured]
+     [preferredUsername preferred-username]))
+
+
+
 (define-macro (create-database-entity-from-object make-funct entity . properties)
   `(create-database-entity ,make-funct ,entity
      ["OBJECT_ID"     identity]
@@ -159,6 +172,17 @@
      ["PUBLISHED"     positive?  (compose time-utc->date (cut make-time time-utc 0 <>))]
      ["SUMMARY"       identity]
      ["URL"           identity   (compose string->uri string-reverse)]))
+
+(define-macro (create-database-entity-from-actor make-funct entity . properties)
+  `(create-database-entity-from-object ,make-funct ,entity
+     ,@properties
+     [ "INBOX"             identity              string->uri]
+     ["OUTBOX"             identity              string->uri]
+     ["FOLLOWING"          (negate string-null?) string->uri]
+     ["FOLLOWERS"          (negate string-null?) string->uri]
+     ["LIKED"              (negate string-null?) string->uri]
+     ["FEATURED"           (negate string-null?) string->uri]
+     ["PREFERRED_USERNAME" identity]))
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;;  O B J E C T S  ;;

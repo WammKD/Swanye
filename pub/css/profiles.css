@@ -1,0 +1,34 @@
+.profile_header {
+	position: relative;
+}
+
+.profile_header img#landscape {
+	width:         calc(100% - 1em);
+	margin:        0.5em;
+	border-radius: 5px;
+}
+
+.profile_header img#icon {
+	left:          calc(50% - 50px);
+	bottom:        calc(-50px + 0.5em);
+	position:      absolute;
+	max-width:     100px;
+	max-height:    100px;
+	box-shadow:    -1px -1px 10px #1A1A1A;
+	border-radius: 100px;
+}
+
+
+.profile_body {
+	margin-top:  3em;
+	margin-left: 1.5em;
+}
+
+.profile_body h1 b {
+	font-size: .60em;
+}
+
+.profile_body h1 small {
+	color:     #B5D3D9;
+	font-size: 0.35em;
+}

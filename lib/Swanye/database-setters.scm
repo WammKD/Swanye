@@ -143,6 +143,7 @@
                                             #:ICONS         ICONS
                                             #:IMAGES        IMAGES
                                             #:PUBLISHED     PUBLISHED
+                                            #:SUMMARY       SUMMARY
                                             #:URL           URL)])
            ,@body
 
@@ -191,6 +192,7 @@
              #:ICONS         (ref ,name "icon")
              #:IMAGES        (ref ,name "image")
              #:PUBLISHED     (ref ,name "published")
+             #:SUMMARY       (ref ,name "summary")
              #:URL           (ref ,name "url")))))))
 
 (define (insert-object-auto onlyGetID object)
@@ -208,6 +210,7 @@
                              #:ICONS           (ref object "icon")
                              #:IMAGES          (ref object "image")
                              #:PUBLISHED       (ref object "published")
+                             #:SUMMARY         (ref object "summary")
                              #:URL             (ref object "url"))))
 
 

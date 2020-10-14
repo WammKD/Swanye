@@ -559,7 +559,7 @@
   (apply
     append
     (map
-      (compose (cut get-objects-where #:OBJECT_ID <>) cdar)
+      (compose (cut get-posts-where #:OBJECT_ID <>) cdar)
       ($TIMELINES
         'get
         #:columns   '(OBJECT_ID)

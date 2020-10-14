@@ -45,10 +45,10 @@
 		<DIV class="dash_main">
 			<% (for-each
 			     (lambda (post)
-			       (let* ([creator               (car (ap-object-attributed-to post))]
+			       (let* ([creator               (car (ap-post-attributed-to post))]
 			              [editorID        (string-append/shared
 			                                 "editor_"
-			                                 (number->string (ap-object-db-id post)))]
+			                                 (number->string (ap-post-db-id post)))]
 			              [fullCreatorName (string-append/shared
 			                                 (ap-actor-preferred-username creator)
 			                                 "@"
@@ -73,7 +73,7 @@
 
 							<DIV id="timestamp">
 								<I>
-									<%= (if-let ([publishDate (ap-object-published post)])
+									<%= (if-let ([publishDate (ap-post-published post)])
 									        (string-append
 									          (date->string publishDate "~a: ~B ~d, ~Y &ndash; ")
 									          "<u>"
@@ -86,7 +86,7 @@
 					</HEADER>
 
 					<ARTICLE class="dash_post-content" data-users=<%= fullCreatorName %>>
-						<%= (ap-object-content post) %>
+						<%= (ap-post-content post) %>
 					</ARTICLE>
 
 					<@include post-editor.html %>

@@ -70,9 +70,11 @@
 	margin-right: .3em;
 }
 
+
 .dash_post .dash_post-interactions .iconify:hover {
 	cursor: pointer;
 }
+
 .dash_post .dash_post-interactions .iconify#reblog         rect {
 	display: none;
 }
@@ -83,6 +85,16 @@
 .dash_post .dash_post-interactions .iconify#reblog:hover   path {
 	fill: #117EB0;
 }
-.dash_post .dash_post-interactions svg#favorite:hover path {
-	fill: #CF000F;
+
+.dash_post .dash_post-interactions .iconify#favorite       path.unfilled {
+	display: inherit;
+}
+.dash_post .dash_post-interactions .iconify#favorite:hover path.unfilled {
+	display: none;
+}
+.dash_post .dash_post-interactions .iconify#favorite       path.filled {
+	display: none;
+}
+.dash_post .dash_post-interactions .iconify#favorite:hover path.filled {
+	display: inherit;
 }

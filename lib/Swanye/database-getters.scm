@@ -41,6 +41,14 @@
                                                 ap-image-summary       ap-image-url
             get-icons-where
             get-images-where
+            <activityPub-post>     ap-post?     ap-post-attributed-to ap-post-db-id
+                                                ap-post-content       ap-post-ap-id
+                                                ap-post-start-time    ap-post-type
+                                                ap-post-end-time      ap-post-icons
+                                                ap-post-images        ap-post-name
+                                                ap-post-published     ap-post-summary
+                                                ap-post-url           ap-post-users-who-have-liked
+            get-posts-where
             <activityPub-activity> ap-activity? ap-activity-db-id
                                                 ap-activity-ap-id
                                                 ap-activity-type

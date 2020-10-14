@@ -328,27 +328,29 @@
                                                            post
                                                            "OBJECT_ID"))))])
           (create-database-entity-from-object make-ap-post post
-            ["USERS_WHO_HAVE_LIKED" (const #t) (const (apply
-                                                        append
-                                                        (map
-                                                          (cut get-users-where #:USER_ID <>)
-                                                          (delete-duplicates
-                                                            (map
-                                                              (cut assoc-ref <> "ACTOR_ID")
-                                                              ($ACTIVITIES_BY_ACTORS
-                                                                'get
-                                                                #:columns   '(*)
-                                                                #:condition (where
-                                                                              #:ACTIVITY_ID
-                                                                              (map
+            ["USERS_WHO_HAVE_LIKED" (const #t) (const (if (null? actIDs)
+                                                          '()
+                                                        (if-let ([likes null? (map
                                                                                 (cut assoc-ref <> "OBJECT_ID")
                                                                                 ($OBJECTS
                                                                                   'get
                                                                                   #:columns   '(*)
                                                                                   #:condition (where (/and
                                                                                                        #:OBJECT_TYPE "Like"
-                                                                                                       (/or #:OBJECT_ID actIDs))))))))
-                                                            =))))])))
+                                                                                                       (/or #:OBJECT_ID actIDs)))))])
+                                                            '()
+                                                          (apply
+                                                            append
+                                                            (map
+                                                              (cut get-users-where #:USER_ID <>)
+                                                              (delete-duplicates
+                                                                (map
+                                                                  (cut assoc-ref <> "ACTOR_ID")
+                                                                  ($ACTIVITIES_BY_ACTORS
+                                                                    'get
+                                                                    #:columns   '(*)
+                                                                    #:condition (where #:ACTIVITY_ID likes)))
+                                                                =))))))])))
       ($OBJECTS 'get #:columns '(*) #:condition (where column values)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;

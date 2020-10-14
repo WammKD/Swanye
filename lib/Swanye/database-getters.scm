@@ -115,6 +115,7 @@
                                                 swanye-user-url
             get-users-where
             get-only-user-where
+            get-user-by-session-id
             get-home-timeline
             get-followers-of))
 
@@ -551,6 +552,14 @@
           ["SUMMARY"            (const #f)]
           ["URL"                (const #f)]))
       ($USERS 'get #:columns '(*) #:condition (where column values)))))
+
+(define (get-user-by-session-id sID)
+  (car (get-users-where #:USER_ID (assoc-ref
+                                    (car ($SESSIONS
+                                           'get
+                                           #:columns   '(USER_ID)
+                                           #:condition (where #:SESSION_ID sID)))
+                                    "USER_ID"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  T I M E L I N E S  ;;

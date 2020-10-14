@@ -121,44 +121,12 @@
 						</SVG>
 						<!-- #1595D1 -->
 
-						<SVG xmlns="http://www.w3.org/2000/svg"
-						     xmlns:xlink="http://www.w3.org/1999/xlink"
-						     aria-hidden="true"
-						     focusable="false"
-						     width="1.3em"
-						     height="1.3em"
-						     preserveAspectRatio="xMidYMid meet"
-						     viewBox="0 0 24 24"
-						     class="iconify icon:gridicons:heart-outline"
-						     data-inline="false"
-						     data-width="1.3em"
-						     data-height="1.3em"
-						     data-icon="gridicons:heart-outline"
-						     style="transform: rotate(360deg);"
-						     id="favorite">
-							<PATH d="M16.5 4.5c2.206 0 4 1.794 4 4c0 4.67-5.543 8.94-8.5 11.023C9.043 17.44 3.5 13.17 3.5 8.5c0-2.206 1.794-4 4-4a4.01 4.01 0 0 1 3.273 1.706L12 7.953l1.227-1.746A4.004 4.004 0 0 1 16.5 4.5m0-1.5A5.49 5.49 0 0 0 12 5.344A5.49 5.49 0 0 0 7.5 3A5.5 5.5 0 0 0 2 8.5c0 5.72 6.5 10.438 10 12.85c3.5-2.412 10-7.13 10-12.85A5.5 5.5 0 0 0 16.5 3z"
-							      fill="#707B97">
-							</PATH>
-						</SVG>
-
-						<SVG xmlns="http://www.w3.org/2000/svg"
-						     xmlns:xlink="http://www.w3.org/1999/xlink"
-						     aria-hidden="true"
-						     focusable="false"
-						     width="1.3em"
-						     height="1.3em"
-						     preserveAspectRatio="xMidYMid meet"
-						     viewBox="0 0 24 24"
-						     class="iconify icon:gridicons:heart"
-						     data-inline="false"
-						     data-width="1.3em"
-						     data-height="1.3em"
-						     data-icon="gridicons:heart"
-						     style="transform: rotate(360deg);">
-							<PATH d="M16.5 3A5.49 5.49 0 0 0 12 5.344A5.49 5.49 0 0 0 7.5 3A5.5 5.5 0 0 0 2 8.5c0 5.72 6.5 10.438 10 12.85c3.5-2.412 10-7.13 10-12.85A5.5 5.5 0 0 0 16.5 3z"
-							      fill="#CF000F">
-							</PATH>
-						</SVG>
+						<% (when (not (member user (ap-post-users-who-have-liked post))) %>
+						     <@include like-button_unclicked.html %>
+						<% ) %>
+						<% (when (member user (ap-post-users-who-have-liked post)) %>
+						     <@include like-button_clicked.html %>
+						<% ) %>
 					</FOOTER>
 				</DIV>
 			<% )) posts) %>

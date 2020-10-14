@@ -16,13 +16,15 @@
   (options #:with-auth "/auth/sign_in")
 
   (lambda (rc)
-    (let ([posts (reverse (get-home-timeline
-                            (car (assoc-ref
-                                   (map
-                                     (cut string-split <> #\=)
-                                     (string-split
-                                       (assoc-ref (request-headers
-                                                    (rc-req rc))    'cookie)
-                                       #\,))
-                                   "sid"))))])
-      (view-render "main" (the-environment)))))
+    (let* ([sID   (car (assoc-ref
+                         (map
+                           (cut string-split <> #\=)
+                           (string-split
+                             (assoc-ref (request-headers
+                                          (rc-req rc))    'cookie)
+                             #\,))
+                         "sid"))]
+           [user       (get-user-by-session-id sID)]
+           [posts (reverse (get-home-timeline sID))])
+      (let ([sID 5])
+        (view-render "main" (the-environment))))))

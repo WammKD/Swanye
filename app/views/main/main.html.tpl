@@ -57,8 +57,10 @@
 			                                 "&#10;")]) %>
 				<DIV class="dash_post">
 					<HEADER class="dash_post-info">
-						<IMG id="icon"
-						     src="https://cf.mastohost.com/v1/AUTH_91eb37814936490c95da7b85993cc2ff/queergarden/accounts/avatars/000/043/948/original/956d5a7b7621b9a8.png">
+						<% (when (not (null? (ap-actor-icons creator))) %>
+							<IMG id="icon"
+							     src=<%= (uri->string (ap-image-url (car (ap-actor-icons creator)))) %>>
+						<% ) %>
 
 						<DIV id="post-info">
 							<DIV id="poster">

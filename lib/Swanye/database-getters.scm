@@ -299,6 +299,49 @@
             ((if isIMAGE $IMAGES $OBJECTS) 'get #:columns   '(*)
                                                 #:condition (where column values))))))))
 
+;;;;;;;;;;;;;;;;;
+;;  P O S T S  ;;
+;;;;;;;;;;;;;;;;;
+(define-record-from-object #f post
+  [usersWhoHaveLiked users-who-have-liked])
+
+(define (get-posts-where column values)
+  (if (null? values)
+      '()
+    (map
+      (lambda (post)
+        (let ([actIDs (map
+                        (cut assoc-ref <> "ACTIVITY_ID")
+                        ($ACTIVITIES
+                          'get
+                          #:columns   '(*)
+                          #:condition (where #:OBJECT_ID (assoc-ref
+                                                           post
+                                                           "OBJECT_ID"))))])
+          (create-database-entity-from-object make-ap-post post
+            ["USERS_WHO_HAVE_LIKED" (const #t) (const (apply
+                                                        append
+                                                        (map
+                                                          (cut get-users-where #:USER_ID <>)
+                                                          (delete-duplicates
+                                                            (map
+                                                              (cut assoc-ref <> "ACTOR_ID")
+                                                              ($ACTIVITIES_BY_ACTORS
+                                                                'get
+                                                                #:columns   '(*)
+                                                                #:condition (where
+                                                                              #:ACTIVITY_ID
+                                                                              (map
+                                                                                (cut assoc-ref <> "OBJECT_ID")
+                                                                                ($OBJECTS
+                                                                                  'get
+                                                                                  #:columns   '(*)
+                                                                                  #:condition (where (/and
+                                                                                                       #:OBJECT_TYPE "Like"
+                                                                                                       (/or #:OBJECT_ID actIDs))))))))
+                                                            =))))])))
+      ($OBJECTS 'get #:columns '(*) #:condition (where column values)))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  A C T I V I T I E S  ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;

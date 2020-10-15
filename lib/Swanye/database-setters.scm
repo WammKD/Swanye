@@ -4,6 +4,7 @@
 
 (define-module (Swanye database-setters)
   #:use-module (ice-9         hash-table)
+  #:use-module (ice-9         string-fun)
   #:use-module (srfi             srfi-19)
   #:use-module (web                  uri)
   #:use-module (Swanye  database-getters)
@@ -58,8 +59,8 @@
                                                                       ATTRIBUTED_TO)])
                                                      'null
                                                    (ap-object-db-id (car at)))])
-                   #:CONTENT       (if CONTENT (gsub "'" "''" CONTENT) 'null)
-                   #:NAME          (if NAME    (gsub "'" "''" NAME)    'null)
+                   #:CONTENT       (if CONTENT (string-replace-substring CONTENT "'" "''") 'null)
+                   #:NAME          (if NAME    (string-replace-substring NAME    "'" "''") 'null)
                    #:STARTTIME     (case-pred STARTTIME
                                      [not                             'null]
                                      [string? (time-second
@@ -90,13 +91,13 @@
                                      [date?   (time-second
                                                 (date->time-utc PUBLISHED))]
                                      [time?   (time-second       PUBLISHED)])
-                   #:SUMMARY       (if SUMMARY (gsub "'" "''" SUMMARY) 'null)
+                   #:SUMMARY       (if SUMMARY (string-replace-substring SUMMARY "'" "''") 'null)
                    #:URL           (string-reverse (if (uri? URL)
                                                        (uri->string URL)
                                                      (return-if URL "")))
-                   #:JSON          (gsub "'" "''" (if (hash-table? JSON)
-                                                      (scm->json-string JSON)
-                                                    JSON)))
+                   #:JSON          (string-replace-substring (if (hash-table? JSON)
+                                                                 (scm->json-string JSON)
+                                                               JSON) "'" "''"))
 
     (let* ([obj      (if onlyGetID
                          (get-object-dbID-by-apID

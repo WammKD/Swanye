@@ -95,6 +95,22 @@
                                         " " sigFilename " | base64 > " baseFilename))
           (system (string-append/shared "rm " privFilename " " sigFilename))
 
+          (display "\n\n\n\nFUCKERSHIT\n\n\n\n")
+          (display (string-append/shared
+                     "curl -H \"Content-Type: application/json\" "
+                          "-H \"Host: "    actorInbox  "\" "
+                          "-H \"Date: "    currentDate "\" "
+                          "-H \"Signature: keyId='" (uri->string
+                                                       (swanye-user-ap-id user)) "',"
+                                          "headers='(request-target) host date',"
+                                          "signature='" (get-string-all-with-detected-charset baseFilename) "'\" "
+                          "-d '" (scm->json-string scmJSON) "' "
+                           actorInbox))
+          (newline)
+          (newline)
+          (newline)
+          (newline)
+
           (system (string-append/shared
                     "curl -H \"Content-Type: application/json\" "
                          "-H \"Host: "    actorInbox  "\" "

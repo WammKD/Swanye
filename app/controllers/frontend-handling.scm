@@ -97,7 +97,8 @@
 
           (display "\n\n\n\nFUCKERSHIT\n\n\n\n")
           (display (string-append/shared
-                     "curl -H \"Content-Type: application/json\" "
+                     "curl -X POST "
+                          "-H \"Content-Type: application/json\" "
                           "-H \"Host: "    (uri-host (string->uri actorInbox)) "\" "
                           "-H \"Date: "    currentDate "\" "
                           "-H \"Signature: keyId='" (uri->string

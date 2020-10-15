@@ -117,4 +117,9 @@
           ;;   (system (string-append/shared "rm " baseFilename)))
 
           (response-emit "OK" #:status 200))
-      (response-emit "FUCK" #:status 401))))
+      (begin
+        (display "\n\n\n\nFUCKERSHIT\n\n\n\n")
+        (display (request-headers (rc-req rc)))
+        (newline)
+
+        (response-emit "FUCK" #:status 401)))))

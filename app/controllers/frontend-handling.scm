@@ -103,7 +103,7 @@
                           "-H \"Signature: keyId='" (uri->string
                                                        (swanye-user-ap-id user)) "',"
                                           "headers='(request-target) host date',"
-                                          "signature='" (get-string-all-with-detected-charset baseFilename) "'\" "
+                                          "signature='" (string-trim-right (get-string-all-with-detected-charset baseFilename)) "'\" "
                           "-d '" (scm->json-string scmJSON) "' "
                            actorInbox))
           (newline)
@@ -118,7 +118,7 @@
                          "-H \"Signature: keyId='" (uri->string
                                                       (swanye-user-ap-id user)) "',"
                                          "headers='(request-target) host date',"
-                                         "signature='" (get-string-all-with-detected-charset baseFilename) "'\" "
+                                         "signature='" (string-trim-right (get-string-all-with-detected-charset baseFilename)) "'\" "
                          "-d '" (scm->json-string scmJSON) "' "
                           actorInbox))
           ;; (receive (httpHead httpBody)

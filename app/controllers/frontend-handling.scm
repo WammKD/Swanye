@@ -4,8 +4,9 @@
 (define-artanis-controller frontend-handling) ; DO NOT REMOVE THIS LINE!!!
 
 (use-modules (app       models  OBJECTS) (ice-9        hash-table)
-             (app       models SESSIONS) (srfi            srfi-19)
-             (industria crypto blowfish) (srfi            srfi-26)
+             (app       models SESSIONS) (ice-9        string-fun)
+             (industria crypto blowfish) (srfi            srfi-19)
+                                         (srfi            srfi-26)
                                          (srfi            srfi-98)
                                          (Swanye database-getters)
                                          (Swanye database-setters)

@@ -53,8 +53,8 @@
                [stringToSign      (let ([uri (string->uri actorInbox)])
                                     (string-append/shared
                                       "(request-target): post " (uri-path uri)
-                                      "\nhost: "                (uri-host uri)
-                                      "\ndate: "                currentDate))]
+                                      "\\nhost: "               (uri-host uri)
+                                      "\\ndate: "               currentDate))]
                [objectActPubID   (uri-decode (:from-post rc 'get "objectID"))]
                [scmJSON          (alist->hash-table
                                    `(("@context" . "https://www.w3.org/ns/activitystreams")

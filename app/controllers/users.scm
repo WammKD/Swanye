@@ -51,7 +51,9 @@
                                                                      userURL
                                                                      "#main-key"))
                                                 ("owner"        . ,userURL)
-                                                ("publicKeyPem" . ,(swanye-user-public-key user)))))))
+                                                ("publicKeyPem" . ,(string-append/shared
+                                                                     (swanye-user-public-key user)
+                                                                     "\n")))))))
         (string-append/shared "The user page of " username "!")))))
 
 (users-define :user

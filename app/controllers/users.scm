@@ -22,13 +22,15 @@
               (let ([userVar (car poss)])
                 then ...)))]))
 
-(define (act-stream? accept)
-  (or
-    (assoc-ref accept 'application/activity+json)
-    (let ([ld (assoc-ref accept 'application/ld+json)])
-      (and ld (equal?
-                (assoc-ref ld 'profile)
-                "https://www.w3.org/ns/activitystreams")))))
+(define (act-stream? req)
+  (let ([accept (request-accept req)])
+    (or
+      (assoc-ref accept 'application/activity+json)
+      (and
+        (assoc-ref accept 'application/ld+json)
+        (equal?
+          (assoc-ref (request-headers req) 'profile)
+          "https://www.w3.org/ns/activitystreams")))))
 
 
 
@@ -36,8 +38,7 @@
 (get "/@:user" #:mime 'json
   (lambda (rc)
     (process-user-account-as user (rc)
-      (if-let* ([request                                        (rc-req rc)]
-                [accept   act-stream?              (request-accept request)]
+      (if-let* ([request  act-stream?                           (rc-req rc)]
                 [username             (swanye-user-preferred-username user)])
           (let ([userURL (uri->string (swanye-user-ap-id user))])
             (:mime rc `(("@context"          . ("https://www.w3.org/ns/activitystreams"

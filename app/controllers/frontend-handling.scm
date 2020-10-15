@@ -98,7 +98,7 @@
           (display "\n\n\n\nFUCKERSHIT\n\n\n\n")
           (display (string-append/shared
                      "curl -H \"Content-Type: application/json\" "
-                          "-H \"Host: "    actorInbox  "\" "
+                          "-H \"Host: "    (uri-host (string->uri actorInbox)) "\" "
                           "-H \"Date: "    currentDate "\" "
                           "-H \"Signature: keyId='" (uri->string
                                                        (swanye-user-ap-id user)) "',"
@@ -113,7 +113,7 @@
 
           (system (string-append/shared
                     "curl -H \"Content-Type: application/json\" "
-                         "-H \"Host: "    actorInbox  "\" "
+                         "-H \"Host: "    (uri-host (string->uri actorInbox)) "\" "
                          "-H \"Date: "    currentDate "\" "
                          "-H \"Signature: keyId='" (uri->string
                                                       (swanye-user-ap-id user)) "',"

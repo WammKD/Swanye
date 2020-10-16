@@ -122,8 +122,10 @@
                     "curl -H \"Content-Type: application/json\" "
                          "-H \"Host: "    (uri-host (string->uri actorInbox)) "\" "
                          "-H \"Date: "    currentDate "\" "
-                         "-H \"Signature: keyId='" (uri->string
-                                                      (swanye-user-ap-id user)) "',"
+                         "-H \"Signature: keyId='" (string-append/shared
+                                                     (uri->string
+                                                       (swanye-user-ap-id user))
+                                                     "#main-key") "',"
                                          "headers='(request-target) host date',"
                                          "signature='" (string-replace-substring
                                                          (get-string-all-with-detected-charset baseFilename)

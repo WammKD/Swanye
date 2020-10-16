@@ -96,41 +96,19 @@
                                         " " sigFilename " | base64 > " baseFilename))
           (system (string-append/shared "rm " privFilename " " sigFilename))
 
-          (display "\n\n\n\nFUCKERSHIT\n\n\n\n")
-          (display (string-append/shared
-                     "curl -X POST "
-                          "-H \"Content-Type: application/json\" "
-                          "-H \"Host: "    (uri-host (string->uri actorInbox)) "\" "
-                          "-H \"Date: "    currentDate "\" "
-                          "-H \"Signature: keyId='" (string-append/shared
-                                                      (uri->string
-                                                        (swanye-user-ap-id user))
-                                                      "#main-key") "',"
-                                          "headers='(request-target) host date',"
-                                          "signature='" (string-replace-substring
-                                                          (get-string-all-with-detected-charset baseFilename)
-                                                          "\n"
-                                                          "") "'\" "
-                          "-d '" (scm->json-string scmJSON) "' "
-                           actorInbox))
-          (newline)
-          (newline)
-          (newline)
-          (newline)
-
           (system (string-append/shared
-                    "curl -H \"Content-Type: application/json\" "
-                         "-H \"Host: "    (uri-host (string->uri actorInbox)) "\" "
-                         "-H \"Date: "    currentDate "\" "
-                         "-H \"Signature: keyId='" (string-append/shared
+                    "curl -H 'Content-Type: application/json' "
+                         "-H 'Host: "    (uri-host (string->uri actorInbox)) "' "
+                         "-H 'Date: "    currentDate "' "
+                         "-H 'Signature: keyId=\"" (string-append/shared
                                                      (uri->string
                                                        (swanye-user-ap-id user))
-                                                     "#main-key") "',"
-                                         "headers='(request-target) host date',"
-                                         "signature='" (string-replace-substring
-                                                         (get-string-all-with-detected-charset baseFilename)
-                                                         "\n"
-                                                         "") "'\" "
+                                                     "#main-key") "\","
+                                         "headers=\"(request-target) host date\","
+                                         "signature=\"" (string-replace-substring
+                                                          (get-string-all-with-detected-charset baseFilename)
+                                                          "\n"
+                                                          "") "\"' "
                          "-d '" (scm->json-string scmJSON) "' "
                           actorInbox))
           ;; (receive (httpHead httpBody)

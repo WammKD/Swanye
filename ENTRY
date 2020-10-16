@@ -26,12 +26,12 @@
              (let ([domain                                    (cadr split)]
                    [poss   ((map-table-from-DB (:conn rc))
                              'get        'USERS
-                             #:columns   '(USERNAME)
-                             #:condition (where #:USERNAME (cadr split2)))])
+                             #:columns   '(PREFERRED_USERNAME)
+                             #:condition (where #:PREFERRED_USERNAME (cadr split2)))])
                (if (and
                      (string=? domain (car (request-host (rc-req rc))))
                      (not (null? poss)))
-                   (let* ([username   (assoc-ref (car poss) "USERNAME")]
+                   (let* ([username   (assoc-ref (car poss) "PREFERRED_USERNAME")]
                           [userURL  (string-append "https://" domain
                                                    "/users/"  username)])
                      (:mime rc `(("subject" . ,(string-append "acct:" username

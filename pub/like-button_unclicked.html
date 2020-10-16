@@ -13,12 +13,29 @@
      data-icon="gridicons:heart-outline"
      style="transform: rotate(360deg);"
      id="favorite"
-     onclick="var xhttp   = new XMLHttpRequest(),
-                  dataset = this.parentElement.dataset;
+     onclick="var xhttp    = new XMLHttpRequest(),
+                  dataset  = this.parentElement.dataset,
+                  children = this.children;
+
+              for(var i = 0; i < children.length; i++) {
+                if(children[i].className.baseVal === 'unfilled') {
+                  children[i].style.display = 'none';
+                } else if(children[i].className.baseVal === 'filled') {
+                  children[i].style.display = 'inherit';
+                }
+              }
 
               xhttp.onreadystatechange = function() {
                                            if(this.readyState == 4   &&
                                               this.status     == 200) {
+                                           } else {
+                                             for(var i = 0; i < children.length; i++) {
+                                               if(children[i].className.baseVal === 'unfilled') {
+                                                 children[i].style.display = 'inherit';
+                                               } else if(children[i].className.baseVal === 'filled') {
+                                                 children[i].style.display = 'none';
+                                               }
+                                             }
                                              console.log(this.responseText);
                                            }
                                          };

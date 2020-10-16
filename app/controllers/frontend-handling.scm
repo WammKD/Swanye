@@ -125,7 +125,10 @@
                          "-H \"Signature: keyId='" (uri->string
                                                       (swanye-user-ap-id user)) "',"
                                          "headers='(request-target) host date',"
-                                         "signature='" (string-trim-right (get-string-all-with-detected-charset baseFilename)) "'\" "
+                                         "signature='" (string-replace-substring
+                                                         (get-string-all-with-detected-charset baseFilename)
+                                                         "\n"
+                                                         "") "'\" "
                          "-d '" (scm->json-string scmJSON) "' "
                           actorInbox))
           ;; (receive (httpHead httpBody)

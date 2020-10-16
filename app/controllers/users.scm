@@ -42,7 +42,8 @@
                 [username             (swanye-user-preferred-username user)])
           (let ([userURL (uri->string (swanye-user-ap-id user))])
             (:mime rc `(("@context"          . ("https://www.w3.org/ns/activitystreams"
-                                                "https://w3id.org/security/v1"))
+                                                "https://w3id.org/security/v1"
+                                                (("publicKeyBase64" . "toot:publicKeyBase64"))))
                         ("id"                . ,userURL)
                         ("type"              . "Person")
                         ("preferredUsername" . ,username)

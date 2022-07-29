@@ -9,7 +9,8 @@ A tumblelog in the style of [[https://www.tumblr.com][Tumblr]].
   :CUSTOM_ID: moved
   :END:
 This repo. has been moved to Codeberg, at https://codeberg.org/WammKD/Swanye.
-
+#+HTML: <br>
+#+HTML: <br>
 Any future development will continue there due to Microsoft's
 ownership of GitHub.
 

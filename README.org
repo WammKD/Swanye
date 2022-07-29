@@ -1,3 +1,5 @@
+#+MACRO: NEWLINE @@latex:\\@@ @@html:<br>@@ @@ascii:|@@
+
 * Swanye
   :PROPERTIES:
   :CUSTOM_ID: swanye
@@ -23,7 +25,7 @@ And, as always, all contributions are welcome!
 is a community-driven, non-profit software development platform
 operated by Codeberg e.V. and centered around Codeberg.org, a
 Gitea-based software forge.
-
+{{{NEWLINE}}}
 Codeberg is not a corporation but a community of free software
 enthusiasts providing a humane, non-commercial and privacy-friendly
 alternative to commercial services.
